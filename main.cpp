@@ -4,7 +4,7 @@ int main(void) {
 	using namespace Graphics;
 	Window window("Engine", 1024, 800);
 
-	while (1)
+	while (!window.closed())
 		window.update();
 
 	return 0;
