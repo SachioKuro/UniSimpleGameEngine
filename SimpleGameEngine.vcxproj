@@ -68,6 +68,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
