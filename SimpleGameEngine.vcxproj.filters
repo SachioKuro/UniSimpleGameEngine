@@ -25,6 +25,18 @@
     <Filter Include="Header Files\Core\Graphics">
       <UniqueIdentifier>{330a8d12-c553-4fe2-a988-f4036f831f36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Input">
+      <UniqueIdentifier>{97670580-939f-4449-a06b-13809ab6089f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core\Controller">
+      <UniqueIdentifier>{0302468f-2b52-461a-8f82-2735c85674f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Input">
+      <UniqueIdentifier>{85beccf3-c1b4-4809-8d3e-7db03cd752a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Context">
+      <UniqueIdentifier>{9daf26f5-3b60-4b3c-8fca-d222a9642c80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -33,10 +45,25 @@
     <ClCompile Include="Core\Graphics\window.cpp">
       <Filter>Source Files\Core\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Input\Input.cpp">
+      <Filter>Source Files\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Controller\Context.cpp">
+      <Filter>Source Files\Core\Context</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Graphics\window.hpp">
       <Filter>Header Files\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input\Input.hpp">
+      <Filter>Header Files\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Controller\Controller.hpp">
+      <Filter>Header Files\Core\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Controller\Context.hpp">
+      <Filter>Header Files\Core\Controller</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,11 +1,22 @@
 #include "Core/Graphics/window.hpp"
+#include "Core/Input/Input.hpp"
+#include "Core/Controller/Context.hpp"
+#include "Core/Controller/Controller.hpp"
 
 int main(void) {
-	using namespace Graphics;
-	Window window("Engine", 1024, 800);
+	using namespace Core::Graphics;
+	using namespace Core::Utils;
+	using namespace Core;
 
-	while (!window.closed())
-		window.update();
+	Window window("Engine", 1024, 800);
+	Input input;
+	Context con(&window, &input);
+
+	Controller controller;
+	controller.setRootContext(&con);
+
+	while (!controller.getRootContext()->getWindow()->closed())
+		controller.getRootContext()->getWindow()->update();
 
 	return 0;
 }
