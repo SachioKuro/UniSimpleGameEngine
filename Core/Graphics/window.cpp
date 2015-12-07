@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <iostream>
-#include <iomanip>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
