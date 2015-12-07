@@ -1,6 +1,7 @@
 #pragma once
 
 #include <GLFW\glfw3.h>
+#include <glm\glm.hpp>
 
 #define MAX_KEYS 1024
 #define MAX_BUTTONS 32
@@ -13,7 +14,7 @@ namespace Core {
 		public:
 			GLint Keys[MAX_KEYS];
 			GLint Buttons[MAX_BUTTONS];
-			GLfloat X, Y;
+			glm::vec2 Position;
 		public:
 			Input();
 			GLboolean isKeyPressed(GLuint key);

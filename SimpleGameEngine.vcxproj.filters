@@ -37,6 +37,9 @@
     <Filter Include="Source Files\Core\Context">
       <UniqueIdentifier>{9daf26f5-3b60-4b3c-8fca-d222a9642c80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Utils">
+      <UniqueIdentifier>{3c71ec11-9b74-4135-a5f7-7919eb80b963}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="Core\Controller\Context.cpp">
       <Filter>Source Files\Core\Context</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Graphics\shader.cpp">
+      <Filter>Source Files\Core\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,5 +71,17 @@
     <ClInclude Include="Core\Controller\Context.hpp">
       <Filter>Header Files\Core\Controller</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Graphics\shader.hpp">
+      <Filter>Header Files\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utils\output.hpp">
+      <Filter>Header Files\Core\Utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib" />
   </ItemGroup>
 </Project>

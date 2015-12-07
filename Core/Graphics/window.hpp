@@ -6,10 +6,10 @@
 
 namespace Core {
 	namespace Graphics {
-		typedef void(*handleInput)(const GLint* const, const GLint* const);
+		typedef void(*HandleInput)(const GLint* const, const GLint* const);
 		class Window {
 		private:
-			handleInput handleInputFunc;
+			HandleInput handleInputFunc;
 			GLFWwindow* window;
 			int width, height;
 			const char* title;
@@ -22,8 +22,8 @@ namespace Core {
 			inline void setWidth(int width) { this->width = width; }
 			inline void setHeight(int height) { this->height = height; }
 			inline void setClearColor(glm::vec4 clearColor) { this->clearColor; }
-			inline void setHandleInputFunc(handleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
-			inline handleInput getHandleInputFunc() { return handleInputFunc; }
+			inline void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
+			inline HandleInput getHandleInputFunc() { return handleInputFunc; }
 			void update() const;
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);
