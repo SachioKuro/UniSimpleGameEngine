@@ -4,8 +4,11 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#define CAMERA_POSITION vec3(6, 16, 16)
+
 namespace Core {
 	namespace Graphics {
+		using namespace glm;
 		typedef void(*HandleInput)(const GLint* const, const GLint* const);
 		class Window {
 		private:
@@ -14,6 +17,11 @@ namespace Core {
 			int width, height;
 			const char* title;
 			glm::vec4 clearColor;
+			GLuint vertexArrayID;
+			GLuint vertexBuffer;
+			GLuint programID;
+			GLuint matrixID;
+			mat4 view, projection, model, mvp;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();
@@ -24,7 +32,7 @@ namespace Core {
 			inline void setClearColor(glm::vec4 clearColor) { this->clearColor; }
 			inline void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			inline HandleInput getHandleInputFunc() { return handleInputFunc; }
-			void update() const;
+			void update(GLfloat* vertices, size_t size, uint renderMode) const;
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);
 			void setKeyCallback(GLFWkeyfun func);

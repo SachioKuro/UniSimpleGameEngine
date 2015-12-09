@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "../Graphics/window.hpp"
+#include "../Graphics/Window.hpp"
 #include "../Input/Input.hpp"
 
 namespace Core {

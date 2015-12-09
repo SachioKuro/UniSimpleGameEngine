@@ -116,12 +116,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Coding\Git\SimpleGameEngine\Libs\glm;C:\Coding\Git\SimpleGameEngine\Libs\glfw-3.1.2.bin.WIN64\include;C:\Coding\Git\SimpleGameEngine\Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\include;$(SolutionDir)Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>C:\Coding\Git\SimpleGameEngine\Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;C:\Coding\Git\SimpleGameEngine\Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -138,21 +138,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Controller\Context.cpp" />
-    <ClCompile Include="Core\Graphics\shader.cpp" />
-    <ClCompile Include="Core\Graphics\window.cpp" />
+    <ClCompile Include="Core\Graphics\Shader.cpp" />
+    <ClCompile Include="Core\Graphics\Window.cpp" />
     <ClCompile Include="Core\Input\Input.cpp" />
+    <ClCompile Include="Core\Terrain\Block.cpp" />
+    <ClCompile Include="Core\Terrain\Chunk.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Controller\Context.hpp" />
     <ClInclude Include="Core\Controller\Controller.hpp" />
-    <ClInclude Include="Core\Graphics\shader.hpp" />
-    <ClInclude Include="Core\Graphics\window.hpp" />
+    <ClInclude Include="Core\Graphics\Shader.hpp" />
+    <ClInclude Include="Core\Graphics\Window.hpp" />
     <ClInclude Include="Core\Input\Input.hpp" />
-    <ClInclude Include="Core\Utils\output.hpp" />
+    <ClInclude Include="Core\Terrain\Block.hpp" />
+    <ClInclude Include="Core\Terrain\Chunk.hpp" />
+    <ClInclude Include="Core\Utils\Output.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="Shader\simpleFragment.glsl" />
+    <None Include="Shader\simpleVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib">

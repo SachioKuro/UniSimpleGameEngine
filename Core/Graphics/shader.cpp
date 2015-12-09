@@ -35,6 +35,12 @@ namespace Core {
 			glShaderSource(vertexShaderID, 1, &vertexSourcePointer, NULL);
 			glCompileShader(vertexShaderID);
 
+			DEBUG_F("Compiling shader : %s\n", fragmentShaderPath);
+
+			char const* fragmentShaderPointer = fragmentShaderCode.c_str();
+			glShaderSource(fragmentShaderID, 1, &fragmentShaderPointer, NULL);
+			glCompileShader(fragmentShaderID);
+
 			// Check Shader
 			checkCode(vertexShaderID);
 			checkCode(fragmentShaderID);
@@ -56,7 +62,7 @@ namespace Core {
 			if (infoLogLength) {
 				vector<char> programErrorMessage(infoLogLength + 1);
 				glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
-				ERROR_F("%s\n", programErrorMessage[0]);
+				ERROR_F("%s\n", &programErrorMessage[0]);
 			}
 
 			// Clean
@@ -76,8 +82,8 @@ namespace Core {
 				while (getline(vertexShaderStream, line))
 					code += "\n" + line;
 				vertexShaderStream.close();
-			}
-			else {
+				return 1;
+			} else {
 				ERROR_F("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", path);
 				return 0;
 			}
@@ -93,7 +99,7 @@ namespace Core {
 			if (infoLogLength) {
 				vector<char> shaderErrorMessage(infoLogLength + 1);
 				glGetShaderInfoLog(shaderID, infoLogLength, NULL, &shaderErrorMessage[0]);
-				ERROR_F("%s\n", shaderErrorMessage[0]);
+				ERROR_F("%s\n", &shaderErrorMessage[0]);
 			}
 		}
 	}

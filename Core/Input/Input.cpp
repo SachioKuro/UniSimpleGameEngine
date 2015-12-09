@@ -1,5 +1,5 @@
 #include "Input.hpp"
-#include "../Graphics/window.hpp"
+#include "../Graphics/Window.hpp"
 
 namespace Core {
 	namespace Utils {
@@ -7,6 +7,7 @@ namespace Core {
 		Input* _input;
 		Input::Input() {
 			_input = this;
+
 		}
 
 		void Input::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
