@@ -4,14 +4,14 @@
 namespace Core {
 	namespace Terrain {
 		Chunk::Chunk() {
-			renderMode = RenderMode::WIRED;
+			renderMode = RenderMode::SOLID;
 			blocks = new Block**[CHUNK_SIZE_X];
 			for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
 				blocks[x] = new Block*[CHUNK_SIZE_Y];
 				for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 					blocks[x][y] = new Block[CHUNK_SIZE_Z];
 					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-						blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), (BlockType)0, GL_TRUE);
+							blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), (BlockType)0, ((x + y + z) & 1)? GL_TRUE : GL_FALSE);
 					}
 				}
 			}
@@ -338,18 +338,20 @@ namespace Core {
 			}
 			GLfloat* meshPointer = meshData;
 
-			if (renderMode == RenderMode::SOLID)
+			if (renderMode == RenderMode::SOLID) {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
 					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							buildBlockMesh(blocks[x][y][z].getPosition(), meshPointer);
-			else if (renderMode == RenderMode::WIRED)
+							if(blocks[x][y][z].isEnabled())
+								buildBlockMesh(blocks[x][y][z].getPosition(), meshPointer);
+			} else if (renderMode == RenderMode::WIRED) {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
 					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							buildBlockMeshWired(blocks[x][y][z].getPosition(), meshPointer);
+							if (blocks[x][y][z].isEnabled())
+								buildBlockMeshWired(blocks[x][y][z].getPosition(), meshPointer);
+			}
 		}
-
 
 	}
 }

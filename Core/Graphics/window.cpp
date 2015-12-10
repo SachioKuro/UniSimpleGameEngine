@@ -9,8 +9,8 @@
 #define ERROR_OUTPUT_ENABLED 1
 #define DEBUG_OUTPUT_ENABLED 1
 #include "../Utils/output.hpp"
-
-#include "Shader.hpp";
+#include "Shader.hpp"
+#include <gli\load.hpp>
 
 namespace Core {
 	namespace Graphics {
@@ -123,6 +123,10 @@ namespace Core {
 
 			glGenBuffers(1, &vertexBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+			gli::texture tex = gli::load("Textures/MarbleGreen001.dds");
+			if (tex.empty())
+				ERROR("Texture empty!");
 
 			return true;
 		}
