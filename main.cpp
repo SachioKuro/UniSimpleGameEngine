@@ -19,12 +19,6 @@ int main(void) {
 	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk;
 	chunk->buildMesh();
 
-	GLfloat g_vertex_buffer_data[] = {
-		 -1.0f, -1.0f, 0.0f,
-				 1.0f, -1.0f, 0.0f,
-				 0.0f,  1.0f, 0.0f,
-	};
-
 	size_t size = 36 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z;
 
 	while (!controller.getRootContext()->getWindow()->closed())

@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="Core\Controller\Context.cpp" />
     <ClCompile Include="Core\Graphics\Shader.cpp" />
+    <ClCompile Include="Core\Graphics\Texture.cpp" />
     <ClCompile Include="Core\Graphics\Window.cpp" />
     <ClCompile Include="Core\Input\Input.cpp" />
     <ClCompile Include="Core\Terrain\Block.cpp" />
@@ -149,10 +150,12 @@
     <ClInclude Include="Core\Controller\Context.hpp" />
     <ClInclude Include="Core\Controller\Controller.hpp" />
     <ClInclude Include="Core\Graphics\Shader.hpp" />
+    <ClInclude Include="Core\Graphics\Texture.hpp" />
     <ClInclude Include="Core\Graphics\Window.hpp" />
     <ClInclude Include="Core\Input\Input.hpp" />
     <ClInclude Include="Core\Terrain\Block.hpp" />
     <ClInclude Include="Core\Terrain\Chunk.hpp" />
+    <ClInclude Include="Core\Utils\GL.hpp" />
     <ClInclude Include="Core\Utils\Output.hpp" />
   </ItemGroup>
   <ItemGroup>

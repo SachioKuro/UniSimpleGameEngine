@@ -1,7 +1,6 @@
 #pragma once
 
-#include <GLFW\glfw3.h>
-#include <glm\glm.hpp>
+#include "../Utils/GL.hpp"
 
 #define MAX_KEYS 1024
 #define MAX_BUTTONS 32

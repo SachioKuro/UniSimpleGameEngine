@@ -13,19 +13,26 @@ namespace Core {
 		GLuint readShaderCode(const char* const, string&);
 		void checkCode(GLuint);
 
-		GLuint Shader::loadShaders(const char* const vertexShaderPath, const char* const fragmentShaderPath) {
+		Shader::Shader(const char* const vertexShaderPath, const char* const fragmentShaderPath) {
+			programID = load(vertexShaderPath, fragmentShaderPath);
+		}
 
+		Shader::~Shader() {
+			glDeleteProgram(programID);
+		}
+
+		GLuint Shader::load(const char* const vertexShaderPath, const char* const fragmentShaderPath) {
 			// Create Shaders
 			GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 			GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 
 			// Read Shader-Code
 			string vertexShaderCode;
-			if (!readShaderCode(vertexShaderPath, vertexShaderCode))
+			if (!readShaderCode(vertexShaderPath, vertexShaderCode)) 
 				return 0;
 
 			string fragmentShaderCode;
-			if (!readShaderCode(fragmentShaderPath, fragmentShaderCode))
+			if (!readShaderCode(fragmentShaderPath, fragmentShaderCode)) 
 				return 0;
 
 			// Compile Shader
@@ -44,24 +51,24 @@ namespace Core {
 			// Check Shader
 			checkCode(vertexShaderID);
 			checkCode(fragmentShaderID);
-			
+
 			// Linking to a program
 			DEBUG("Linking programm");
 
-			GLuint programID = glCreateProgram();
-			glAttachShader(programID, vertexShaderID);
-			glAttachShader(programID, fragmentShaderID);
-			glLinkProgram(programID);
+			GLuint pr_id = glCreateProgram();
+			glAttachShader(pr_id, vertexShaderID);
+			glAttachShader(pr_id, fragmentShaderID);
+			glLinkProgram(pr_id);
 
-			GLint result = GL_FALSE; 
+			GLint result = GL_FALSE;
 			int infoLogLength;
 
 			// Check the program
-			glGetProgramiv(programID, GL_LINK_STATUS, &result);
-			glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &infoLogLength);
+			glGetProgramiv(pr_id, GL_LINK_STATUS, &result);
+			glGetProgramiv(pr_id, GL_INFO_LOG_LENGTH, &infoLogLength);
 			if (infoLogLength) {
 				vector<char> programErrorMessage(infoLogLength + 1);
-				glGetProgramInfoLog(programID, infoLogLength, NULL, &programErrorMessage[0]);
+				glGetProgramInfoLog(pr_id, infoLogLength, NULL, &programErrorMessage[0]);
 				ERROR_F("%s\n", &programErrorMessage[0]);
 			}
 
@@ -69,7 +76,7 @@ namespace Core {
 			glDeleteShader(vertexShaderID);
 			glDeleteShader(fragmentShaderID);
 
-			return programID;
+			return pr_id;
 		}
 
 		/*
@@ -101,6 +108,30 @@ namespace Core {
 				glGetShaderInfoLog(shaderID, infoLogLength, NULL, &shaderErrorMessage[0]);
 				ERROR_F("%s\n", &shaderErrorMessage[0]);
 			}
+		}
+
+		void Shader::activate() const {
+			glUseProgram(programID);
+		}
+
+		void Shader::deactivate() const {
+			glUseProgram(0);
+		}
+
+		GLint Shader::getUniformLocation(const char * name)
+		{
+			GLint location = glGetUniformLocation(programID, name);
+			
+			// Todo: Cache the Location
+
+			if (location == -1)
+				ERROR_F("Could not find Location with the name: %s\n", name);
+
+			return location;
+		}
+
+		void Shader::setUniformMatrix4(const char* location, const glm::mat4& matrix) {
+			glUniformMatrix4fv(getUniformLocation(location), 1, GL_FALSE, &matrix[0][0]);
 		}
 	}
 }

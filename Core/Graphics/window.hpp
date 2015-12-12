@@ -1,8 +1,9 @@
 #pragma once
 
+#include "Shader.hpp"
 #include <string>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+
+#include "../Utils/GL.hpp"
 
 #define CAMERA_POSITION vec3(6, 16, 16)
 
@@ -14,12 +15,13 @@ namespace Core {
 		private:
 			HandleInput handleInputFunc;
 			GLFWwindow* window;
+			Shader* shader = nullptr;
 			int width, height;
 			const char* title;
 			glm::vec4 clearColor;
 			GLuint vertexArrayID;
 			GLuint vertexBuffer;
-			GLuint programID;
+			GLuint texBuffer;
 			GLuint matrixID;
 			mat4 view, projection, model, mvp;
 		public:

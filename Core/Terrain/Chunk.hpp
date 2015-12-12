@@ -16,16 +16,18 @@ namespace Core {
 			GLuint64 chunkID;
 			Block*** blocks;
 			GLfloat* meshData = 0;
+			GLfloat* texData = 0;
 		public:
 			Chunk();
 			~Chunk();
 			void buildMesh();
+			GLfloat* getTexData() const { return texData; }
 			GLfloat* getMeshData() const { return meshData; }
 			RenderMode getRenderMode() const { return  renderMode; }
 			// TODO: load existing Chunk
 			// GLboolean loadChunk(GLuint64 chunkID);
 		private:
-			void buildBlockMesh(vec3& position, GLfloat*& meshPointer);
+			void buildBlockMesh(vec3& position, GLfloat*& meshPointer, GLfloat*& texPointer);
 			void buildBlockMeshWired(vec3& position, GLfloat*& meshPointer);
 		};
 	}
