@@ -76,8 +76,8 @@
     <IntDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\Intermediates\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -129,11 +129,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Coding\Git\SimpleGameEngine\Libs\glm;C:\Coding\Git\SimpleGameEngine\Libs\glfw-3.1.2.bin.WIN64\include;C:\Coding\Git\SimpleGameEngine\Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\include;$(SolutionDir)Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Coding\Git\SimpleGameEngine\Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;C:\Coding\Git\SimpleGameEngine\Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
