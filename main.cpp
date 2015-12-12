@@ -23,7 +23,6 @@ int main(void) {
 
 	while (!controller.getRootContext()->getWindow()->closed())
 		controller.getRootContext()->getWindow()->update(chunk->getMeshData(), size, (GLuint)chunk->getRenderMode());
-		//controller.getRootContext()->getWindow()->update(g_vertex_buffer_data, 9);
 
 	delete chunk;
 
