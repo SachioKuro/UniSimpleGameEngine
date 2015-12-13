@@ -19,7 +19,19 @@ namespace Core {
 
 	void Context::handleInput(const GLint * const _keys, const GLint * const _buttons)
 	{
-		std::cout << "OK" << std::endl;
+		if (_buttons[GLFW_MOUSE_BUTTON_LEFT] == 1)
+		{
+			std::cout << "Linke Maustaste" << std::endl;
+		}
+		else if(_buttons[GLFW_MOUSE_BUTTON_RIGHT] == 1)
+		{
+			std::cout << "Rechte Maustaste" << std::endl;
+		}
+
+		if (_keys[GLFW_KEY_ESCAPE] == 1)
+		{
+			exit(1);
+		}
 	}
 
 	void Context::handleInput(const GLint * const _keys, const GLint * const _buttons, HandleInputFunc _func)
