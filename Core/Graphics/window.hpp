@@ -4,8 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#define CAMERA_POSITION vec3(6, 16, 16)
-
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
@@ -36,6 +34,7 @@ namespace Core {
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);
 			void setKeyCallback(GLFWkeyfun func);
+			vec3 cameraPosition = vec3(6, 16, 16);
 		private:
 			bool init();
 		};

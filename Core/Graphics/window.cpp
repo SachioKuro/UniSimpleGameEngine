@@ -113,7 +113,7 @@ namespace Core {
 			matrixID = glGetUniformLocation(programID, "MVP");
 
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-			view = lookAt(CAMERA_POSITION, vec3(0,0,0), vec3(0,1,0));
+			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
 
 			mvp = projection * view * model;
