@@ -19,7 +19,8 @@ namespace Core {
 			GLuint vertexBuffer;
 			GLuint programID;
 			GLuint matrixID;
-			mat4 view, projection, model, mvp;
+			glm::mat4 view, projection, model, mvp;
+			double xpos, ypos;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();
@@ -30,7 +31,8 @@ namespace Core {
 			inline void setClearColor(glm::vec4 clearColor) { this->clearColor; }
 			inline void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			inline HandleInput getHandleInputFunc() { return handleInputFunc; }
-			void update(GLfloat* vertices, size_t size, uint renderMode) const;
+			void updateCamera();
+			void update(GLfloat* vertices, size_t size, uint renderMode);
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);
 			void setKeyCallback(GLFWkeyfun func);

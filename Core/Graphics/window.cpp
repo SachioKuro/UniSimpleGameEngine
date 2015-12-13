@@ -34,7 +34,62 @@ namespace Core {
 			glfwTerminate();
 		}
 
-		void Window::update(GLfloat* vertices, size_t size, uint renderMode) const {
+		void Window::updateCamera() {
+
+			// Compute new orientation
+			double horizontalAngle = 0.0f;
+			double verticalAngle = 0.0f;
+			float mouseSpeed = 2.0f;
+			float deltaTime = 0.05f;
+			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xpos);
+			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - ypos);
+
+			// Direction : Spherical coordinates to Cartesian coordinates conversion
+			glm::vec3 direction(
+				cos(verticalAngle) * sin(horizontalAngle),
+				sin(verticalAngle),
+				cos(verticalAngle) * cos(horizontalAngle)
+				);
+
+			// Right vector
+			glm::vec3 right = glm::vec3(
+				sin(horizontalAngle - 3.14f / 2.0f),
+				0,
+				cos(horizontalAngle - 3.14f / 2.0f)
+				);
+
+			// Up vector : perpendicular to both direction and right
+			glm::vec3 up = glm::cross(right, direction);
+
+			// Move forward
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+				cameraPosition += direction * deltaTime * mouseSpeed;
+			}
+
+			// Move backward
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+				cameraPosition -= direction * deltaTime * mouseSpeed;
+			}
+
+			// Strafe right
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+				cameraPosition += right * deltaTime * mouseSpeed;
+			}
+
+			// Strafe left
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+				cameraPosition -= right * deltaTime * mouseSpeed;
+			}
+
+			view = lookAt(cameraPosition, cameraPosition+direction, vec3(0, 1, 0));
+			mvp = projection * view * model;
+			glfwGetCursorPos(window, &xpos, &ypos);
+
+		}
+
+		void Window::update(GLfloat* vertices, size_t size, uint renderMode) {
+			updateCamera();
+
 			glClear(GL_COLOR_BUFFER_BIT);
 			
 			glBufferData(GL_ARRAY_BUFFER, size * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
@@ -56,6 +111,7 @@ namespace Core {
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
+
 		}
 
 
@@ -111,6 +167,8 @@ namespace Core {
 			programID = Shader::loadShaders("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
 
 			matrixID = glGetUniformLocation(programID, "MVP");
+
+			glfwSetCursorPos(window, width / 2, height / 2);
 
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
