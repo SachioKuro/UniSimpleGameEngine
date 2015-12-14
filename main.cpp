@@ -19,10 +19,11 @@ int main(void) {
 	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk;
 	chunk->buildMesh();
 
-	size_t size = 36 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z;
-
 	while (!controller.getRootContext()->getWindow()->closed())
-		controller.getRootContext()->getWindow()->update(chunk->getMeshData(), size, (GLuint)chunk->getRenderMode());
+		controller
+			.getRootContext()
+			->getWindow()
+			->update(chunk, 1, chunk->getRenderMode());
 
 	delete chunk;
 

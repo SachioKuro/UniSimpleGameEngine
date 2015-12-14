@@ -26,33 +26,15 @@ namespace Core {
 
 		Window::~Window() {
 			delete shader;
-			glDeleteBuffers(1, &vertexBuffer);
-			glDeleteVertexArrays(1, &vertexArrayID);
 			glfwTerminate();
 		}
 
-		void Window::update(GLfloat* vertices, size_t size, uint renderMode) const {
-			glClear(GL_COLOR_BUFFER_BIT);
+		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) const {
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+			for (size_t i = 0; i < nrOfChunks; i++)
+				chunks[i].draw(mvp, renderMode);
 			
-			glBufferData(GL_ARRAY_BUFFER, size * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-
-			shader->activate();
-			shader->setUniformMatrix4("MVP", mvp);
-
-
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-			glEnableVertexAttribArray(0);
-
-			if (renderMode == 0) {
-				glDrawArrays(GL_TRIANGLES, 0, size);
-			}
-			else if (renderMode == 1) {
-				glDrawArrays(GL_LINES, 0, size);
-			}
-
-			glDisableVertexAttribArray(0);
-
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
@@ -107,8 +89,8 @@ namespace Core {
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
 
-			shader = new Shader("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
-
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LESS);
 
 			// Todo: get from Camera-Class
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
@@ -118,11 +100,7 @@ namespace Core {
 
 			mvp = projection * view * model;
 
-			glGenVertexArrays(1, &vertexArrayID);
-			glBindVertexArray(vertexArrayID);
-
-			glGenBuffers(1, &vertexBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+			
 			/*
 			texBuffer = Texture::load("Textures/MarbleGreen001.dds");
 

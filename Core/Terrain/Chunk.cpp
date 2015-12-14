@@ -5,6 +5,7 @@ namespace Core {
 	namespace Terrain {
 		Chunk::Chunk() {
 			renderMode = RenderMode::SOLID;
+			Shader::init();
 			blocks = new Block**[CHUNK_SIZE_X];
 			for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
 				blocks[x] = new Block*[CHUNK_SIZE_Y];
@@ -15,6 +16,15 @@ namespace Core {
 					}
 				}
 			}
+			glGenVertexArrays(1, &vertexArrayID);
+			glBindVertexArray(vertexArrayID);
+			glGenBuffers(1, &vertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+			glBufferData(
+				GL_ARRAY_BUFFER, 
+				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat), 
+				nullptr, 
+				GL_DYNAMIC_DRAW);
 		}
 
 		Chunk::~Chunk() {
@@ -26,8 +36,10 @@ namespace Core {
 				}
 				delete[] blocks[x];
 			}
-			delete[] blocks;
 
+
+			glDeleteBuffers(1, &vertexBuffer);
+			glDeleteVertexArrays(1, &vertexArrayID);
 			DEBUG_F("Deleted Chunk [%llu]\n", chunkID);
 		}
 
@@ -403,7 +415,6 @@ namespace Core {
 			*(meshPointer++) = position.z - 1;
 		}
 
-
 		void Chunk::buildMesh() {
 			if (!meshData) {
 				meshData = new GLfloat[36 * 3 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z];
@@ -429,5 +440,26 @@ namespace Core {
 			}
 		}
 
+		void Chunk::draw(mat4 mvp, RenderMode renderMode) const {
+			glBufferSubData(
+				GL_ARRAY_BUFFER, 
+				0, 
+				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat), 
+				meshData);
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+
+
+			// TODO 1 Shader for 1 Block
+			blocks[0][0][0].shader->activate();
+			blocks[0][0][0].shader->setUniformMatrix4("MVP", mvp);
+
+			if (renderMode == RenderMode::SOLID) {
+				glDrawArrays(GL_TRIANGLES, 0, 36 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z);
+			}
+			else if (renderMode == RenderMode::WIRED) {
+				glDrawArrays(GL_LINES, 0, 36 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z);
+			}
+		}
 	}
 }

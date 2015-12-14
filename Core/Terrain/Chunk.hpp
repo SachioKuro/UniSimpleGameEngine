@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Block.hpp"
+#include "../Graphics/Shader.hpp"
 
 #define CHUNK_SIZE_X 8
 #define CHUNK_SIZE_Y 8
@@ -9,6 +10,7 @@
 
 namespace Core {
 	namespace Terrain {
+		using namespace Graphics;
 		enum class RenderMode { SOLID, WIRED };
 		class Chunk {
 		private:
@@ -17,6 +19,9 @@ namespace Core {
 			Block*** blocks;
 			GLfloat* meshData = 0;
 			GLfloat* texData = 0;
+			Shader* shader;
+			GLuint vertexArrayID;
+			GLuint vertexBuffer;
 		public:
 			Chunk();
 			~Chunk();
@@ -24,6 +29,7 @@ namespace Core {
 			GLfloat* getTexData() const { return texData; }
 			GLfloat* getMeshData() const { return meshData; }
 			RenderMode getRenderMode() const { return  renderMode; }
+			void draw(mat4 mvp, RenderMode renderMode) const;
 			// TODO: load existing Chunk
 			// GLboolean loadChunk(GLuint64 chunkID);
 		private:

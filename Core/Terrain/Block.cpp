@@ -3,10 +3,15 @@
 namespace Core {
 	namespace Terrain {
 		Block::Block(vec3 position, BlockType type, GLboolean enabled) 
-			: position(position), type(type), enabled(enabled) {
+			: position(position), type(type), enabled(enabled) 
+		{
+			shader = Shader::Block;
 		}
 
 		Block::Block() : Block::Block(vec3(0.0f), (BlockType)0, GL_TRUE) {}
+
+		Block::~Block() {
+		}
 
 		void Block::enable() {
 			this->enabled = GL_TRUE;
@@ -19,5 +24,7 @@ namespace Core {
 		void Block::transformTo(BlockType type) {
 			this->type = type;
 		}
+
+
 	}
 }
