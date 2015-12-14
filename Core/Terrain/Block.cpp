@@ -25,6 +25,11 @@ namespace Core {
 			this->type = type;
 		}
 
-
+		void Block::draw(GLubyte renderType, mat4 mvp, GLint index) const {
+			shader->activate();
+			shader->setUniformMatrix4("MVP", mvp);
+			glDrawArrays(renderType, index, 36);
+			shader->deactivate();
+		}
 	}
 }

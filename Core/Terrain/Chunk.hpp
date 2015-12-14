@@ -18,6 +18,7 @@ namespace Core {
 			GLuint64 chunkID;
 			Block*** blocks;
 			GLfloat* meshData = 0;
+			GLuint verticesCount;
 			GLfloat* texData = 0;
 			Shader* shader;
 			GLuint vertexArrayID;
@@ -29,7 +30,11 @@ namespace Core {
 			GLfloat* getTexData() const { return texData; }
 			GLfloat* getMeshData() const { return meshData; }
 			RenderMode getRenderMode() const { return  renderMode; }
+			void setRenderMode(RenderMode _renderMode) { renderMode = _renderMode; }
 			void draw(mat4 mvp, RenderMode renderMode) const;
+			void switchRenderMode() { 
+				renderMode = renderMode == RenderMode::SOLID ? RenderMode::WIRED : RenderMode::SOLID; 
+			}
 			// TODO: load existing Chunk
 			// GLboolean loadChunk(GLuint64 chunkID);
 		private:

@@ -40,7 +40,7 @@ namespace Core {
 			vec3 getPosition() const { return position; }
 			inline GLboolean isEnabled() const { return enabled; };
 			inline BlockType getBlockType() const { return type; };
-			void draw(mat4 mvp) const;
+			void draw(GLubyte renderType, mat4 mvp, GLint index) const;
 		};
 	}
 }

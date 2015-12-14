@@ -12,18 +12,19 @@ namespace Core {
 				for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 					blocks[x][y] = new Block[CHUNK_SIZE_Z];
 					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-							blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), (BlockType)0, ((x + y + z) & 1)? GL_TRUE : GL_FALSE);
+						blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), (BlockType)0, ((x + y + z) & 1) ? GL_TRUE : GL_FALSE);
 					}
 				}
 			}
+			verticesCount = 0;
 			glGenVertexArrays(1, &vertexArrayID);
 			glBindVertexArray(vertexArrayID);
 			glGenBuffers(1, &vertexBuffer);
 			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 			glBufferData(
-				GL_ARRAY_BUFFER, 
-				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat), 
-				nullptr, 
+				GL_ARRAY_BUFFER,
+				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
+				nullptr,
 				GL_DYNAMIC_DRAW);
 		}
 
@@ -278,6 +279,8 @@ namespace Core {
 			*(meshPointer++) = position.z - 1;
 			*(texPointer++) = 0.0f;
 			*(texPointer++) = 0.0f;
+
+			verticesCount += 108;
 		}
 
 		void Chunk::buildBlockMeshWired(vec3& position, GLfloat*& meshPointer) {
@@ -429,9 +432,10 @@ namespace Core {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
 					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							if(blocks[x][y][z].isEnabled())
+							if (blocks[x][y][z].isEnabled())
 								buildBlockMesh(blocks[x][y][z].getPosition(), meshPointer, texPointer);
-			} else if (renderMode == RenderMode::WIRED) {
+			}
+			else if (renderMode == RenderMode::WIRED) {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
 					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
@@ -442,23 +446,31 @@ namespace Core {
 
 		void Chunk::draw(mat4 mvp, RenderMode renderMode) const {
 			glBufferSubData(
-				GL_ARRAY_BUFFER, 
-				0, 
-				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat), 
+				GL_ARRAY_BUFFER,
+				0,
+				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
 				meshData);
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-
-
-			// TODO 1 Shader for 1 Block
-			blocks[0][0][0].shader->activate();
-			blocks[0][0][0].shader->setUniformMatrix4("MVP", mvp);
-
+			
+			GLint index = 0;
 			if (renderMode == RenderMode::SOLID) {
-				glDrawArrays(GL_TRIANGLES, 0, 36 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z);
+				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
+					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
+						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
+							if (blocks[x][y][z].isEnabled()) {
+								index += 36;
+								blocks[x][y][z].draw(GL_TRIANGLES, mvp, index);
+							}
 			}
 			else if (renderMode == RenderMode::WIRED) {
-				glDrawArrays(GL_LINES, 0, 36 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z);
+				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
+					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
+						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
+							if (blocks[x][y][z].isEnabled()) {
+								index += 36;
+								blocks[x][y][z].draw(GL_LINE, mvp, index);
+							}
 			}
 		}
 	}
