@@ -86,9 +86,6 @@ namespace Core {
 			updateCamera();
 
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			
-			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
-
 
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -162,13 +159,8 @@ namespace Core {
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
 
 			mvp = projection * view * model;
-
 			
-			/*
-			texBuffer = Texture::load("Textures/MarbleGreen001.dds");
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texBuffer);*/
+			
 
 			return true;
 		}

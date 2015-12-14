@@ -12,7 +12,7 @@ namespace Core {
 				for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 					blocks[x][y] = new Block[CHUNK_SIZE_Z];
 					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-						blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), (BlockType)0, ((x + y + z) & 1) ? GL_TRUE : GL_FALSE);
+						blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), ((x + y + z) & 2) ? BlockType::Stone : BlockType::Grass, ((x + y + z) & 1) ? GL_TRUE : GL_FALSE);
 					}
 				}
 			}
@@ -26,6 +26,16 @@ namespace Core {
 				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
 				nullptr,
 				GL_DYNAMIC_DRAW);
+
+			glGenBuffers(1, &texBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+			glBufferData(
+				GL_ARRAY_BUFFER,
+				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
+				nullptr,
+				GL_STATIC_DRAW);
+			textureIDs[0] = Texture::load("Textures/SoilMud001.dds");
+			textureIDs[1] = Texture::load("Textures/MarbleGreen001.dds");
 		}
 
 		Chunk::~Chunk() {
@@ -445,6 +455,7 @@ namespace Core {
 		}
 
 		void Chunk::draw(mat4 mvp, RenderMode renderMode) const {
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 			glBufferSubData(
 				GL_ARRAY_BUFFER,
 				0,
@@ -453,14 +464,34 @@ namespace Core {
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
 			
+			glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+			glBufferSubData(
+				GL_ARRAY_BUFFER,
+				0,
+				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
+				texData);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
+
+			glActiveTexture(GL_TEXTURE0);
+			//glBindTexture(GL_TEXTURE_2D, textureIDs[1]);
+
 			GLint index = 0;
 			if (renderMode == RenderMode::SOLID) {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
 					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
 							if (blocks[x][y][z].isEnabled()) {
-								index += 36;
+								switch (blocks[x][y][z].getBlockType()) {
+									case BlockType::Grass:
+										glBindTexture(GL_TEXTURE_2D, textureIDs[0]);
+										break;
+									case BlockType::Stone:
+										glBindTexture(GL_TEXTURE_2D, textureIDs[1]);
+									break;
+								}
 								blocks[x][y][z].draw(GL_TRIANGLES, mvp, index);
+								index += 36;
 							}
 			}
 			else if (renderMode == RenderMode::WIRED) {
@@ -468,8 +499,8 @@ namespace Core {
 					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
 							if (blocks[x][y][z].isEnabled()) {
-								index += 36;
 								blocks[x][y][z].draw(GL_LINE, mvp, index);
+								index += 36;
 							}
 			}
 		}

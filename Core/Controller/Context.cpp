@@ -31,7 +31,6 @@ namespace Core {
 		if (_keys[GLFW_KEY_ESCAPE] == 1)
 		{
 			glfwSetWindowShouldClose(window->getGLFWwindow(), GL_TRUE);
-			exit(1);
 		}
 	}
 

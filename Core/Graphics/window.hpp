@@ -20,6 +20,7 @@ namespace Core {
 			GLuint matrixID;
 			glm::mat4 view, projection, model, mvp;
 			double xpos, ypos;
+			GLuint texBuffer;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();

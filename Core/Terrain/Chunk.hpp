@@ -2,6 +2,7 @@
 
 #include "Block.hpp"
 #include "../Graphics/Shader.hpp"
+#include "../Graphics/Texture.hpp"
 
 #define CHUNK_SIZE_X 8
 #define CHUNK_SIZE_Y 8
@@ -23,6 +24,8 @@ namespace Core {
 			Shader* shader;
 			GLuint vertexArrayID;
 			GLuint vertexBuffer;
+			GLuint texBuffer;
+			GLuint	textureIDs[2];
 		public:
 			Chunk();
 			~Chunk();
