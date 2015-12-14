@@ -17,6 +17,7 @@ namespace Core {
 			~Shader();
 			void activate() const;
 			void deactivate() const;
+			void setUniformVector3(const char* location, const glm::vec3& vector);
 			void setUniformMatrix4(const char* location, const glm::mat4& matrix);
 		private:
 			GLint getUniformLocation(const char* name);

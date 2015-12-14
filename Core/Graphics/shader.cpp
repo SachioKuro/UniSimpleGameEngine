@@ -143,5 +143,9 @@ namespace Core {
 		void Shader::setUniformMatrix4(const char* location, const glm::mat4& matrix) {
 			glUniformMatrix4fv(getUniformLocation(location), 1, GL_FALSE, &matrix[0][0]);
 		}
+
+		void Shader::setUniformVector3(const char* location, const glm::vec3& vector) {
+			glUniform3f(getUniformLocation(location), vector.x, vector.y, vector.z);
+		}
 	}
 }

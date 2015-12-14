@@ -1,13 +1,13 @@
 #version 330
 
 layout(location = 0) in vec3 vertexPos_ms;
-layout(location = 1) in vec2 vertexUV;
 
-//out vec2 UV;
+out vec3 blendC;
 
 uniform mat4 MVP;
+uniform vec3 BlendColor = vec3(1.0f,1.0f,1.0f);
 
 void main() {
 	gl_Position = MVP * vec4(vertexPos_ms, 1);
-	//UV = vertexUV;
+	blendC = BlendColor;
 }
