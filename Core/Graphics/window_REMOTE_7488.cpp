@@ -1,13 +1,16 @@
-#include "Window.hpp"
-#include "Texture.hpp"
-
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
+#include "window.hpp"
 #include "../Input/Input.hpp"
 
 #define ERROR_OUTPUT_ENABLED 1
 #define DEBUG_OUTPUT_ENABLED 1
-#include "../Utils/Output.hpp"
+#include "../Utils/output.hpp"
+#include "Shader.hpp"
+#include <gli\load.hpp>
 
 namespace Core {
 	namespace Graphics {
@@ -25,7 +28,9 @@ namespace Core {
 		}
 
 		Window::~Window() {
-			delete shader;
+			glDeleteBuffers(1, &vertexBuffer);
+			glDeleteVertexArrays(1, &vertexArrayID);
+			glDeleteProgram(programID);
 			glfwTerminate();
 		}
 
@@ -82,20 +87,28 @@ namespace Core {
 
 		}
 
-		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(GLfloat* vertices, size_t size, uint renderMode) {
 			updateCamera();
 
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT);
 			
+			glBufferData(GL_ARRAY_BUFFER, size * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+			
+			glUseProgram(programID);
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 
 
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-			for (size_t i = 0; i < nrOfChunks; i++)
-				chunks[i].draw(mvp, renderMode);
+			if (renderMode == 0) {
+				glDrawArrays(GL_TRIANGLES, 0, size);
+			} else if (renderMode == 1) {
+				glDrawArrays(GL_LINES, 0, size);
+			}
 			
+			glDisableVertexAttribArray(0);
+
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 
@@ -151,24 +164,27 @@ namespace Core {
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
 
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS);
+			programID = Shader::loadShaders("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
+
+			matrixID = glGetUniformLocation(programID, "MVP");
 
 			glfwSetCursorPos(window, width / 2, height / 2);
 
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
-
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
 
 			mvp = projection * view * model;
 
-			
-			/*
-			texBuffer = Texture::load("Textures/MarbleGreen001.dds");
+			glGenVertexArrays(1, &vertexArrayID);
+			glBindVertexArray(vertexArrayID);
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texBuffer);*/
+			glGenBuffers(1, &vertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+			gli::texture tex = gli::load("Textures/MarbleGreen001.dds");
+			if (tex.empty())
+				ERROR("Texture empty!");
 
 			return true;
 		}

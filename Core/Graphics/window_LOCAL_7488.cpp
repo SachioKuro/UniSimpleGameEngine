@@ -29,76 +29,14 @@ namespace Core {
 			glfwTerminate();
 		}
 
-		void Window::updateCamera() {
-
-			// Compute new orientation
-			double horizontalAngle = 0.0f;
-			double verticalAngle = 0.0f;
-			float mouseSpeed = 2.0f;
-			float deltaTime = 0.05f;
-			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xpos);
-			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - ypos);
-
-			// Direction : Spherical coordinates to Cartesian coordinates conversion
-			glm::vec3 direction(
-				cos(verticalAngle) * sin(horizontalAngle),
-				sin(verticalAngle),
-				cos(verticalAngle) * cos(horizontalAngle)
-				);
-
-			// Right vector
-			glm::vec3 right = glm::vec3(
-				sin(horizontalAngle - 3.14f / 2.0f),
-				0,
-				cos(horizontalAngle - 3.14f / 2.0f)
-				);
-
-			// Up vector : perpendicular to both direction and right
-			glm::vec3 up = glm::cross(right, direction);
-
-			// Move forward
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-				cameraPosition += direction * deltaTime * mouseSpeed;
-			}
-
-			// Move backward
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-				cameraPosition -= direction * deltaTime * mouseSpeed;
-			}
-
-			// Strafe right
-			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-				cameraPosition += right * deltaTime * mouseSpeed;
-			}
-
-			// Strafe left
-			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-				cameraPosition -= right * deltaTime * mouseSpeed;
-			}
-
-			view = lookAt(cameraPosition, cameraPosition+direction, vec3(0, 1, 0));
-			mvp = projection * view * model;
-			glfwGetCursorPos(window, &xpos, &ypos);
-
-		}
-
-		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) {
-			updateCamera();
-
+		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) const {
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			
-			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
-
-
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 			for (size_t i = 0; i < nrOfChunks; i++)
 				chunks[i].draw(mvp, renderMode);
 			
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-
 		}
 
 
@@ -154,11 +92,10 @@ namespace Core {
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 
-			glfwSetCursorPos(window, width / 2, height / 2);
-
+			// Todo: get from Camera-Class
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
-
+			view = lookAt(CAMERA_POSITION, vec3(0, 0, 0), vec3(0, 1, 0));
+			// Todo: refactor
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
 
 			mvp = projection * view * model;

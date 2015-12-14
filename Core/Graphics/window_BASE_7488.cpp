@@ -1,13 +1,16 @@
-#include "Window.hpp"
-#include "Texture.hpp"
-
+#define GLEW_STATIC
+#include <GL/glew.h>
+#include <glm/glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
+#include "window.hpp"
 #include "../Input/Input.hpp"
 
 #define ERROR_OUTPUT_ENABLED 1
 #define DEBUG_OUTPUT_ENABLED 1
-#include "../Utils/Output.hpp"
+#include "../Utils/output.hpp"
+#include "Shader.hpp"
+#include <gli\load.hpp>
 
 namespace Core {
 	namespace Graphics {
@@ -25,80 +28,34 @@ namespace Core {
 		}
 
 		Window::~Window() {
-			delete shader;
+			glDeleteBuffers(1, &vertexBuffer);
+			glDeleteVertexArrays(1, &vertexArrayID);
+			glDeleteProgram(programID);
 			glfwTerminate();
 		}
 
-		void Window::updateCamera() {
-
-			// Compute new orientation
-			double horizontalAngle = 0.0f;
-			double verticalAngle = 0.0f;
-			float mouseSpeed = 2.0f;
-			float deltaTime = 0.05f;
-			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xpos);
-			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - ypos);
-
-			// Direction : Spherical coordinates to Cartesian coordinates conversion
-			glm::vec3 direction(
-				cos(verticalAngle) * sin(horizontalAngle),
-				sin(verticalAngle),
-				cos(verticalAngle) * cos(horizontalAngle)
-				);
-
-			// Right vector
-			glm::vec3 right = glm::vec3(
-				sin(horizontalAngle - 3.14f / 2.0f),
-				0,
-				cos(horizontalAngle - 3.14f / 2.0f)
-				);
-
-			// Up vector : perpendicular to both direction and right
-			glm::vec3 up = glm::cross(right, direction);
-
-			// Move forward
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-				cameraPosition += direction * deltaTime * mouseSpeed;
-			}
-
-			// Move backward
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-				cameraPosition -= direction * deltaTime * mouseSpeed;
-			}
-
-			// Strafe right
-			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-				cameraPosition += right * deltaTime * mouseSpeed;
-			}
-
-			// Strafe left
-			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-				cameraPosition -= right * deltaTime * mouseSpeed;
-			}
-
-			view = lookAt(cameraPosition, cameraPosition+direction, vec3(0, 1, 0));
-			mvp = projection * view * model;
-			glfwGetCursorPos(window, &xpos, &ypos);
-
-		}
-
-		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) {
-			updateCamera();
-
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+		void Window::update(GLfloat* vertices, size_t size, uint renderMode) const {
+			glClear(GL_COLOR_BUFFER_BIT);
 			
+			glBufferData(GL_ARRAY_BUFFER, size * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+			
+			glUseProgram(programID);
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 
 
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-			for (size_t i = 0; i < nrOfChunks; i++)
-				chunks[i].draw(mvp, renderMode);
+			if (renderMode == 0) {
+				glDrawArrays(GL_TRIANGLES, 0, size);
+			} else if (renderMode == 1) {
+				glDrawArrays(GL_LINES, 0, size);
+			}
 			
+			glDisableVertexAttribArray(0);
+
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-
 		}
 
 
@@ -151,24 +108,25 @@ namespace Core {
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
 
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LESS);
+			programID = Shader::loadShaders("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
 
-			glfwSetCursorPos(window, width / 2, height / 2);
+			matrixID = glGetUniformLocation(programID, "MVP");
 
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
-
+			view = lookAt(CAMERA_POSITION, vec3(0,0,0), vec3(0,1,0));
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
 
 			mvp = projection * view * model;
 
-			
-			/*
-			texBuffer = Texture::load("Textures/MarbleGreen001.dds");
+			glGenVertexArrays(1, &vertexArrayID);
+			glBindVertexArray(vertexArrayID);
 
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texBuffer);*/
+			glGenBuffers(1, &vertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+			gli::texture tex = gli::load("Textures/MarbleGreen001.dds");
+			if (tex.empty())
+				ERROR("Texture empty!");
 
 			return true;
 		}

@@ -29,6 +29,10 @@ namespace Core {
 			glfwTerminate();
 		}
 
+<<<<<<< HEAD
+		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) const {
+			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+=======
 		void Window::updateCamera() {
 
 			// Compute new orientation
@@ -82,16 +86,20 @@ namespace Core {
 
 		}
 
-		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(GLfloat* vertices, size_t size, uint renderMode) {
 			updateCamera();
 
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT);
 			
+			glBufferData(GL_ARRAY_BUFFER, size * 3 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+			
+			glUseProgram(programID);
 			glUniformMatrix4fv(matrixID, 1, GL_FALSE, &mvp[0][0]);
 
 
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+>>>>>>> Camera
 
 			for (size_t i = 0; i < nrOfChunks; i++)
 				chunks[i].draw(mvp, renderMode);
@@ -154,11 +162,17 @@ namespace Core {
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 
+<<<<<<< HEAD
+			// Todo: get from Camera-Class
+			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+			view = lookAt(CAMERA_POSITION, vec3(0, 0, 0), vec3(0, 1, 0));
+			// Todo: refactor
+=======
 			glfwSetCursorPos(window, width / 2, height / 2);
 
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
-
+>>>>>>> Camera
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
 
 			mvp = projection * view * model;
