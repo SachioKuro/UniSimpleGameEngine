@@ -2,6 +2,7 @@
 
 #include "../Graphics/Shader.hpp"
 #include "../Utils/GL.hpp"
+#include "../Graphics/Texture.hpp"
 
 namespace Core {
 	namespace Terrain {
@@ -23,7 +24,7 @@ namespace Core {
 			Presentation of an Block in our world
 		*/
 		class Block {
-		private:
+		protected:
 			// Position in our world
 			vec3 position;
 			BlockType type;
@@ -40,7 +41,7 @@ namespace Core {
 			vec3 getPosition() const { return position; }
 			inline GLboolean isEnabled() const { return enabled; };
 			inline BlockType getBlockType() const { return type; };
-			void draw(GLubyte renderType, mat4 mvp, GLint index) const;
+			virtual void draw(GLubyte renderType, mat4 mvp, GLint index) const;
 		};
 	}
 }

@@ -7,7 +7,7 @@ namespace Core {
 		class Shader
 		{
 		public:
-			static Shader *Block;
+			static Shader *Block, *Sky;
 		private:
 			GLuint programID;
 		public:

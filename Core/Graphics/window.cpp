@@ -82,7 +82,7 @@ namespace Core {
 
 		}
 
-		void Window::update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
 			updateCamera();
 
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -90,9 +90,11 @@ namespace Core {
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-			for (size_t i = 0; i < nrOfChunks; i++)
-				chunks[i].draw(mvp, renderMode);
-			
+			skybox->getSkyboxBlock().draw(GL_TRIANGLES, mvp, 0);
+
+			//for (size_t i = 0; i < nrOfChunks; i++)
+			//	chunks[i].draw(mvp, renderMode);
+
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 
@@ -153,7 +155,7 @@ namespace Core {
 
 			glfwSetCursorPos(window, width / 2, height / 2);
 
-			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
 
 			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);

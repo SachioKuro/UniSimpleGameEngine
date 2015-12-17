@@ -72,6 +72,12 @@
     <ClCompile Include="Core\Graphics\Texture.cpp">
       <Filter>Source Files\Core\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Terrain\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Terrain\SkyboxBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input\Input.hpp">
@@ -104,6 +110,12 @@
     <ClInclude Include="Core\Utils\GL.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Terrain\Skybox.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Terrain\SkyboxBlock.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
@@ -113,6 +125,9 @@
     <None Include="Shader\simpleVertex.glsl">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Shader\skyFragment.glsl" />
+    <None Include="Shader\skyVertex.glsl" />
+    <None Include="Libs\FreeImage\x64\FreeImage.dll" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib" />

@@ -3,6 +3,7 @@
 #include <string>
 
 #include "../Terrain/Chunk.hpp"
+#include "../Terrain/Skybox.hpp"
 #include "../Utils/GL.hpp"
 
 namespace Core {
@@ -31,7 +32,7 @@ namespace Core {
 			inline void setClearColor(glm::vec4 clearColor) { this->clearColor; }
 			inline void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			inline HandleInput getHandleInputFunc() { return handleInputFunc; }
-			void update(Terrain::Chunk* chunks, size_t nrOfChunks, Terrain::RenderMode renderMode);
+			void update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
 			GLFWwindow* getGLFWwindow() { return window; }
 			void updateCamera();
 			bool closed() const;

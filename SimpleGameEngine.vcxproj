@@ -70,14 +70,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <IncludePath>$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libs\FreeImage\x64;$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libs\FreeImage\x64;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(Platform)\$(Configuration)\Intermediates\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)Libs\FreeImage\x64;$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glew-1.13.0\include\;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015\;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Libs\FreeImage\x64;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -116,12 +116,12 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\include;$(SolutionDir)Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Libs\FreeImage\x64;$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\include;$(SolutionDir)Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\FreeImage\x64;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -129,11 +129,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\include;$(SolutionDir)Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Libs\Simple OpenGL Image Library;$(SolutionDir)Libs\gli;$(SolutionDir)Libs\glm;$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\include;$(SolutionDir)Libs\glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FreeImage.lib;glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -144,6 +144,8 @@
     <ClCompile Include="Core\Input\Input.cpp" />
     <ClCompile Include="Core\Terrain\Block.cpp" />
     <ClCompile Include="Core\Terrain\Chunk.cpp" />
+    <ClCompile Include="Core\Terrain\Skybox.cpp" />
+    <ClCompile Include="Core\Terrain\SkyboxBlock.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,13 +157,18 @@
     <ClInclude Include="Core\Input\Input.hpp" />
     <ClInclude Include="Core\Terrain\Block.hpp" />
     <ClInclude Include="Core\Terrain\Chunk.hpp" />
+    <ClInclude Include="Core\Terrain\Skybox.hpp" />
+    <ClInclude Include="Core\Terrain\SkyboxBlock.hpp" />
     <ClInclude Include="Core\Utils\GL.hpp" />
     <ClInclude Include="Core\Utils\Output.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="Libs\FreeImage\x64\FreeImage.dll" />
     <None Include="Shader\simpleFragment.glsl" />
     <None Include="Shader\simpleVertex.glsl" />
+    <None Include="Shader\skyFragment.glsl" />
+    <None Include="Shader\skyVertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib">

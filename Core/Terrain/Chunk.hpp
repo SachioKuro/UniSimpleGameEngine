@@ -25,7 +25,7 @@ namespace Core {
 			GLuint vertexArrayID;
 			GLuint vertexBuffer;
 			GLuint texBuffer;
-			GLuint	textureIDs[2];
+			Texture texture[2];
 		public:
 			Chunk();
 			~Chunk();
@@ -34,7 +34,7 @@ namespace Core {
 			GLfloat* getMeshData() const { return meshData; }
 			RenderMode getRenderMode() const { return  renderMode; }
 			void setRenderMode(RenderMode _renderMode) { renderMode = _renderMode; }
-			void draw(mat4 mvp, RenderMode renderMode) const;
+			void draw(mat4 mvp, RenderMode renderMode);
 			void switchRenderMode() { 
 				renderMode = renderMode == RenderMode::SOLID ? RenderMode::WIRED : RenderMode::SOLID; 
 			}

@@ -10,7 +10,7 @@ namespace Core {
 	namespace Graphics {
 		using namespace std;
 
-		Shader* Shader::Block;
+		Shader *Shader::Block, *Shader::Sky;
 
 		GLuint readShaderCode(const char* const, string&);
 		void checkCode(GLuint);
@@ -122,10 +122,12 @@ namespace Core {
 
 		void Shader::init() {
 			Block = new Shader("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
+			Sky = new Shader("Shader/skyVertex.glsl", "Shader/skyFragment.glsl");
 		}
 
 		void Shader::del() {
 			delete Block;
+			delete Sky;
 		}
 
 		GLint Shader::getUniformLocation(const char * name)

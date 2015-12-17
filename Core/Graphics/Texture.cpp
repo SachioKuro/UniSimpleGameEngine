@@ -4,6 +4,7 @@
 
 namespace Core {
 	namespace Graphics {
+		
 		GLuint Texture::load(const char * texturePath) {
 			using namespace gli;
 
@@ -17,7 +18,7 @@ namespace Core {
 			gl l_gl;
 			gl::format const l_format = l_gl.translate(l_tex.format());
 			GLenum l_target = l_gl.translate(l_tex.target());
-
+			
 			GLuint l_texID = 0;
 			glGenTextures(1, &l_texID);
 			glBindTexture(l_target, l_texID);
@@ -27,7 +28,7 @@ namespace Core {
 			glTexParameteri(l_target, GL_TEXTURE_SWIZZLE_G, l_format.Swizzle[1]);
 			glTexParameteri(l_target, GL_TEXTURE_SWIZZLE_B, l_format.Swizzle[2]);
 			glTexParameteri(l_target, GL_TEXTURE_SWIZZLE_A, l_format.Swizzle[3]);
-
+			
 			glm::tvec3<GLsizei> const l_dimensions(l_tex.dimensions());
 			GLsizei const l_faceTotal = static_cast<GLsizei>(l_tex.layers() * l_tex.faces());
 
@@ -99,6 +100,89 @@ namespace Core {
 						}
 					}
 			return l_texID;
+		}
+
+		void Texture::retrieveData(BYTE* data) {
+			FREE_IMAGE_FORMAT format = FreeImage_GetFileType(texturePath);
+
+			if (format == FIF_UNKNOWN)
+				format = FreeImage_GetFIFFromFilename(texturePath);
+
+			if (format == FIF_UNKNOWN)
+				return GL_FALSE;
+
+			FIBITMAP* bits;
+
+			if (FreeImage_FIFSupportsReading(format))
+				bits = FreeImage_Load(format, texturePath);
+
+			if (!bits)
+				return false;
+
+			data = FreeImage_GetBits(bits);
+			width = FreeImage_GetWidth(bits);
+			height = FreeImage_GetHeight(bits);
+			bytesPerPixel = FreeImage_GetBPP(bits);
+
+			if (data == 0 || width == 0 || height == 0)
+				return GL_FALSE;
+		}
+
+		GLboolean Texture::load2D(const char* texturePath, GLboolean withMipMaps) {
+			BYTE* data;
+			retrieveData(data);
+
+			glGenTextures(1, &textureID);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+
+			GLuint spFormat = (bytesPerPixel == 24) ? GL_BGR : (bytesPerPixel == 8) ? GL_LUMINANCE : 0;
+			GLuint inFormat = (bytesPerPixel == 24) ? GL_RGB : GL_DEPTH_COMPONENT;
+
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, spFormat, GL_UNSIGNED_BYTE, data);
+
+			if (withMipMaps)
+				glGenerateMipmap(GL_TEXTURE_2D);
+
+			FreeImage_Unload(bits);
+
+			glGenSamplers(1, &textureSampler);
+
+			return GL_TRUE;
+		}
+		
+		GLboolean Texture::loadCubeMap(vector<const char*> texturePath, GLboolean withMipMaps) {
+			
+			glGenTextures(1, &textureID);
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+			BYTE* data;			
+			for (size_t i = 0; i < texturePath.size(), i++) {
+				data = load2D(texturePath[i]);
+				GLuint spFormat = (bytesPerPixel == 24) ? GL_BGR : (bytesPerPixel == 8) ? GL_LUMINANCE : 0;
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, spFormat, GL_UNSIGNED_BYTE, data);
+				
+			}
+
+
+			return GL_TRUE;
+		}
+
+		void Texture::setFiltering(GLint magnification, GLint minification) const {
+			glSamplerParameteri(textureSampler, GL_TEXTURE_MAG_FILTER, magnification);
+			glSamplerParameteri(textureSampler, GL_TEXTURE_MIN_FILTER, minification);
+		}
+		
+		void Texture::setCubeBoxParam() const {
+			glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		}
+		
+		void Texture::bind(GLuint unit) const {
+			glActiveTexture(GL_TEXTURE0 + unit);
+			glBindTexture(GL_TEXTURE_2D, textureID);
+			glBindSampler(unit, textureSampler);
 		}
 	}
 }

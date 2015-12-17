@@ -19,13 +19,16 @@ int main(void) {
 	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk;
 	chunk->buildMesh();
 
+	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox;
+
 	while (!controller.getRootContext()->getWindow()->closed())
 		controller
 			.getRootContext()
 			->getWindow()
-			->update(chunk, 1, chunk->getRenderMode());
+			->update(chunk, skybox, 1, chunk->getRenderMode());
 
 	delete chunk;
+	delete skybox;
 
 	return 0;
 }

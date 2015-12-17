@@ -34,8 +34,10 @@ namespace Core {
 				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
 				nullptr,
 				GL_STATIC_DRAW);
-			textureIDs[0] = Texture::load("Textures/SoilMud001.dds");
-			textureIDs[1] = Texture::load("Textures/MarbleGreen001.dds");
+			
+			
+			texture[0].load2D("Textures/MarbleGreen001.dds");
+			texture[1].load2D("Textures/SoilMud002.dds");
 		}
 
 		Chunk::~Chunk() {
@@ -454,7 +456,8 @@ namespace Core {
 			}
 		}
 
-		void Chunk::draw(mat4 mvp, RenderMode renderMode) const {
+		void Chunk::draw(mat4 mvp, RenderMode renderMode)  {
+			glBindVertexArray(vertexArrayID);
 			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 			glBufferSubData(
 				GL_ARRAY_BUFFER,
@@ -473,9 +476,6 @@ namespace Core {
 			glEnableVertexAttribArray(1);
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
 
-			glActiveTexture(GL_TEXTURE0);
-			//glBindTexture(GL_TEXTURE_2D, textureIDs[1]);
-
 			GLint index = 0;
 			if (renderMode == RenderMode::SOLID) {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
@@ -484,10 +484,10 @@ namespace Core {
 							if (blocks[x][y][z].isEnabled()) {
 								switch (blocks[x][y][z].getBlockType()) {
 									case BlockType::Grass:
-										glBindTexture(GL_TEXTURE_2D, textureIDs[0]);
+										texture[1].bind(0);
 										break;
 									case BlockType::Stone:
-										glBindTexture(GL_TEXTURE_2D, textureIDs[1]);
+										texture[0].bind(0);
 									break;
 								}
 								blocks[x][y][z].draw(GL_TRIANGLES, mvp, index);
