@@ -90,10 +90,18 @@ namespace Core {
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-			skybox->getSkyboxBlock().draw(GL_TRIANGLES, mvp, 0);
+			skybox->getSkyboxBlock().updateModelMatrix(cameraPosition);
+			skybox->getSkyboxBlock().setMVP(mvp);
+			skybox->getSkyboxBlock().draw(mvp);
 
-			//for (size_t i = 0; i < nrOfChunks; i++)
-			//	chunks[i].draw(mvp, renderMode);
+			for (size_t i = 0; i < nrOfChunks; i++)
+				chunks[i].draw(mvp, renderMode);
+
+			GLenum error = glGetError();
+			if (error != GL_NO_ERROR && !(errorFlags & 0x0001)) {
+				std::cout << error << std::endl;
+				errorFlags |= 0x0001;
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -122,13 +130,12 @@ namespace Core {
 
 			glfwSetErrorCallback(error_callback);
 
-			// Todo
+
 			glfwWindowHint(GLFW_SAMPLES, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
 			window = glfwCreateWindow(width, height, title, NULL, NULL);
 
 			if (!window) {
@@ -138,9 +145,11 @@ namespace Core {
 			}
 
 			glfwMakeContextCurrent(window);
-			glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+			//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-			glewExperimental = true;
+
+			
+			glewExperimental = GL_TRUE;
 			if (glewInit() != GLEW_OK) {
 				ERROR("Failed to initialize GLEW\n");
 				return false;
@@ -149,6 +158,7 @@ namespace Core {
 			glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
+			glfwSwapInterval(0.0);
 
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
@@ -158,8 +168,7 @@ namespace Core {
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
 
-			model = mat4(1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, .0f, .0f, .0f, 1.0f, .0f, -.5f, -.5f, .0f, 1.0f);
-
+			model = mat4(1.0f);
 			mvp = projection * view * model;
 			
 			

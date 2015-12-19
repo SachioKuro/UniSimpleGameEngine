@@ -102,7 +102,7 @@ namespace Core {
 			return l_texID;
 		}
 
-		void Texture::retrieveData(BYTE* data) {
+		GLboolean Texture::load2D(const char* texturePath, GLboolean withMipMaps) {
 			FREE_IMAGE_FORMAT format = FreeImage_GetFileType(texturePath);
 
 			if (format == FIF_UNKNOWN)
@@ -119,18 +119,13 @@ namespace Core {
 			if (!bits)
 				return false;
 
-			data = FreeImage_GetBits(bits);
+			BYTE* data = FreeImage_GetBits(bits);
 			width = FreeImage_GetWidth(bits);
 			height = FreeImage_GetHeight(bits);
 			bytesPerPixel = FreeImage_GetBPP(bits);
 
 			if (data == 0 || width == 0 || height == 0)
 				return GL_FALSE;
-		}
-
-		GLboolean Texture::load2D(const char* texturePath, GLboolean withMipMaps) {
-			BYTE* data;
-			retrieveData(data);
 
 			glGenTextures(1, &textureID);
 			glBindTexture(GL_TEXTURE_2D, textureID);
@@ -149,24 +144,6 @@ namespace Core {
 
 			return GL_TRUE;
 		}
-		
-		GLboolean Texture::loadCubeMap(vector<const char*> texturePath, GLboolean withMipMaps) {
-			
-			glGenTextures(1, &textureID);
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-			BYTE* data;			
-			for (size_t i = 0; i < texturePath.size(), i++) {
-				data = load2D(texturePath[i]);
-				GLuint spFormat = (bytesPerPixel == 24) ? GL_BGR : (bytesPerPixel == 8) ? GL_LUMINANCE : 0;
-				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, spFormat, GL_UNSIGNED_BYTE, data);
-				
-			}
-
-
-			return GL_TRUE;
-		}
 
 		void Texture::setFiltering(GLint magnification, GLint minification) const {
 			glSamplerParameteri(textureSampler, GL_TEXTURE_MAG_FILTER, magnification);
@@ -178,7 +155,7 @@ namespace Core {
 			glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glSamplerParameteri(textureSampler, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		}
-		
+
 		void Texture::bind(GLuint unit) const {
 			glActiveTexture(GL_TEXTURE0 + unit);
 			glBindTexture(GL_TEXTURE_2D, textureID);

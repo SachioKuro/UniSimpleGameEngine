@@ -3,6 +3,7 @@
 
 namespace Core {
 	namespace Terrain {
+
 		Chunk::Chunk() {
 			renderMode = RenderMode::SOLID;
 			Shader::init();
@@ -17,6 +18,8 @@ namespace Core {
 				}
 			}
 			verticesCount = 0;
+			buildMesh();
+#if 0
 			glGenVertexArrays(1, &vertexArrayID);
 			glBindVertexArray(vertexArrayID);
 			glGenBuffers(1, &vertexBuffer);
@@ -35,7 +38,33 @@ namespace Core {
 				nullptr,
 				GL_STATIC_DRAW);
 			
-			
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
+#if 1
+			glGenVertexArrays(1, &vertexArrayID);
+			glBindVertexArray(vertexArrayID);
+			glGenBuffers(1, &vertexBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+			glBufferData(
+				GL_ARRAY_BUFFER,
+				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
+				meshData,
+				GL_DYNAMIC_DRAW);
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+
+			glGenBuffers(1, &texBuffer);
+			glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
+			glBufferData(
+				GL_ARRAY_BUFFER,
+				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
+				texData,
+				GL_STATIC_DRAW);
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
+
+			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+#endif	
 			texture[0].load2D("Textures/MarbleGreen001.dds");
 			texture[1].load2D("Textures/SoilMud002.dds");
 		}
@@ -456,7 +485,9 @@ namespace Core {
 			}
 		}
 
+
 		void Chunk::draw(mat4 mvp, RenderMode renderMode)  {
+#if 0
 			glBindVertexArray(vertexArrayID);
 			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 			glBufferSubData(
@@ -476,6 +507,10 @@ namespace Core {
 			glEnableVertexAttribArray(1);
 			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
 
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
+
+			glBindVertexArray(vertexArrayID);
 			GLint index = 0;
 			if (renderMode == RenderMode::SOLID) {
 				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
@@ -503,6 +538,7 @@ namespace Core {
 								index += 36;
 							}
 			}
+			glBindVertexArray(0);
 		}
 	}
 }

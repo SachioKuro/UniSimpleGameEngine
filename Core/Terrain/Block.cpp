@@ -34,7 +34,6 @@ namespace Core {
 			// Alternative: glDrawElements mit einem Pointer
 			glDrawArrays(renderType, index, 36);
 			shader->deactivate();
-			timer = timer > 2000 ? 0 : timer;
 		}
 	}
 }

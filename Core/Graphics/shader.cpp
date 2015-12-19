@@ -98,6 +98,9 @@ namespace Core {
 			}
 		}
 
+		/*
+			Check Shader-Code 
+		*/
 		inline void checkCode(GLuint shaderID) {
 			GLint result = GL_FALSE; // Compilationresult
 			int infoLogLength;
@@ -136,8 +139,10 @@ namespace Core {
 			
 			// Todo: Cache the Location
 
-			if (location == -1)
+			if (location == -1 && !(errorFlags & 0x0001)) {
 				ERROR_F("Could not find Location with the name: %s\n", name);
+				errorFlags |= 0x0001;
+			}
 
 			return location;
 		}

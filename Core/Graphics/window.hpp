@@ -19,9 +19,10 @@ namespace Core {
 			const char* title;
 			glm::vec4 clearColor;
 			GLuint matrixID;
-			glm::mat4 view, projection, model, mvp;
+			glm::mat4 view = mat4(1.0f), projection, model, mvp;
 			double xpos, ypos;
 			GLuint texBuffer;
+			GLbyte errorFlags = 0x0000;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();
@@ -38,7 +39,7 @@ namespace Core {
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);
 			void setKeyCallback(GLFWkeyfun func);
-			vec3 cameraPosition = vec3(6, 16, 16);
+			vec3 cameraPosition = vec3(0, 0, 0);
 		private:
 			bool init();
 		};

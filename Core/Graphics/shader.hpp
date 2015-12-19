@@ -10,6 +10,7 @@ namespace Core {
 			static Shader *Block, *Sky;
 		private:
 			GLuint programID;
+			GLchar errorFlags = 0x0000;
 		public:
 			static void init();
 			static void del();

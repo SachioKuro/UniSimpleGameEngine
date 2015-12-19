@@ -8,17 +8,17 @@ int main(void) {
 	using namespace Core::Utils;
 	using namespace Core;
 
+	GLenum error = glGetError();
 	Window window("Engine", 1024, 800);
 	Input input;
 	Context con(&window, &input);
+
 
 	Controller controller;
 	controller.setRootContext(&con);
 
 	// TestChamber:
 	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk;
-	chunk->buildMesh();
-
 	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox;
 
 	while (!controller.getRootContext()->getWindow()->closed())
