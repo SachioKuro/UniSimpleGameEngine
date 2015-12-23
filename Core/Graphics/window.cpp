@@ -1,17 +1,7 @@
 #include "Window.hpp"
-#include "Texture.hpp"
-
-#include <glm\gtc\matrix_transform.hpp>
-
-#include "../Input/Input.hpp"
-
-#define ERROR_OUTPUT_ENABLED 1
-#define DEBUG_OUTPUT_ENABLED 1
-#include "../Utils/Output.hpp"
 
 namespace Core {
 	namespace Graphics {
-
 		void error_callback(int, const char*);
 		void windowResize_callback(GLFWwindow*, int, int);
 
@@ -25,7 +15,6 @@ namespace Core {
 		}
 
 		Window::~Window() {
-			delete shader;
 			glfwTerminate();
 		}
 
@@ -34,7 +23,7 @@ namespace Core {
 			// Compute new orientation
 			double horizontalAngle = 0.0f;
 			double verticalAngle = 0.0f;
-			float mouseSpeed = 2.0f;
+			float mouseSpeed = 1.0f;
 			float deltaTime = 0.05f;
 			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xpos);
 			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - ypos);
@@ -79,24 +68,21 @@ namespace Core {
 			view = lookAt(cameraPosition, cameraPosition+direction, vec3(0, 1, 0));
 			mvp = projection * view * model;
 			glfwGetCursorPos(window, &xpos, &ypos);
-
 		}
 
 		void Window::update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
 			updateCamera();
 
 			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+			
+			// Draw Skybox
+			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-			skybox->getSkyboxBlock().updateModelMatrix(cameraPosition);
-			skybox->getSkyboxBlock().setMVP(mvp);
-			skybox->getSkyboxBlock().draw(mvp);
-
+			// Draw Chunks
 			for (size_t i = 0; i < nrOfChunks; i++)
 				chunks[i].draw(mvp, renderMode);
 
+			// Error-Checking
 			GLenum error = glGetError();
 			if (error != GL_NO_ERROR && !(errorFlags & 0x0001)) {
 				std::cout << error << std::endl;
@@ -105,7 +91,6 @@ namespace Core {
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
-
 		}
 
 
@@ -121,58 +106,64 @@ namespace Core {
 			glfwSetKeyCallback(window, func);
 		}
 
-
 		bool Window::init() {
+			// Initializes GLFW
 			if (!glfwInit()) {
 				ERROR("Failed to initialize GLFW\n");
 				return false;
 			}
 
+			// Error-Handling
 			glfwSetErrorCallback(error_callback);
 
-
+			// GLFW-Settings
 			glfwWindowHint(GLFW_SAMPLES, 4);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+			// Creates GLFW-Window
 			window = glfwCreateWindow(width, height, title, NULL, NULL);
 
+			// Checks if GLFW-Window was successfully created
 			if (!window) {
 				glfwTerminate();
 				ERROR("Failed to create window\n");
 				return false;
 			}
 
+			// sets context
 			glfwMakeContextCurrent(window);
-			//glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+			glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-
-			
+			// Initializes glew
 			glewExperimental = GL_TRUE;
 			if (glewInit() != GLEW_OK) {
 				ERROR("Failed to initialize GLEW\n");
 				return false;
 			}
 
+			INFO(glfwGetVersionString());
+			INFO(glGetString(GL_VERSION));
+
 			glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
-			glfwSwapInterval(0.0);
 
+#ifdef DEBUG
+			glfwSwapInterval(0.0);
+#endif // DEBUG
+
+			// Initializes shader
+			Shader::init();
+
+			// Enables Depth-Testing
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
 
-			glfwSetCursorPos(window, width / 2, height / 2);
-
+			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-			view = lookAt(cameraPosition, vec3(0,1,0), vec3(0,1,0));
-
-			model = mat4(1.0f);
-			mvp = projection * view * model;
 			
-			
-
 			return true;
 		}
 
@@ -181,6 +172,7 @@ namespace Core {
 		}
 
 		void windowResize_callback(GLFWwindow* window, int width, int height) {
+			// Gets pointer to the GLFW-Window
 			Window* _window = (Window*)glfwGetWindowUserPointer(window);
 			_window->setWidth(width);
 			_window->setHeight(height);

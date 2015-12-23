@@ -1,544 +1,109 @@
 #include "Chunk.hpp"
-#include "../Utils/Output.hpp"
 
 namespace Core {
 	namespace Terrain {
-
 		Chunk::Chunk() {
-			renderMode = RenderMode::SOLID;
-			Shader::init();
-			blocks = new Block**[CHUNK_SIZE_X];
+			setRenderMode(RenderMode::SOLID);
+
+			// Define texturemap
+			texture.load2D("Textures/texturemap.png");
+			texture.setCubeBoxParam();
+			texture.defineTextureInfo(vec2(8, 8), vec2(256, 256));
+
+			// Creates blocks
+			TextureID tex; 
+			vec2 texOffSet;
+			blocks = new Block***[CHUNK_SIZE_X];
 			for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-				blocks[x] = new Block*[CHUNK_SIZE_Y];
+				blocks[x] = new Block**[CHUNK_SIZE_Y];
 				for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
-					blocks[x][y] = new Block[CHUNK_SIZE_Z];
+					blocks[x][y] = new Block*[CHUNK_SIZE_Z];
 					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-						blocks[x][y][z] = Block(vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z), ((x + y + z) & 2) ? BlockType::Stone : BlockType::Grass, ((x + y + z) & 1) ? GL_TRUE : GL_FALSE);
+						BlockType btype = (x + y + z) & 1 ? BlockType::GRASS : BlockType::STONE;
+
+						switch (btype) {
+							case BlockType::GRASS:	tex = TextureID::GRASS01; break;
+							case BlockType::STONE:	tex = TextureID::STONE01; break;
+							default:				tex = TextureID::NONE;
+						}
+
+						blocks[x][y][z] =
+							new Block(
+								vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z),
+								btype, texture.getTextureOffset(tex), texture.getTexturePercentage(), mode, 
+								(x+y+z) & 2 ? GL_TRUE : GL_FALSE);
 					}
 				}
 			}
-			verticesCount = 0;
-			buildMesh();
-#if 0
-			glGenVertexArrays(1, &vertexArrayID);
-			glBindVertexArray(vertexArrayID);
-			glGenBuffers(1, &vertexBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-			glBufferData(
-				GL_ARRAY_BUFFER,
-				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
-				nullptr,
-				GL_DYNAMIC_DRAW);
 
-			glGenBuffers(1, &texBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-			glBufferData(
-				GL_ARRAY_BUFFER,
-				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
-				nullptr,
-				GL_STATIC_DRAW);
-			
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-#endif
-#if 1
-			glGenVertexArrays(1, &vertexArrayID);
-			glBindVertexArray(vertexArrayID);
-			glGenBuffers(1, &vertexBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-			glBufferData(
-				GL_ARRAY_BUFFER,
-				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
-				meshData,
-				GL_DYNAMIC_DRAW);
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-
-			glGenBuffers(1, &texBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-			glBufferData(
-				GL_ARRAY_BUFFER,
-				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
-				texData,
-				GL_STATIC_DRAW);
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
-
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-#endif	
-			texture[0].load2D("Textures/MarbleGreen001.dds");
-			texture[1].load2D("Textures/SoilMud002.dds");
+			// Set renderer
+			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, vertexCount, mode);
+			renderer->useShader(Shader::Block);
 		}
 
 		Chunk::~Chunk() {
-			for (size_t x = 0; x < CHUNK_SIZE_X; x++)
-			{
-				for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
-				{
+			for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
+				for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
+					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
+						delete[] blocks[x][y][z];
+					}
 					delete[] blocks[x][y];
 				}
 				delete[] blocks[x];
 			}
-
-
-			glDeleteBuffers(1, &vertexBuffer);
-			glDeleteVertexArrays(1, &vertexArrayID);
+			delete[] blocks;
+			delete renderer;
 			DEBUG_F("Deleted Chunk [%llu]\n", chunkID);
 		}
 
-		void Chunk::buildBlockMesh(vec3& position, GLfloat*& meshPointer, GLfloat*& texPointer) {
-			/* Face Front */
-			// Triangle LU-F
-			// LLF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// RUF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// LUF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// Triangle RL-F
-			// LLF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// RLF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// RUF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			/* Face Right */
-			// Triangle LL-R
-			// RLF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// RLB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// RUF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// Triangle RU-R
-			// RLB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// RUB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// RUF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			/* Face Back */
-			// Triangle LU-B
-			// LUB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// RUB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// RLB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// Triangle RL-B
-			// LUB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// RLB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// LLB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			/* Face Left */
-			// Triangle LL-L
-			// LLB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// LLF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// LUB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// Triangle RU-L
-			// LLF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// LUF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// LUB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			/* Face Lower */
-			// Triangle LL-L
-			// LLF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// LLB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// RLB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// Triangle RU-L
-			// LLF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// RLF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// RLB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			/* Face Upper */
-			// Triangle LL-U
-			// LUF
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 1.0f;
-			// RUF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// LUB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-			// Triangle RU-U
-			// RUF
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 1.0f;
-			// RUB
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 1.0f;
-			*(texPointer++) = 0.0f;
-			// LUB
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(texPointer++) = 0.0f;
-			*(texPointer++) = 0.0f;
-
-			verticesCount += 108;
-		}
-
-		void Chunk::buildBlockMeshWired(vec3& position, GLfloat*& meshPointer) {
-			/* Face Front */
-			// Left
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			// Upper
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			// V-LL-RU
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			// Lower
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			// Right
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			/* Face Right */
-			// Upper
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			// V-RU-LL
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			// Lower
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			// Right
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			/* Face Back */
-			// Upper
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			// V-RU-LL
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			// Lower
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			// Right
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			/* Face Left */
-			// Upper
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			// V-RU-LL
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			// Lower
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			/* Face Lower */
-			// V-LU-RL
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y;
-			*(meshPointer++) = position.z - 1;
-			/* Face Upper */
-			// V-LU-RL
-			*(meshPointer++) = position.x;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z;
-			*(meshPointer++) = position.x + 1;
-			*(meshPointer++) = position.y + 1;
-			*(meshPointer++) = position.z - 1;
-		}
-
-		void Chunk::buildMesh() {
-			if (!meshData) {
-				meshData = new GLfloat[36 * 3 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z];
-			}
-			if (!texData) {
-				texData = new GLfloat[36 * 2 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z];
-			}
-			GLfloat* texPointer = texData;
-			GLfloat* meshPointer = meshData;
-
-			if (renderMode == RenderMode::SOLID) {
-				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
-					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
-						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							if (blocks[x][y][z].isEnabled())
-								buildBlockMesh(blocks[x][y][z].getPosition(), meshPointer, texPointer);
-			}
-			else if (renderMode == RenderMode::WIRED) {
-				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
-					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
-						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							if (blocks[x][y][z].isEnabled())
-								buildBlockMeshWired(blocks[x][y][z].getPosition(), meshPointer);
+		void Chunk::setRenderMode(RenderMode mode) {
+			// Setup rendermode
+			this->mode = mode;
+			switch (mode) {
+			case RenderMode::SOLID:
+				glEnable(GL_DEPTH_TEST);
+				glDisable(GL_BLEND);
+				vertexCount = 36;
+				break;
+			case RenderMode::WIRED:
+				glEnable(GL_BLEND);
+				glDisable(GL_DEPTH_TEST);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				vertexCount = 23;
+				break;
+			default:
+				break;
 			}
 		}
 
-
-		void Chunk::draw(mat4 mvp, RenderMode renderMode)  {
-#if 0
-			glBindVertexArray(vertexArrayID);
-			glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-			glBufferSubData(
-				GL_ARRAY_BUFFER,
-				0,
-				108 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
-				meshData);
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-			
-			glBindBuffer(GL_ARRAY_BUFFER, texBuffer);
-			glBufferSubData(
-				GL_ARRAY_BUFFER,
-				0,
-				72 * CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z * sizeof(GLfloat),
-				texData);
-			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), (void*)0);
-
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-#endif
-
-			glBindVertexArray(vertexArrayID);
-			GLint index = 0;
-			if (renderMode == RenderMode::SOLID) {
-				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
-					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
-						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							if (blocks[x][y][z].isEnabled()) {
-								switch (blocks[x][y][z].getBlockType()) {
-									case BlockType::Grass:
-										texture[1].bind(0);
-										break;
-									case BlockType::Stone:
-										texture[0].bind(0);
-									break;
-								}
-								blocks[x][y][z].draw(GL_TRIANGLES, mvp, index);
-								index += 36;
-							}
+		void Chunk::toggleRenderMode() {
+			switch (mode) {
+			case RenderMode::SOLID:	setRenderMode(RenderMode::WIRED); break;
+			case RenderMode::WIRED:	setRenderMode(RenderMode::SOLID); break;
+			default:				break;
 			}
-			else if (renderMode == RenderMode::WIRED) {
-				for (size_t x = 0; x < CHUNK_SIZE_X; x++)
-					for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
-						for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
-							if (blocks[x][y][z].isEnabled()) {
-								blocks[x][y][z].draw(GL_LINE, mvp, index);
-								index += 36;
-							}
-			}
-			glBindVertexArray(0);
+		}
+
+		void Chunk::draw(mat4 mvp, RenderMode renderMode) {
+			// Setup rendering
+			renderer->activateShader();
+			renderer->start();
+
+			// Set shadervariables
+			renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
+			renderer->getActiveShader()->setUniformInteger("renderType", mode == RenderMode::SOLID ? 0 : 1);
+
+			// Submit Blocks
+			for (size_t x = 0; x < CHUNK_SIZE_X; x++)
+				for (size_t y = 0; y < CHUNK_SIZE_Y; y++)
+					for (size_t z = 0; z < CHUNK_SIZE_Z; z++)
+						if (blocks[x][y][z]->isEnabled()) blocks[x][y][z]->submit(renderer);
+
+			// Ready for render
+			renderer->end();
+			// Starts rendering
+			renderer->draw();
+			renderer->deactivateShader();
 		}
 	}
 }

@@ -8,8 +8,8 @@ int main(void) {
 	using namespace Core::Utils;
 	using namespace Core;
 
-	GLenum error = glGetError();
 	Window window("Engine", 1024, 800);
+	GLenum error = glGetError();
 	Input input;
 	Context con(&window, &input);
 
@@ -19,7 +19,7 @@ int main(void) {
 
 	// TestChamber:
 	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk;
-	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox;
+	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);
 
 	while (!controller.getRootContext()->getWindow()->closed())
 		controller

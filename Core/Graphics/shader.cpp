@@ -1,10 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
 #include "shader.hpp"
-
-#include "../Utils/output.hpp"
 
 namespace Core {
 	namespace Graphics {
@@ -133,18 +127,26 @@ namespace Core {
 			delete Sky;
 		}
 
-		GLint Shader::getUniformLocation(const char * name)
+		GLint Shader::getUniformLocation(const char* name)
 		{
-			GLint location = glGetUniformLocation(programID, name);
-			
-			// Todo: Cache the Location
+			// Caches the location
+			IntCache location = locationCache[name];
+			if (location.value == -2) {
+				locationCache[name] = glGetUniformLocation(programID, name);
+				location = locationCache[name];
+			}
 
-			if (location == -1 && !(errorFlags & 0x0001)) {
+			// Checkes if the location was found
+			if (location.value == -1 && !(errorFlags & 0x0001)) {
 				ERROR_F("Could not find Location with the name: %s\n", name);
 				errorFlags |= 0x0001;
 			}
 
-			return location;
+			return location.value;
+		}
+
+		void Shader::setUniformInteger(const char* location, const int value) {
+			glUniform1i(getUniformLocation(location), value);
 		}
 
 		void Shader::setUniformMatrix4(const char* location, const glm::mat4& matrix) {

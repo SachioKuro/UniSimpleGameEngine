@@ -2,7 +2,9 @@
 
 #include "Block.hpp"
 #include "../Graphics/Shader.hpp"
+#include "../Graphics/Renderer.hpp"
 #include "../Graphics/Texture.hpp"
+#include "../Utils/Output.hpp"
 
 #define CHUNK_SIZE_X 8
 #define CHUNK_SIZE_Y 8
@@ -12,37 +14,26 @@
 namespace Core {
 	namespace Terrain {
 		using namespace Graphics;
-		enum class RenderMode { SOLID, WIRED };
+		/* A chunk in our world */
 		class Chunk {
 		private:
-			RenderMode renderMode;
 			GLuint64 chunkID;
-			Block*** blocks;
-			GLfloat* meshData = 0;
-			GLuint verticesCount;
-			GLfloat* texData = 0;
-			Shader* shader;
-			GLuint vertexArrayID;
-			GLuint vertexBuffer;
-			GLuint texBuffer;
-			Texture texture[2];
+			Block**** blocks;
+			Renderer* renderer;
+			RenderMode mode = RenderMode::SOLID;
+			Texture texture;
+			GLuint vertexCount = 36;
 		public:
 			Chunk();
 			~Chunk();
-			void buildMesh();
-			GLfloat* getTexData() const { return texData; }
-			GLfloat* getMeshData() const { return meshData; }
-			RenderMode getRenderMode() const { return  renderMode; }
-			void setRenderMode(RenderMode _renderMode) { renderMode = _renderMode; }
+
+			void setRenderMode(RenderMode mode);
+			RenderMode getRenderMode() const { return mode; }
+			/* Switch between Rendermodes */
+			void toggleRenderMode();
+
+			/* Draws the chunk */
 			void draw(mat4 mvp, RenderMode renderMode);
-			void switchRenderMode() { 
-				renderMode = renderMode == RenderMode::SOLID ? RenderMode::WIRED : RenderMode::SOLID; 
-			}
-			// TODO: load existing Chunk
-			// GLboolean loadChunk(GLuint64 chunkID);
-		private:
-			void buildBlockMesh(vec3& position, GLfloat*& meshPointer, GLfloat*& texPointer);
-			void buildBlockMeshWired(vec3& position, GLfloat*& meshPointer);
 		};
 	}
 }

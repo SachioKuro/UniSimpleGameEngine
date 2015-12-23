@@ -1,14 +1,12 @@
-#version 430
+#version 330
 
-in vec2 uv;
-in vec3 blendC;
+in vec4 _color;
+in vec3 _uv;
 
-out vec3 color;
+out vec4 color;
 
-uniform sampler2D texSampler;
+uniform samplerCube texSampler;
 
 void main() {
-	//color = texture(texSampler, UV).rgb;
-	color = texture(texSampler, uv).rgb;
-	//color = vec3(uv, 1.0);
+	color = texture(texSampler, _uv) + _color;
 }

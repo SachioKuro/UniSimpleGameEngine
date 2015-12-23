@@ -1,5 +1,4 @@
 #include "Input.hpp"
-#include "../Graphics/Window.hpp"
 
 namespace Core {
 	namespace Utils {
@@ -7,14 +6,15 @@ namespace Core {
 		Input* _input;
 		Input::Input() {
 			_input = this;
-
 		}
 
 		void Input::key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 		{
-			Graphics::Window* _window = (Graphics::Window*)glfwGetWindowUserPointer(window);
+			// Get pointer to window
+			Window* _window = (Window*)glfwGetWindowUserPointer(window);
+			// Update keymap
 			Keys[key] = action != GLFW_RELEASE;
-
+			// Forward to inputfunction
 			_window->getHandleInputFunc()(Keys, Buttons);
 		}
 
@@ -30,9 +30,11 @@ namespace Core {
 
 		void Input::button_callback(GLFWwindow * window, int button, int action, int mods)
 		{
-			Graphics::Window* _window = (Graphics::Window*)glfwGetWindowUserPointer(window);
+			// Get pointer to window
+			Window* _window = (Window*)glfwGetWindowUserPointer(window);
+			// Update buttonmap
 			Buttons[button] = action != GLFW_RELEASE;
-
+			// Forward to inputfunction
 			_window->getHandleInputFunc()(Keys, Buttons);
 		}
 
@@ -51,7 +53,7 @@ namespace Core {
 			return Keys[key];
 		}
 
-		GLboolean Utils::Input::isButtonPressed(GLuint button)
+		GLboolean Input::isButtonPressed(GLuint button)
 		{
 			return Buttons[button];
 		}

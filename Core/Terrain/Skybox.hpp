@@ -6,21 +6,23 @@
 namespace Core {
 	namespace Terrain {
 		using namespace glm;
-		using namespace Graphics;
 
+		/* Global Light */
 		struct GlobalLight {
 			vec3 color = vec3(1.0f, 1.0f, 1.0f);
 			vec3 position;
 			GLfloat intensity;
 		};
 
+		/* Manages one Skybox */
 		class Skybox {
 		private:
-			SkyboxBlock skyboxBlock;
+			// Physical part of the skybox 
+			SkyboxBlock* skyboxBlock;
 		public:
-			Skybox();
+			Skybox(SkyType type);
 			~Skybox();
-			SkyboxBlock getSkyboxBlock() const { return skyboxBlock; }
+			SkyboxBlock* getSkyboxBlock() const { return skyboxBlock; }
 		};
 	}
 }

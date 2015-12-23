@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Graphics/Shader.hpp"
 #include "../Utils/GL.hpp"
-#include "../Graphics/Texture.hpp"
+#include "../Graphics/Renderer.hpp"
+#include "../Graphics/Drawable.hpp"
 
 namespace Core {
 	namespace Terrain {
@@ -13,35 +13,42 @@ namespace Core {
 		*/
 		enum class BlockType
 		{
-			None,
-			Water,
-			Stone,
-			Grass,
-			Sand
+			NONE,
+			WATER,
+			STONE,
+			GRASS,
+			SAND
 		};
 
 		/*
 			Presentation of an Block in our world
 		*/
-		class Block {
+		class Block : public Drawable {
 		protected:
-			// Position in our world
-			vec3 position;
 			BlockType type;
 			// Should the block be rendered
 			GLboolean enabled;
 		public:
-			Shader* shader;
-			Block();
-			Block(vec3 position, BlockType type, GLboolean enabled);
+			Block(vec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled);
 			~Block();
+
+			/* Enable the Block */
 			void enable();
+			/* Disable the Block */
 			void disable();
+			/* Transform the Block */
 			void transformTo(BlockType type);
-			vec3 getPosition() const { return position; }
+
 			inline GLboolean isEnabled() const { return enabled; };
 			inline BlockType getBlockType() const { return type; };
-			virtual void draw(GLubyte renderType, mat4 mvp, GLint index) const;
+
+			/* Submit Block for rendering */
+			void submit(Renderer* renderer) const;
+		private:
+			/* Build the mesh */
+			void buildBlock(vec3 position);
+			void buildBlockSolid(vec3 position);
+			void buildBlockWired(vec3 position);
 		};
 	}
 }

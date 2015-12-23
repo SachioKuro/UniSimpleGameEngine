@@ -1,7 +1,5 @@
 #include "Context.hpp"
 
-#include <iostream>
-
 namespace Core {
 
 	Context* _context;
@@ -21,11 +19,11 @@ namespace Core {
 	{
 		if (_buttons[GLFW_MOUSE_BUTTON_LEFT] == 1)
 		{
-			std::cout << "Linke Maustaste" << std::endl;
+			DEBUG("Linke Maustaste");
 		}
 		else if(_buttons[GLFW_MOUSE_BUTTON_RIGHT] == 1)
 		{
-			std::cout << "Rechte Maustaste" << std::endl;
+			DEBUG("Rechte Maustaste");
 		}
 
 		if (_keys[GLFW_KEY_ESCAPE] == 1)
