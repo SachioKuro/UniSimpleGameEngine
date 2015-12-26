@@ -18,16 +18,17 @@ int main(void) {
 	controller.setRootContext(&con);
 
 	// TestChamber:
-	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk;
+	Core::Terrain::Chunk* chunk = new Core::Terrain::Chunk[32];
+
 	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);
 
 	while (!controller.getRootContext()->getWindow()->closed())
 		controller
 			.getRootContext()
 			->getWindow()
-			->update(chunk, skybox, 1, chunk->getRenderMode());
+			->update(chunk, skybox, 32, chunk->getRenderMode());
 
-	delete chunk;
+	delete[] chunk;
 	delete skybox;
 
 	return 0;

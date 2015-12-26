@@ -23,7 +23,7 @@ namespace Core {
 			// Compute new orientation
 			double horizontalAngle = 0.0f;
 			double verticalAngle = 0.0f;
-			float mouseSpeed = 1.0f;
+			float mouseSpeed = 2.0f;
 			float deltaTime = 0.05f;
 			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xpos);
 			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - ypos);
@@ -65,7 +65,7 @@ namespace Core {
 				cameraPosition -= right * deltaTime * mouseSpeed;
 			}
 
-			view = lookAt(cameraPosition, cameraPosition+direction, vec3(0, 1, 0));
+			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
 			mvp = projection * view * model;
 			glfwGetCursorPos(window, &xpos, &ypos);
 		}
@@ -73,14 +73,23 @@ namespace Core {
 		void Window::update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
 			updateCamera();
 
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			// Draw Skybox
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
+			GLint v = 1;
 			// Draw Chunks
-			for (size_t i = 0; i < nrOfChunks; i++)
+			for (GLint i = 0, j = 0, n = (nrOfChunks >> 2); i < nrOfChunks; i++, j++) {
+				if (j >= n) {
+					mvp = translate(mvp, vec3(CHUNK_SIZE_X, 0, 0));
+					v *= -1;
+					j = -1;
+				} else {
+					mvp = translate(mvp, vec3(0, 0, CHUNK_SIZE_Z * v));
+				}
 				chunks[i].draw(mvp, renderMode);
+			}
 
 			// Error-Checking
 			GLenum error = glGetError();
@@ -117,7 +126,7 @@ namespace Core {
 			glfwSetErrorCallback(error_callback);
 
 			// GLFW-Settings
-			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_SAMPLES, 2);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -163,7 +172,7 @@ namespace Core {
 
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-			
+
 			return true;
 		}
 

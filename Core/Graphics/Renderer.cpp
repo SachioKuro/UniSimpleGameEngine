@@ -9,7 +9,6 @@ namespace Core {
 
 			// Calculates needed sizes
 			bufferSize = maxObjectCount * objectSize * sizeof(VertexAttr);
-			vertexCount = maxObjectCount * objectSize;
 
 			// Binds vao
 			glBindVertexArray(vao);
@@ -74,6 +73,7 @@ namespace Core {
 				vertexAttributes->uv = object->getUV(i);
 				vertexAttributes->blendColor = object->getblendColor(i);
 				vertexAttributes++;
+				vertexCount++;
 			}
 		}
 
@@ -91,10 +91,10 @@ namespace Core {
 				glDrawArrays(GL_LINE_STRIP, 0, vertexCount);
 				break;
 			}
-
 			// Unbind all
 			glBindVertexArray(0);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			vertexCount = 0;
 		}
 	}
 }

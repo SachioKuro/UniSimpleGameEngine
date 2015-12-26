@@ -6,7 +6,7 @@ namespace Core {
 		Block::Block(vec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled)
 			: type(type), enabled(enabled), Drawable(mode, textureOffset, textureSize)
 		{
-			buildBlock(position);
+			//if(enabled) buildBlock(position);
 		}
 
 		Block::~Block() {
@@ -173,7 +173,7 @@ namespace Core {
 		}
 
 		void Block::submit(Renderer* renderer) const {
-			renderer->submit((Drawable*)this);
+			if (isEnabled()) renderer->submit((Drawable*)this);
 		}
 	}
 }

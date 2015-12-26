@@ -27,7 +27,7 @@ namespace Core {
 		protected:
 			BlockType type;
 			// Should the block be rendered
-			GLboolean enabled;
+			GLboolean enabled, covered;
 		public:
 			Block(vec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled);
 			~Block();
@@ -39,14 +39,16 @@ namespace Core {
 			/* Transform the Block */
 			void transformTo(BlockType type);
 
-			inline GLboolean isEnabled() const { return enabled; };
-			inline BlockType getBlockType() const { return type; };
+			GLboolean isEnabled() const { return enabled; };
+			GLboolean isCovered() const { return covered; };
+			void isCovered(GLboolean isCovered) { covered = isCovered;}
+			BlockType getBlockType() const { return type; };
 
 			/* Submit Block for rendering */
 			void submit(Renderer* renderer) const;
+			void buildBlock(vec3 position);
 		private:
 			/* Build the mesh */
-			void buildBlock(vec3 position);
 			void buildBlockSolid(vec3 position);
 			void buildBlockWired(vec3 position);
 		};
