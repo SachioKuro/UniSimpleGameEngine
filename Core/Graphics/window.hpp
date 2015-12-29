@@ -1,5 +1,5 @@
 #pragma once
-#define DEBUG 0
+#define KDEBUG 1
 #define ERROR_OUTPUT_ENABLED 1
 #define DEBUG_OUTPUT_ENABLED 1
 

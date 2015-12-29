@@ -4,8 +4,8 @@
 #include "../Graphics/Renderer.hpp"
 #include "../Graphics/Drawable.hpp"
 
-#define COORD_SIZE 1000
-#define COORD_THICKNESS 0.2
+#define COORD_SIZE 200.0
+#define COORD_THICKNESS 0.1
 
 namespace Core {
 	namespace Graphics {
@@ -14,6 +14,7 @@ namespace Core {
 			private:
 				GLboolean enabled = GL_TRUE;
 				Renderer* renderer;
+				VertexAttr vertexAttr[108];
 			public:
 				CoordSystem(vec3 position, GLboolean enabled);
 				~CoordSystem();

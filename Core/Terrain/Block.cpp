@@ -4,7 +4,7 @@ namespace Core {
 	namespace Terrain {
 		GLuint timer = 0;
 		Block::Block(vec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled)
-			: type(type), enabled(enabled), Drawable(mode, textureOffset, textureSize)
+			: type(type), enabled(enabled), Drawable(mode, textureOffset, textureSize, 36)
 		{
 			//if(enabled) buildBlock(position);
 		}
@@ -29,47 +29,47 @@ namespace Core {
 			vec3* normals = new vec3[6];
 
 			/* Face Front */
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
+			*(mesh++) = vec3(position.x, position.y, position.z + 1);
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z + 1);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z + 1);
+			*(mesh++) = vec3(position.x, position.y, position.z + 1);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z + 1);
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z + 1);
 			/* Face Right */
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z + 1);
 			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z + 1);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z + 1);
 			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
 			/* Face Back */
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z - 1);
-			/* Face Left */
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z);
-			/* Face Lower */
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
 			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			/* Face Upper */
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
 			*(mesh++) = vec3(position.x, position.y + 1, position.z);
 			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z - 1);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z);
+			*(mesh++) = vec3(position.x, position.y, position.z);
 			*(mesh++) = vec3(position.x, position.y + 1, position.z);
+			/* Face Left */
+			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z + 1);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z);
+			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = vec3(position.x, position.y, position.z + 1);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z + 1);
+			/* Face Lower */
+			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z + 1);
+			*(mesh++) = vec3(position.x, position.y, position.z + 1);
+			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z);
+			*(mesh++) = vec3(position.x + 1, position.y, position.z + 1);
+			/* Face Upper */
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z + 1);
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z + 1);
+			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z);
+			*(mesh++) = vec3(position.x, position.y + 1, position.z + 1);
 
 			*(uvs++) = textureOffset;
 			*(uvs++) = textureOffset + textureSize;

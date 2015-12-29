@@ -11,7 +11,7 @@ namespace Core {
 			model[3].z = position.z;
 
 			// Define texturemap
-			texture.load2D("Textures/texturemap64.png");
+			texture.load2D("Textures/texturemap.png");
 			texture.setCubeBoxParam();
 			texture.defineTextureInfo(vec2(8, 8), vec2(64, 64));
 
@@ -33,32 +33,16 @@ namespace Core {
 						default:				tex = TextureID::NONE;
 						}
 
-						if (x == 0 || y == 0 || z == 0) {
+						if (x == 0 || y == 0 || z == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 || z == CHUNK_SIZE_Z - 1) {
 							isEnabled = GL_TRUE;
-						} else if (x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 || z == CHUNK_SIZE_Z - 1) {
-							isEnabled = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isEnabled()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isCovered()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isCovered()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isCovered()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isEnabled()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isCovered()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isEnabled()) {
-							isEnabled = GL_FALSE;
-							isCovered = GL_TRUE;
-						} else if (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isEnabled()) {
+						} else if ((blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isEnabled()) ||
+							       (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isCovered()) ||
+							       (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isCovered()) ||
+							       (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isCovered()) ||
+							       (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isEnabled()) ||
+							       (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isCovered()) ||
+							       (blocks[x][y][z - 1]->isEnabled() && blocks[x][y + 1][z]->isCovered() && blocks[x - 1][y][z]->isEnabled()) ||
+							       (blocks[x][y][z - 1]->isCovered() && blocks[x][y + 1][z]->isEnabled() && blocks[x - 1][y][z]->isEnabled())) {
 							isEnabled = GL_FALSE;
 							isCovered = GL_TRUE;
 						} else {
@@ -73,7 +57,7 @@ namespace Core {
 						if ((x + y + z) & 1)
 							blocks[x][y][z]->disable();
 #endif
-
+#if 1
 						if (!isEnabled && !isCovered && !(x == 0 || y == CHUNK_SIZE_Y - 1 || z == 0)) {
 							if (blocks[x][y][z - 1]->isCovered()) blocks[x][y][z - 1]->enable();
 							if (blocks[x][y + 1][z]->isCovered()) blocks[x][y + 1][z]->enable();
@@ -197,7 +181,9 @@ namespace Core {
 						}
 
 						if (isEnabled && !isCovered) blocks[x][y][z]->buildBlock(vec3(x, y, z));
-
+#else
+						blocks[x][y][z]->buildBlock(vec3(x, y, z));
+#endif
 
 						isEnabled = GL_FALSE;
 						isCovered = GL_FALSE;

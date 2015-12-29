@@ -6,9 +6,9 @@
 #include "../Graphics/Texture.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 8
-#define CHUNK_SIZE_Y 8
-#define CHUNK_SIZE_Z 8
+#define CHUNK_SIZE_X 3
+#define CHUNK_SIZE_Y 3
+#define CHUNK_SIZE_Z 3
 #define BLOCKSIZE 1
 
 namespace Core {

@@ -27,10 +27,9 @@ int main(void) {
 	for (int i = 0, j = 0, k = 0; i < 27; i++) {
 		if (i % 9 == 0) {
 			j -= countY;
-			k = 0;
-		}
-		if (i % 3 == 0)
-			k += countZ;
+			k = -countZ;
+		} else if (i % 3 == 0 )
+			k -= countZ;
 
 		position.x = (i % 3) * countX;
 		position.y = j;
@@ -44,7 +43,7 @@ int main(void) {
 		controller
 		.getRootContext()
 		->getWindow()
-		->update(chunks, skybox, 125, chunks[0]->getRenderMode());
+		->update(chunks, skybox, 27, chunks[0]->getRenderMode());
 
 	for (Core::Terrain::Chunk* chunk : chunks)
 		delete chunk;

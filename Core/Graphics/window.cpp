@@ -15,7 +15,7 @@ namespace Core {
 		}
 
 		Window::~Window() {
-#ifdef DEBUG
+#if KDEBUG
 			delete coordSystem;
 #endif
 			glfwTerminate();
@@ -85,8 +85,8 @@ namespace Core {
 			for (GLint i = 0; i < nrOfChunks; i++) {
 				chunks[i]->draw(projection, view, renderMode);
 			}
-
-#ifdef DEBUG
+			
+#if KDEBUG
 			coordSystem->draw(projection, view);
 #endif
 
@@ -158,7 +158,7 @@ namespace Core {
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
 
-#ifdef DEBUG
+#if KDEBUG
 			glfwSwapInterval(0.0);
 #endif // DEBUG
 
@@ -172,7 +172,7 @@ namespace Core {
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
 
-#ifdef DEBUG
+#if KDEBUG
 			coordSystem = new CoordSystem(vec3(0), GL_TRUE);
 #endif
 
