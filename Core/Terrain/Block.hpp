@@ -27,7 +27,7 @@ namespace Core {
 		protected:
 			BlockType type;
 			// Should the block be rendered
-			GLboolean enabled, covered;
+			GLboolean enabled = GL_TRUE, covered = GL_FALSE;
 		public:
 			Block(vec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled);
 			~Block();

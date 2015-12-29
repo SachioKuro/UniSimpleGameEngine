@@ -2,8 +2,13 @@
 
 namespace Core {
 	namespace Terrain {
-		Chunk::Chunk() {
+		Chunk::Chunk(vec3 position, Chunk* lchunk, Chunk* tchunk, Chunk* bchunk) 
+			: position(position), lchunk(lchunk), tchunk(tchunk), bchunk(bchunk) {
 			setRenderMode(RenderMode::SOLID);
+
+			model[3].x = position.x;
+			model[3].y = position.y;
+			model[3].z = position.z;
 
 			// Define texturemap
 			texture.load2D("Textures/texturemap64.png");
@@ -64,9 +69,10 @@ namespace Core {
 							new Block(
 								vec3(BLOCKSIZE * x, BLOCKSIZE * y, BLOCKSIZE * z),
 								btype, texture.getTextureOffset(tex), texture.getTexturePercentage(), mode, isEnabled);
-
+#if 0
 						if ((x + y + z) & 1)
 							blocks[x][y][z]->disable();
+#endif
 
 						if (!isEnabled && !isCovered && !(x == 0 || y == CHUNK_SIZE_Y - 1 || z == 0)) {
 							if (blocks[x][y][z - 1]->isCovered()) blocks[x][y][z - 1]->enable();
@@ -77,9 +83,121 @@ namespace Core {
 							blocks[x - 1][y][z]->isCovered(GL_FALSE);
 						}
 
+						blocks[x][y][z]->isCovered(isCovered);
+
+						if (lchunk != nullptr && (tchunk != nullptr || y != CHUNK_SIZE_Y - 1) && (bchunk != nullptr || z != CHUNK_SIZE_Z - 1)) {
+							if (x == 1 && z != 0 && y != 0) {
+								if ((blocks[x - 1][y][z]    ->isEnabled() || blocks[x - 1][y][z]    ->isCovered()) &&
+									(blocks[x][y][z]        ->isEnabled() || blocks[x][y][z]        ->isCovered()) &&
+									(blocks[x - 1][y - 1][z]->isEnabled() || blocks[x - 1][y - 1][z]->isCovered()) &&
+									(y == CHUNK_SIZE_Y - 1) ?
+									(tchunk->blocks[0][0][z]->isEnabled() || tchunk->blocks[0][0][z]->isCovered()) :
+									(blocks[x - 1][y + 1][z]->isEnabled() || blocks[x - 1][y + 1][z]->isCovered()) && 
+									(blocks[x - 1][y][z - 1]->isEnabled() || blocks[x - 1][y][z - 1]->isCovered()) &&
+									(z == CHUNK_SIZE_Z - 1) ?
+									(bchunk->blocks[0][y][0]->isEnabled() || bchunk->blocks[0][y][0]->isCovered()) :
+									(blocks[x - 1][y][z + 1]->isEnabled() || blocks[x - 1][y][z + 1]->isCovered())) {
+									if (lchunk->blocks[CHUNK_SIZE_X - 1][y][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][y][z]->isCovered()) {
+										blocks[x - 1][y][z]->disable();
+										blocks[x - 1][y][z]->isCovered(GL_TRUE);
+										if (lchunk->blocks[CHUNK_SIZE_X - 1][y][z]    ->isEnabled() &&
+											lchunk->blocks[CHUNK_SIZE_X - 2][y][z]    ->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 2][y][z]    ->isCovered() &&
+											lchunk->blocks[CHUNK_SIZE_X - 1][y - 1][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][y - 1][z]->isCovered() && 
+											lchunk->blocks[CHUNK_SIZE_X - 1][y + 1][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][y + 1][z]->isCovered() && 
+											lchunk->blocks[CHUNK_SIZE_X - 1][y][z - 1]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][y][z - 1]->isCovered() && 
+											lchunk->blocks[CHUNK_SIZE_X - 1][y][z + 1]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][y][z + 1]->isCovered()) {
+											lchunk->blocks[CHUNK_SIZE_X - 1][y][z]->disable();
+										}
+										if (y == CHUNK_SIZE_Y - 1) {
+											if (tchunk        ->blocks[0][0][z]               ->isEnabled() || tchunk        ->blocks[0][0][z]               ->isCovered() &&
+												tchunk->lchunk->blocks[CHUNK_SIZE_X - 1][0][z]->isEnabled() || tchunk->lchunk->blocks[CHUNK_SIZE_X - 1][0][z]->isCovered() &&
+												tchunk        ->blocks[1][0][z]               ->isEnabled() || tchunk        ->blocks[1][0][z]               ->isCovered() &&
+												tchunk		  ->blocks[0][0][z - 1]           ->isEnabled() || tchunk        ->blocks[0][0][z - 1]           ->isCovered() &&
+												tchunk        ->blocks[0][0][z + 1]           ->isEnabled() || tchunk        ->blocks[0][0][z + 1]           ->isCovered() &&
+												tchunk        ->blocks[0][1][z]               ->isEnabled() || tchunk        ->blocks[0][1][z]               ->isCovered()) {
+												tchunk->blocks[0][0][z]->disable();
+											}
+										}
+										if (z == CHUNK_SIZE_Z - 1) {
+											if (bchunk        ->blocks[0][y][0]               ->isEnabled() || bchunk        ->blocks[0][y][0]               ->isCovered() &&
+												bchunk->lchunk->blocks[CHUNK_SIZE_X - 1][y][0]->isEnabled() || bchunk->lchunk->blocks[CHUNK_SIZE_X - 1][y][0]->isCovered() &&
+												bchunk        ->blocks[0][y - 1][0]           ->isEnabled() || bchunk        ->blocks[0][y - 1][0]           ->isCovered() &&
+												bchunk        ->blocks[0][y + 1][0]           ->isEnabled() || bchunk        ->blocks[0][y + 1][0]           ->isCovered() &&
+												bchunk        ->blocks[1][y][0]               ->isEnabled() || bchunk        ->blocks[1][y][0]               ->isCovered() &&
+												bchunk        ->blocks[0][y][1]               ->isEnabled() || bchunk        ->blocks[0][y][1]               ->isCovered()) {
+												bchunk->blocks[0][y][0]->disable();
+											}
+										}
+									}
+								}
+							}
+						}
+
+						if (tchunk != nullptr && (lchunk != nullptr || x != 1)) {
+							if (y == CHUNK_SIZE_Y - 2 && x > 0 && z > 0 && z < CHUNK_SIZE_Z - 1) {
+								if ((blocks[x - 1][y + 1][z]    ->isEnabled() || blocks[x - 1][y + 1][z]    ->isCovered()) && // Mid
+								    (blocks[x - 1][y][z]        ->isEnabled() || blocks[x - 1][y][z]        ->isCovered()) && // Down
+
+									(x == 1) ?
+									(lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z]->isCovered()) : // Left
+									(blocks[x - 2][y + 1][z]    ->isEnabled() || blocks[x - 2][y + 1][z]    ->isCovered()) && // Left
+									
+									
+									(blocks[x][y + 1][z]        ->isEnabled() || blocks[x][y + 1][z]        ->isCovered()) && // Right
+									(blocks[x - 1][y + 1][z - 1]->isEnabled() || blocks[x - 1][y + 1][z - 1]->isCovered()) && // Front
+									(blocks[x - 1][y + 1][z + 1]->isEnabled() || blocks[x - 1][y + 1][z + 1]->isCovered())) { // Back
+									if (tchunk->blocks[x - 1][0][z]->isEnabled() || tchunk->blocks[x - 1][0][z]->isCovered()) {
+										blocks[x - 1][y + 1][z]->disable();
+										blocks[x - 1][y + 1][z]->isCovered(GL_TRUE);
+										if (tchunk->blocks[x - 1][0][z]    ->isEnabled() && // To Check
+											tchunk->blocks[x - 2][0][z]    ->isEnabled() || tchunk->blocks[x - 2][0][z]    ->isCovered() && // Left
+											tchunk->blocks[x][0][z]        ->isEnabled() || tchunk->blocks[x][0][z]        ->isCovered() && // Right
+											tchunk->blocks[x - 1][0][z - 1]->isEnabled() || tchunk->blocks[x - 1][0][z - 1]->isCovered() && // Front
+											tchunk->blocks[x - 1][0][z + 1]->isEnabled() || tchunk->blocks[x - 1][0][z + 1]->isCovered() && // Back
+											tchunk->blocks[x - 1][1][z]    ->isEnabled() || tchunk->blocks[x - 1][1][z]    ->isCovered()) { // Top
+											tchunk->blocks[x - 1][0][z]->disable();
+										}
+										if (x == 1) {
+											if ((lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z]->isCovered()) && // To Check
+												(lchunk->tchunk->blocks[CHUNK_SIZE_X - 1][0][z]->isEnabled() || lchunk->tchunk->blocks[CHUNK_SIZE_X - 1][0][z]->isCovered()) && // Top
+												(lchunk->blocks[CHUNK_SIZE_X - 2][CHUNK_SIZE_Y - 1][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 2][CHUNK_SIZE_Y - 1][z]->isCovered()) && // Left
+												(lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 2][z]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 2][z]->isCovered()) && // Down
+												(lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z - 1]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z - 1]->isCovered()) && // Front
+												(lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z + 1]->isEnabled() || lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z + 1]->isCovered())) { // Back
+												lchunk->blocks[CHUNK_SIZE_X - 1][CHUNK_SIZE_Y - 1][z]->disable();
+											}
+										}
+									}
+								}
+							}
+						}
+
+						if (bchunk != nullptr) {
+							if (x > 1 && z == 0 && y < CHUNK_SIZE_Y - 1 && y > 0) {
+								if ((blocks[x - 1][y][z]    ->isEnabled() || blocks[x - 1][y][z]    ->isCovered()) && // Mid
+									(blocks[x - 1][y - 1][z]->isEnabled() || blocks[x - 1][y - 1][z]->isCovered()) && // Down
+									(blocks[x - 1][y + 1][z]->isEnabled() || blocks[x - 1][y + 1][z]->isCovered()) && // Top
+									(blocks[x - 2][y][z]    ->isEnabled() || blocks[x - 2][y][z]    ->isCovered()) && // Left
+									(blocks[x][y][z]        ->isEnabled() || blocks[x][y][z]        ->isCovered()) && // Right
+									(blocks[x - 1][y][z + 1]->isEnabled() || blocks[x - 1][y][z + 1]->isCovered())) { // Front
+									if (bchunk->blocks[x - 1][y][0]->isEnabled() || bchunk->blocks[x - 1][y][0]->isCovered()) {
+										blocks[x - 1][y][z]->disable();
+										blocks[x - 1][y][z]->isCovered(GL_TRUE);
+										if (bchunk->blocks[x - 1][y][CHUNK_SIZE_Z - 1]    ->isEnabled() && // To Check
+											bchunk->blocks[x - 2][y][CHUNK_SIZE_Z - 1]    ->isEnabled() || bchunk->blocks[x - 2][y][CHUNK_SIZE_Z - 1]    ->isCovered() && // Left
+											bchunk->blocks[x][y][CHUNK_SIZE_Z - 1]        ->isEnabled() || bchunk->blocks[x][y][CHUNK_SIZE_Z - 1]        ->isCovered() && // Right
+											bchunk->blocks[x - 1][y + 1][CHUNK_SIZE_Z - 1]->isEnabled() || bchunk->blocks[x - 1][y + 1][CHUNK_SIZE_Z - 1]->isCovered() && // Top
+											bchunk->blocks[x - 1][y - 1][CHUNK_SIZE_Z - 1]->isEnabled() || bchunk->blocks[x - 1][y - 1][CHUNK_SIZE_Z - 1]->isCovered() && // Down
+											bchunk->blocks[x - 1][y][CHUNK_SIZE_Z - 2]    ->isEnabled() || bchunk->blocks[x - 1][y][CHUNK_SIZE_Z - 2]    ->isCovered()) { // Back
+											bchunk->blocks[x - 1][y][CHUNK_SIZE_Z - 1]->disable();
+										}
+									}
+								}
+							}
+						}
+
 						if (isEnabled && !isCovered) blocks[x][y][z]->buildBlock(vec3(x, y, z));
 
-						blocks[x][y][z]->isCovered(isCovered);
 
 						isEnabled = GL_FALSE;
 						isCovered = GL_FALSE;
@@ -135,7 +253,8 @@ namespace Core {
 			}
 		}
 
-		void Chunk::draw(mat4 mvp, RenderMode renderMode) {
+		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode) {
+			mvp = projection * view * model;
 			// Setup rendering
 			renderer->activateShader();
 			renderer->start();

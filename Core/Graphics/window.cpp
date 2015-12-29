@@ -15,6 +15,9 @@ namespace Core {
 		}
 
 		Window::~Window() {
+#ifdef DEBUG
+			delete coordSystem;
+#endif
 			glfwTerminate();
 		}
 
@@ -66,11 +69,11 @@ namespace Core {
 			}
 
 			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
-			mvp = projection * view * model;
+			//mvp = projection * view * model;
 			glfwGetCursorPos(window, &xpos, &ypos);
 		}
 
-		void Window::update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
 			updateCamera();
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,18 +81,14 @@ namespace Core {
 			// Draw Skybox
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
-			GLint v = 1;
 			// Draw Chunks
-			for (GLint i = 0, j = 0, n = (nrOfChunks >> 2); i < nrOfChunks; i++, j++) {
-				if (j >= n) {
-					mvp = translate(mvp, vec3(CHUNK_SIZE_X, 0, 0));
-					v *= -1;
-					j = -1;
-				} else {
-					mvp = translate(mvp, vec3(0, 0, CHUNK_SIZE_Z * v));
-				}
-				chunks[i].draw(mvp, renderMode);
+			for (GLint i = 0; i < nrOfChunks; i++) {
+				chunks[i]->draw(projection, view, renderMode);
 			}
+
+#ifdef DEBUG
+			coordSystem->draw(projection, view);
+#endif
 
 			// Error-Checking
 			GLenum error = glGetError();
@@ -172,6 +171,10 @@ namespace Core {
 
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+
+#ifdef DEBUG
+			coordSystem = new CoordSystem(vec3(0), GL_TRUE);
+#endif
 
 			return true;
 		}

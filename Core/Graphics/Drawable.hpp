@@ -32,6 +32,8 @@ namespace Core {
 				: mode(mode), textureOffset(textureOffset), textureSize(textureSize) {};
 			Drawable(RenderMode mode)
 				: mode(mode) {};
+			/*Drawable() 
+				: Drawable(RenderMode::SOLID) {}*/
 			virtual ~Drawable() {}
 
 			/* Switch RenderMode */

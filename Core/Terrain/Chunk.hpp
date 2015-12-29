@@ -6,7 +6,7 @@
 #include "../Graphics/Texture.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 16
+#define CHUNK_SIZE_X 8
 #define CHUNK_SIZE_Y 8
 #define CHUNK_SIZE_Z 8
 #define BLOCKSIZE 1
@@ -19,12 +19,15 @@ namespace Core {
 		private:
 			GLuint64 chunkID;
 			Block**** blocks;
+			Chunk *lchunk, *tchunk, *bchunk;
 			Renderer* renderer;
 			RenderMode mode = RenderMode::SOLID;
 			Texture texture;
 			GLuint vertexCount = 36;
+			vec3 position;
+			mat4 model = mat4(1), mvp;
 		public:
-			Chunk();
+			Chunk(vec3 position, Chunk* lchunk, Chunk* tchunk, Chunk* bchunk);
 			~Chunk();
 
 			void setRenderMode(RenderMode mode);
@@ -33,7 +36,7 @@ namespace Core {
 			void toggleRenderMode();
 
 			/* Draws the chunk */
-			void draw(mat4 mvp, RenderMode renderMode);
+			void draw(mat4 projection, mat4 view, RenderMode renderMode);
 		};
 	}
 }
