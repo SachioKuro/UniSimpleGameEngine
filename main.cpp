@@ -24,18 +24,18 @@ int main(void) {
 	GLint countY = CHUNK_SIZE_Y, countX = CHUNK_SIZE_X, countZ = CHUNK_SIZE_Z;
 
 	vec3 position = vec3(0, 0, 0);
-	for (int i = 0, j = 0, k = 0; i < 125; i++) {
-		if (i % 25 == 0) {
+	for (int i = 0, j = 0, k = 0; i < 27; i++) {
+		if (i % 9 == 0) {
 			j -= countY;
 			k = 0;
 		}
-		if (i % 5 == 0)
+		if (i % 3 == 0)
 			k += countZ;
 
-		position.x = (i % 5) * countX;
+		position.x = (i % 3) * countX;
 		position.y = j;
 		position.z = k;
-		chunks.push_back(new Core::Terrain::Chunk(position, (i % 5 == 0 ? nullptr : chunks[i - 1]), (i < 25 ? nullptr : chunks[i - 25]) ,(i % 25 < 5 ? nullptr : chunks[i - 5])));
+		chunks.push_back(new Core::Terrain::Chunk(position, (i % 3 == 0 ? nullptr : chunks[i - 1]), (i < 9 ? nullptr : chunks[i - 9]) ,(i % 9 < 3 ? nullptr : chunks[i - 3])));
 	}
 
 	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);

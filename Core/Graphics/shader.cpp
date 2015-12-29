@@ -120,7 +120,7 @@ namespace Core {
 		void Shader::init() {
 			Block = new Shader("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
 			Sky = new Shader("Shader/skyVertex.glsl", "Shader/skyFragment.glsl");
-			Sky = new Shader("Shader/info3DVertex.glsl", "Shader/info3DFragment.glsl");
+			Info3D = new Shader("Shader/info3DVertex.glsl", "Shader/info3DFragment.glsl");
 		}
 
 		void Shader::del() {

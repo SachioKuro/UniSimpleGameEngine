@@ -16,7 +16,7 @@
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
-		using namespace Utils;
+		using namespace Graphics::Utils;
 		// Input-Handler
 		typedef void(*HandleInput)(const GLint* const, const GLint* const);
 		/* A Window */
