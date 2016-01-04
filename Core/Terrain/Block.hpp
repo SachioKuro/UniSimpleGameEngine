@@ -51,7 +51,7 @@ namespace Core {
 		private:
 			/* Build the mesh */
 			void buildBlockSolid(ivec3 position);
-			void buildBlockWired(vec3 position);
+			void buildBlockWired(ivec3 position);
 		};
 	}
 }

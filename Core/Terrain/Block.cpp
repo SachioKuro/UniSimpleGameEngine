@@ -24,52 +24,52 @@ namespace Core {
 		}
 
 		void Block::buildBlockSolid(ivec3 position) {
-			vec3* mesh = new vec3[36];
+			ivec3* mesh = new ivec3[36];
 			vec2* uvs = new vec2[6];
-			vec3* normals = new vec3[6];
+			ivec3* normals = new ivec3[6];
 
 			/* Face Front */
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
 			/* Face Right */
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
 			/* Face Back */
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
 			/* Face Left */
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
 			/* Face Lower */
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
 			/* Face Upper */
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z);
-			*(mesh++) = vec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
 
 			*(uvs++) = textureOffset;
 			*(uvs++) = textureOffset + textureSize;
@@ -78,12 +78,12 @@ namespace Core {
 			*(uvs++) = vec2(textureOffset.s + textureSize.s, textureOffset.t);
 			*(uvs++) = textureOffset + textureSize;
 
-			*(normals++) = vec3(0, 0, 1);
-			*(normals++) = vec3(1, 0, 0);
-			*(normals++) = vec3(0, 0, -1);
-			*(normals++) = vec3(-1, 0, 0);
-			*(normals++) = vec3(0, -1, 0);
-			*(normals++) = vec3(0, 1, 0);
+			*(normals++) = ivec3(0, 0, 1);
+			*(normals++) = ivec3(1, 0, 0);
+			*(normals++) = ivec3(0, 0, -1);
+			*(normals++) = ivec3(-1, 0, 0);
+			*(normals++) = ivec3(0, -1, 0);
+			*(normals++) = ivec3(0, 1, 0);
 
 			// Resets pointer
 			mesh -= 36; uvs -= 6; normals -= 6;
@@ -106,41 +106,41 @@ namespace Core {
 			nrOfVertices = 36;
 		}
 
-		void Block::buildBlockWired(vec3 position) {
-			vec3* mesh = new vec3[23];
+		void Block::buildBlockWired(ivec3 position) {
+			ivec3* mesh = new ivec3[23];
 
 			// Sets the end of line with Alpha = 0
-			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
 			/* Face Front */
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z);
 			/* Face Right */
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
 			/* Face Back */
-			*(mesh++) = vec3(position.x, position.y + 1, position.z - 1);
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y, position.z - 1);
 			/* Face Left */
-			*(mesh++) = vec3(position.x, position.y + 1, position.z);
-			*(mesh++) = vec3(position.x, position.y, position.z - 1);
-			*(mesh++) = vec3(position.x, position.y, position.z);
-			*(mesh++) = vec3(position.x, position.y + 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z - 1);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
+			*(mesh++) = ivec3(position.x, position.y, position.z);
 			/* Face Upper */
-			*(mesh++) = vec3(position.x + 1, position.y + 1, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y, position.z - 1);
 			/*....*/
-			*(mesh++) = vec3(position.x + 1, position.y, position.z - 1);
+			*(mesh++) = ivec3(position.x + 1, position.y - 1, position.z - 1);
 			/* Face Lower */
-			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
 			// Sets the start of line with Alpha = 0
-			*(mesh++) = vec3(position.x, position.y, position.z);
+			*(mesh++) = ivec3(position.x, position.y - 1, position.z);
 
 			// Resets Pointer
 			mesh -= 23;
@@ -148,7 +148,7 @@ namespace Core {
 			// Set vertices
 			for (GLsizei i = 0, j = 0, n = 0; i < 23; i++, n++) {
 				setPosition(mesh[i], i);
-				setNormal(vec3(0), i);
+				setNormal(ivec3(0), i);
 				setUV(vec2(0), i);
 				if (i == 0 || i == 22)
 					setblendColor(vec4(0, 0, 0, 0), i);

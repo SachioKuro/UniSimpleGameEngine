@@ -6,7 +6,7 @@ namespace Core {
 		Chunk::Chunk(ivec3 position, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor)
 			: lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), blendColor(blendColor) {
 			chunkID = chunkIDs++;
-			setRenderMode(RenderMode::SOLID);
+			setRenderMode(RenderMode::WIRED);
 
 			model[3].x = position.x;
 			model[3].y = position.y;
