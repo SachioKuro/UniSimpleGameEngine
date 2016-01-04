@@ -9,7 +9,7 @@
 namespace Core {
 	using namespace std;
 	using namespace Graphics;
-	using namespace Utils;
+	using namespace Core::Utils;
 
 	// Inputfunktion
 	typedef void(*HandleInputFunc)(const GLint* const, const GLint* const);

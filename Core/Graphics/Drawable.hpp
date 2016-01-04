@@ -21,18 +21,26 @@ namespace Core {
 		/* Entity, which will be rendered */
 		class Drawable {
 		protected:
-			/* Information for each Vertex */
-			VertexAttr vertexAttr[36];
 			GLsizei nrOfVertices;
 			RenderMode mode = RenderMode::SOLID;
 			/* Texture information */
 			vec2 textureOffset, textureSize;
+			/* Information for each Vertex */
+			VertexAttr* vertexAttr;
 		public:
-			Drawable(RenderMode mode, vec2 textureOffset, vec2 textureSize) 
-				: mode(mode), textureOffset(textureOffset), textureSize(textureSize) {};
-			Drawable(RenderMode mode)
-				: mode(mode) {};
-			virtual ~Drawable() {}
+			Drawable(RenderMode mode, vec2 textureOffset, vec2 textureSize, GLuint vertexAttrSize) 
+				: mode(mode), textureOffset(textureOffset), textureSize(textureSize) {
+				vertexAttr = new VertexAttr[vertexAttrSize];
+			}
+			Drawable(RenderMode mode, GLuint vertexAttrSize)
+				: mode(mode) {
+				vertexAttr = new VertexAttr[vertexAttrSize];
+			}
+			/*Drawable() 
+				: Drawable(RenderMode::SOLID) {}*/
+			virtual ~Drawable() {
+				delete[] vertexAttr;
+			}
 
 			/* Switch RenderMode */
 			void toggleRenderMode() { mode = mode == RenderMode::SOLID ? RenderMode::WIRED : RenderMode::SOLID; }

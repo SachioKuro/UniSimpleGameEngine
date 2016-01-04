@@ -1,19 +1,22 @@
 #pragma once
-#define DEBUG 1
+#define KDEBUG 1
 #define ERROR_OUTPUT_ENABLED 1
 #define DEBUG_OUTPUT_ENABLED 1
 
 #include <string>
+#include <vector>
 
 #include "../Utils/GL.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include "../Terrain/Chunk.hpp"
 #include "../Terrain/Skybox.hpp"
 #include "../Utils/Output.hpp"
+#include "../Utils/CoordSystem.hpp"
 
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
+		using namespace Graphics::Utils;
 		// Input-Handler
 		typedef void(*HandleInput)(const GLint* const, const GLint* const);
 		/* A Window */
@@ -30,8 +33,9 @@ namespace Core {
 			// Transformation-Information
 			glm::mat4 view = mat4(1.0f), projection, model = mat4(1.0f), mvp;
 			double xpos, ypos;
-			vec3 cameraPosition = vec3(0, 0, 0);
+			vec3 cameraPosition = vec3(0, 0, 10);
 			GLbyte errorFlags = 0x0000;
+			CoordSystem* coordSystem;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();
@@ -44,7 +48,7 @@ namespace Core {
 			void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			HandleInput getHandleInputFunc() { return handleInputFunc; }
 			/* Updates the window */
-			void update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
+			void update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
 			void updateCamera();
 			/* Is the window ready for close */
 			bool closed() const;

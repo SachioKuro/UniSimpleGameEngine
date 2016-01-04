@@ -2,7 +2,7 @@
 
 namespace Core {
 	namespace Terrain {
-		SkyboxBlock::SkyboxBlock(SkyType stype, RenderMode mode) : stype(stype), Drawable(mode) {
+		SkyboxBlock::SkyboxBlock(SkyType stype, RenderMode mode) : stype(stype), Drawable(mode, 36) {
 			// Setup texture-information
 			texture.defineTextureInfo(vec2(6, 2), vec2(1024, 1024));
 
@@ -17,7 +17,7 @@ namespace Core {
 
 			// Load the textures
 			texture.loadCubeMap(texturePaths);
-			
+
 			vec3* mesh = new vec3[36];
 			vec3* normals = new vec3[6];
 

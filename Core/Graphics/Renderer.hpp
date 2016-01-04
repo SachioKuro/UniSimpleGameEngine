@@ -10,7 +10,7 @@ namespace Core {
 		class Renderer {
 		private:
 			// VertexArrayObject, VertexBufferObject
-			GLuint vao, vbo, bufferSize, vertexCount;
+			GLuint vao, vbo, bufferSize, vertexCount = 0;
 			VertexAttr* vertexAttributes;
 			Shader* shader;
 			RenderMode mode;

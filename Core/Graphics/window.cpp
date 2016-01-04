@@ -15,6 +15,9 @@ namespace Core {
 		}
 
 		Window::~Window() {
+#if KDEBUG
+			delete coordSystem;
+#endif
 			glfwTerminate();
 		}
 
@@ -23,7 +26,7 @@ namespace Core {
 			// Compute new orientation
 			double horizontalAngle = 0.0f;
 			double verticalAngle = 0.0f;
-			float mouseSpeed = 1.0f;
+			float mouseSpeed = 2.0f;
 			float deltaTime = 0.05f;
 			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xpos);
 			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - ypos);
@@ -46,41 +49,46 @@ namespace Core {
 			glm::vec3 up = glm::cross(right, direction);
 
 			// Move forward
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 				cameraPosition += direction * deltaTime * mouseSpeed;
 			}
 
 			// Move backward
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 				cameraPosition -= direction * deltaTime * mouseSpeed;
 			}
 
 			// Strafe right
-			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 				cameraPosition += right * deltaTime * mouseSpeed;
 			}
 
 			// Strafe left
-			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 				cameraPosition -= right * deltaTime * mouseSpeed;
 			}
 
-			view = lookAt(cameraPosition, cameraPosition+direction, vec3(0, 1, 0));
-			mvp = projection * view * model;
+			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
+			//mvp = projection * view * model;
 			glfwGetCursorPos(window, &xpos, &ypos);
 		}
 
-		void Window::update(Terrain::Chunk* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
 			updateCamera();
 
-			glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			// Draw Skybox
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
 			// Draw Chunks
-			for (size_t i = 0; i < nrOfChunks; i++)
-				chunks[i].draw(mvp, renderMode);
+			for (GLint i = 0; i < nrOfChunks; i++) {
+				chunks[i]->draw(projection, view, renderMode);
+			}
+			
+#if KDEBUG
+			coordSystem->draw(projection, view);
+#endif
 
 			// Error-Checking
 			GLenum error = glGetError();
@@ -117,7 +125,7 @@ namespace Core {
 			glfwSetErrorCallback(error_callback);
 
 			// GLFW-Settings
-			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_SAMPLES, 2);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -149,8 +157,11 @@ namespace Core {
 			glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
+			glFrontFace(GL_CCW);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 
-#ifdef DEBUG
+#if KDEBUG
 			glfwSwapInterval(0.0);
 #endif // DEBUG
 
@@ -163,7 +174,11 @@ namespace Core {
 
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-			
+
+#if KDEBUG
+			coordSystem = new CoordSystem(vec3(0), GL_TRUE);
+#endif
+
 			return true;
 		}
 

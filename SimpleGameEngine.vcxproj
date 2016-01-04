@@ -156,6 +156,7 @@
     <ClCompile Include="Core\Terrain\Chunk.cpp" />
     <ClCompile Include="Core\Terrain\Skybox.cpp" />
     <ClCompile Include="Core\Terrain\SkyboxBlock.cpp" />
+    <ClCompile Include="Core\Utils\CoordSystem.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +172,7 @@
     <ClInclude Include="Core\Terrain\Chunk.hpp" />
     <ClInclude Include="Core\Terrain\Skybox.hpp" />
     <ClInclude Include="Core\Terrain\SkyboxBlock.hpp" />
+    <ClInclude Include="Core\Utils\CoordSystem.hpp" />
     <ClInclude Include="Core\Utils\GL.hpp" />
     <ClInclude Include="Core\Utils\Output.hpp" />
   </ItemGroup>
