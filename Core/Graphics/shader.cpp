@@ -158,5 +158,9 @@ namespace Core {
 		void Shader::setUniformVector3(const char* location, const glm::vec3& vector) {
 			glUniform3f(getUniformLocation(location), vector.x, vector.y, vector.z);
 		}
+
+		void Shader::setUniformVector4(const char* location, const glm::vec4& vector) {
+			glUniform4f(getUniformLocation(location), vector.x, vector.y, vector.z, vector.w);
+		}
 	}
 }

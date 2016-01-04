@@ -48,6 +48,8 @@ namespace Core {
 			void setUniformInteger(const char* location, const int value);
 			/* Sets Vector3-Variable in the Shader */
 			void setUniformVector3(const char* location, const glm::vec3& vector);
+			/* Sets Vector4-Variable in the Shader */
+			void setUniformVector4(const char* location, const glm::vec4& vector);
 			/* Sets Matrix4x4-Variable in the Shader */
 			void setUniformMatrix4(const char* location, const glm::mat4& matrix);
 		private:

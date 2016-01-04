@@ -23,18 +23,29 @@ int main(void) {
 
 	GLint countY = CHUNK_SIZE_Y, countX = CHUNK_SIZE_X, countZ = CHUNK_SIZE_Z;
 
-	vec3 position = vec3(0, 0, 0);
-	for (int i = 0, j = 0, k = 0; i < 27; i++) {
+	ivec3 position = ivec3(0, 0, 0);
+
+	for (int i = 0, y = countY, z = 0; i < 36; i++) {
 		if (i % 9 == 0) {
-			j -= countY;
-			k = -countZ;
+			y -= countY;
+			z = 0;
 		} else if (i % 3 == 0 )
-			k -= countZ;
+			z -= countZ;
 
 		position.x = (i % 3) * countX;
-		position.y = j;
-		position.z = k;
-		chunks.push_back(new Core::Terrain::Chunk(position, (i % 3 == 0 ? nullptr : chunks[i - 1]), (i < 9 ? nullptr : chunks[i - 9]) ,(i % 9 < 3 ? nullptr : chunks[i - 3])));
+		position.y = y;
+		position.z = z;
+		chunks.push_back(
+			new Core::Terrain::Chunk(
+				position,
+				(i % 3 == 0 ? nullptr : chunks[i - 1]),
+				(i < 9 ? nullptr : chunks[i - 9]),
+				(i % 9 < 3 ? nullptr : chunks[i - 3]),
+#if 1
+				vec4(0)));
+#else 
+				vec4((i < 9) ? 1 - (i % 9) * 0.1 : 0, (i >= 9 &&i < 18) ? 1 - (i % 9) * 0.1 : 0, (i >= 18 && i < 27) ? 1 - (i % 9) * 0.1 : 0, 0)));
+#endif
 	}
 
 	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);
@@ -43,7 +54,7 @@ int main(void) {
 		controller
 		.getRootContext()
 		->getWindow()
-		->update(chunks, skybox, 27, chunks[0]->getRenderMode());
+		->update(chunks, skybox, 36, chunks[0]->getRenderMode());
 
 	for (Core::Terrain::Chunk* chunk : chunks)
 		delete chunk;

@@ -33,7 +33,7 @@ namespace Core {
 			// Transformation-Information
 			glm::mat4 view = mat4(1.0f), projection, model = mat4(1.0f), mvp;
 			double xpos, ypos;
-			vec3 cameraPosition = vec3(0, 0, 50);
+			vec3 cameraPosition = vec3(0, 0, 10);
 			GLbyte errorFlags = 0x0000;
 			CoordSystem* coordSystem;
 		public:

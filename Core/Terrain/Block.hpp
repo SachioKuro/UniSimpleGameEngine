@@ -29,7 +29,7 @@ namespace Core {
 			// Should the block be rendered
 			GLboolean enabled = GL_TRUE, covered = GL_FALSE;
 		public:
-			Block(vec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled);
+			Block(ivec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled);
 			~Block();
 
 			/* Enable the Block */
@@ -41,15 +41,16 @@ namespace Core {
 
 			GLboolean isEnabled() const { return enabled; };
 			GLboolean isCovered() const { return covered; };
-			void isCovered(GLboolean isCovered) { covered = isCovered;}
+			GLboolean check() const { return covered || enabled; };
+			void isCovered(GLboolean isCovered) { if (isCovered) disable(); covered = isCovered; }
 			BlockType getBlockType() const { return type; };
 
 			/* Submit Block for rendering */
 			void submit(Renderer* renderer) const;
-			void buildBlock(vec3 position);
+			void buildBlock(ivec3 position);
 		private:
 			/* Build the mesh */
-			void buildBlockSolid(vec3 position);
+			void buildBlockSolid(ivec3 position);
 			void buildBlockWired(vec3 position);
 		};
 	}

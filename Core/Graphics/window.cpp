@@ -49,22 +49,22 @@ namespace Core {
 			glm::vec3 up = glm::cross(right, direction);
 
 			// Move forward
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
 				cameraPosition += direction * deltaTime * mouseSpeed;
 			}
 
 			// Move backward
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 				cameraPosition -= direction * deltaTime * mouseSpeed;
 			}
 
 			// Strafe right
-			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 				cameraPosition += right * deltaTime * mouseSpeed;
 			}
 
 			// Strafe left
-			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 				cameraPosition -= right * deltaTime * mouseSpeed;
 			}
 
@@ -157,6 +157,9 @@ namespace Core {
 			glClearColor(clearColor.x, clearColor.y, clearColor.z, clearColor.w);
 			glfwSetWindowUserPointer(window, this);
 			glfwSetWindowSizeCallback(window, windowResize_callback);
+			glFrontFace(GL_CCW);
+			glEnable(GL_CULL_FACE);
+			glCullFace(GL_BACK);
 
 #if KDEBUG
 			glfwSwapInterval(0.0);
