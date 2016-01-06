@@ -12,6 +12,7 @@
 #include "../Terrain/Skybox.hpp"
 #include "../Utils/Output.hpp"
 #include "../Utils/CoordSystem.hpp"
+#include "../../Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
@@ -32,8 +33,6 @@ namespace Core {
 			glm::vec4 clearColor;
 			// Transformation-Information
 			glm::mat4 view = mat4(1.0f), projection, model = mat4(1.0f), mvp;
-			double xpos, ypos;
-			vec3 cameraPosition = vec3(0, 0, 10);
 			GLbyte errorFlags = 0x0000;
 			CoordSystem* coordSystem;
 		public:
@@ -49,7 +48,6 @@ namespace Core {
 			HandleInput getHandleInputFunc() { return handleInputFunc; }
 			/* Updates the window */
 			void update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
-			void updateCamera();
 			/* Is the window ready for close */
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);
@@ -57,6 +55,7 @@ namespace Core {
 		private:
 			/* Initialize the window */
 			bool init();
+			
 		};
 	}
 }

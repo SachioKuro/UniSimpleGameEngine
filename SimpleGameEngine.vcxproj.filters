@@ -84,6 +84,9 @@
     <ClCompile Include="Core\Utils\CoordSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Core\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input\Input.hpp">
@@ -130,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="Core\Utils\CoordSystem.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Header Files\Core\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
