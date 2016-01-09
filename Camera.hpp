@@ -11,7 +11,7 @@ namespace Core {
 		{
 		private:
 			GLFWwindow* window;
-			vec3 cameraPosition = vec3(0, 0, 10);
+			vec3 cameraPosition = vec3(1, 1, 1);
 			double xCursorPos, yCursorPos;
 			glm::mat4 view = mat4(1.0f);
 		public:

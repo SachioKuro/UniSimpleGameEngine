@@ -15,6 +15,7 @@ namespace Core {
 		mat4 Camera::updateCamera()
 		{
 			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
+			
 			// Compute new orientation
 			double horizontalAngle = 0.0f;
 			double verticalAngle = 0.0f;
@@ -22,6 +23,10 @@ namespace Core {
 			float deltaTime = 0.05f;
 			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xCursorPos);
 			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - yCursorPos);
+
+			// restrict camera angle so the camera doesn't flip
+			if (verticalAngle >= 1) { verticalAngle = 1; }
+			else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
 
 			// Direction : Spherical coordinates to Cartesian coordinates conversion
 			glm::vec3 direction(
