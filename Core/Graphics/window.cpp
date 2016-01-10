@@ -23,8 +23,8 @@ namespace Core {
 		}
 
 		void Window::update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
-			vec3 cameraPosition = camera->getCameraPosition();
 			view = camera->updateCamera();
+			vec3 cameraPosition = camera->getCameraPosition();
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
