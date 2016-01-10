@@ -12,7 +12,7 @@
 #include "../Terrain/Skybox.hpp"
 #include "../Utils/Output.hpp"
 #include "../Utils/CoordSystem.hpp"
-#include "../../Camera.hpp"
+#include "Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
@@ -27,6 +27,7 @@ namespace Core {
 			GLFWwindow* window;
 			// Inpud-Funktion
 			HandleInput handleInputFunc;
+			Camera* camera;
 			// Window-Information
 			int width, height;
 			const char* title;

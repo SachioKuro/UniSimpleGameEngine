@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core\Utils\GL.hpp"
-#include "Core\Graphics\Window.hpp"
+#include "..\Utils\GL.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Core {
 	namespace Graphics {
@@ -11,9 +11,16 @@ namespace Core {
 		{
 		private:
 			GLFWwindow* window;
+			int winWidth, winHeight;
 			vec3 cameraPosition = vec3(1, 1, 1);
 			double xCursorPos, yCursorPos;
-			glm::mat4 view = mat4(1.0f);
+			mat4 view = mat4(1.0f);
+
+			double horizontalAngle = 0.0f;
+			double verticalAngle = 0.0f;
+			float mouseSpeed = 2.0f;
+			float deltaTime = 0.05f;
+			float deltaTimeAngle = 0.005f;
 		public:
 			Camera(GLFWwindow* window);
 			~Camera();
@@ -21,7 +28,7 @@ namespace Core {
 			void setCameraPosition(vec3 position) { cameraPosition = position; }
 			double getXCursorPos() const { return xCursorPos; }
 			double getYCursorPos() const { return yCursorPos; }
-			mat4 updateCamera();
+			mat4& updateCamera();
 		};
 	}
 

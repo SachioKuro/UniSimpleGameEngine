@@ -6,23 +6,21 @@ namespace Core {
 		Camera::Camera(GLFWwindow* currentWindow)
 		{
 			window = currentWindow;
+			glfwGetWindowSize(window, &winWidth, &winHeight);
 		}
 
 		Camera::~Camera()
 		{
 		}
 
-		mat4 Camera::updateCamera()
+		mat4& Camera::updateCamera()
 		{
 			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
+
 			
 			// Compute new orientation
-			double horizontalAngle = 0.0f;
-			double verticalAngle = 0.0f;
-			float mouseSpeed = 2.0f;
-			float deltaTime = 0.05f;
-			horizontalAngle += mouseSpeed * deltaTime / 10 * float(1024 / 2 - xCursorPos);
-			verticalAngle += mouseSpeed * deltaTime / 10 * float(768 / 2 - yCursorPos);
+			horizontalAngle += mouseSpeed * deltaTimeAngle * float((winWidth >> 2) - xCursorPos);
+			verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
 
 			// restrict camera angle so the camera doesn't flip
 			if (verticalAngle >= 1) { verticalAngle = 1; }
@@ -37,9 +35,9 @@ namespace Core {
 
 			// Right vector
 			glm::vec3 right = glm::vec3(
-				sin(horizontalAngle - 3.14f / 2.0f),
+				sin(horizontalAngle - pi<float>() / 2.0f),
 				0,
-				cos(horizontalAngle - 3.14f / 2.0f)
+				cos(horizontalAngle - pi<float>() / 2.0f)
 				);
 
 			// Up vector : perpendicular to both direction and right
@@ -51,7 +49,7 @@ namespace Core {
 			}
 
 			// Move backward
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 				cameraPosition -= direction * deltaTime * mouseSpeed;
 			}
 
@@ -61,13 +59,15 @@ namespace Core {
 			}
 
 			// Strafe left
-			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 				cameraPosition -= right * deltaTime * mouseSpeed;
 			}
-
-			setCameraPosition(cameraPosition);
-
+			
+			
 			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
+
+			//setCameraPosition(cameraPosition);
+			glfwSetCursorPos(window, winWidth >> 2, winHeight >> 2);
 
 			return view;
 		}

@@ -15,6 +15,7 @@ namespace Core {
 		}
 
 		Window::~Window() {
+			delete camera;
 #if KDEBUG
 			delete coordSystem;
 #endif
@@ -22,9 +23,8 @@ namespace Core {
 		}
 
 		void Window::update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
-			Camera camera = Camera(window);
-			vec3 cameraPosition = camera.getCameraPosition();
-			view = camera.updateCamera();
+			vec3 cameraPosition = camera->getCameraPosition();
+			view = camera->updateCamera();
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -129,6 +129,7 @@ namespace Core {
 #if KDEBUG
 			coordSystem = new CoordSystem(vec3(0), GL_TRUE);
 #endif
+			camera = new Camera(window);
 
 			return true;
 		}
