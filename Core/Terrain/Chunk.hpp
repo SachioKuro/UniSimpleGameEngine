@@ -22,19 +22,26 @@ namespace Core {
 			Block**** blocks;
 			Chunk *lchunk, *tchunk, *fchunk;
 			Renderer* renderer;
+			Texture* texture;
+			GLboolean active = GL_FALSE;
 			RenderMode mode = RenderMode::SOLID;
-			Texture texture;
 			GLuint vertexCount = 36;
 			vec4 blendColor;
 			mat4 model = mat4(1), mvp;
 		public:
-			Chunk(ivec3 position, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor = vec4(0));
+			Chunk(ivec3 position, Texture* tex, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor = vec4(0));
 			~Chunk();
 
 			void setRenderMode(RenderMode mode);
 			RenderMode getRenderMode() const { return mode; }
 			/* Switch between Rendermodes */
 			void toggleRenderMode();
+
+			GLboolean isActive() const { return active; }
+			void isActive(GLboolean active) { this->active = active; }
+
+			GLuint load(GLuint id);
+			void unload(GLuint id);
 
 			/* Draws the chunk */
 			void draw(mat4 projection, mat4 view, RenderMode renderMode);

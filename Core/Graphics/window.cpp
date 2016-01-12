@@ -22,7 +22,7 @@ namespace Core {
 			glfwTerminate();
 		}
 
-		void Window::update(vector<Terrain::Chunk*> chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(vector<vector<vector<Terrain::Chunk*>>>* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
 			view = camera->updateCamera();
 			vec3 cameraPosition = camera->getCameraPosition();
 
@@ -32,10 +32,18 @@ namespace Core {
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
 			// Draw Chunks
-			for (GLint i = 0; i < nrOfChunks; i++) {
-				chunks[i]->draw(projection, view, renderMode);
+			//for (GLint i = 0; i < nrOfChunks; i++) {
+			//	chunks[i]->draw(projection, view, renderMode);
+			//}
+
+			for (vector<vector<Terrain::Chunk*>> chunkxy : *chunks) {
+				for (vector<Terrain::Chunk*> chunkx : chunkxy) {
+					for (Terrain::Chunk* chunk : chunkx) {
+						chunk->draw(projection, view, renderMode);
+					}
+				}
 			}
-			
+
 #if KDEBUG
 			coordSystem->draw(projection, view);
 #endif
