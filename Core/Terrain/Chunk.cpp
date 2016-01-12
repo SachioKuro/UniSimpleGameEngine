@@ -3,8 +3,8 @@
 namespace Core {
 	namespace Terrain {
 		GLuint64 Chunk::chunkIDs = 0;
-		Chunk::Chunk(ivec3 position, Texture* texture, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor)
-			: lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), blendColor(blendColor), texture(texture) {
+		Chunk::Chunk(ivec3 position, vector<vector<double>> heightmap, Texture* texture, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor)
+			: lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), blendColor(blendColor), texture(texture), heightmap(heightmap) {
 			chunkID = chunkIDs++;
 			setRenderMode(RenderMode::SOLID);
 
@@ -88,20 +88,23 @@ namespace Core {
 							default:				tex = TextureID::NONE;
 							}
 
-							if (x == 0 || y == 0 || z == 0) {
+							if (y > CHUNK_SIZE_Y - heightmap[x][z]) {
 								isEnabled = GL_TRUE;
-							} else if ((blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isEnabled()) ||
-								(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isCovered()) ||
-								(blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isCovered()) ||
-								(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isCovered()) ||
-								(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isEnabled()) ||
-								(blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isCovered()) ||
-								(blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isEnabled()) ||
-								(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isEnabled())) {
-								isEnabled = GL_FALSE;
-								isCovered = GL_TRUE;
-							} else {
-								isEnabled = GL_TRUE;
+								isCovered = GL_FALSE;
+							}
+
+							if (!(x == 0 || y == 0 || z == 0) && y > CHUNK_SIZE_Y - heightmap[x][z]) {
+								if ((blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isEnabled()) ||
+									(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isCovered()) ||
+									(blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isCovered()) ||
+									(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isCovered()) ||
+									(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isEnabled()) ||
+									(blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isCovered()) ||
+									(blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isEnabled()) ||
+									(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isEnabled())) {
+									//isEnabled = GL_FALSE;
+									isCovered = GL_TRUE;
+								}
 							}
 
 							blocks[z][y][x] =
@@ -117,6 +120,7 @@ namespace Core {
 								blocks[z][y - 1][x]->isCovered(GL_FALSE);
 								blocks[z - 1][y][x]->isCovered(GL_FALSE);
 							}
+							
 							
 							blocks[z][y][x]->isCovered(isCovered);
 
@@ -222,6 +226,19 @@ namespace Core {
 								if (lchunk->tchunk->active ? lchunk->tchunk->fchunk->blocks[ez - 1][ey][ex]->check() : GL_FALSE)
 								if (tchunk->lchunk->active ? tchunk->lchunk->blocks[0][ey][ex]->check() : GL_FALSE)
 									lchunk->tchunk->fchunk->blocks[ez][ey][ex]->isCovered(GL_TRUE);
+
+							if (x == 0 && lchunk != nullptr && lchunk->active)
+								if (y > CHUNK_SIZE_Y - lchunk->heightmap[ex][z] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
+									lchunk->blocks[z][y][ex]->isCovered(GL_FALSE);
+									lchunk->blocks[z][y][ex]->enable();
+								}
+
+							if (z == 0 && fchunk != nullptr && fchunk->active)
+								if (y > CHUNK_SIZE_Y - fchunk->heightmap[x][ez] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
+									fchunk->blocks[ez][y][x]->isCovered(GL_FALSE);
+									fchunk->blocks[ez][y][x]->enable();
+								}
+
 #if 0
 							if (isEnabled && !isCovered) blocks[z][y][x]->buildBlock(ivec3(x, -1 * y, -1 * z));
 #else

@@ -7,13 +7,14 @@
 #include "../Utils/Output.hpp"
 
 #define CHUNK_SIZE_X 9
-#define CHUNK_SIZE_Y 9
+#define CHUNK_SIZE_Y 25
 #define CHUNK_SIZE_Z 9
 #define BLOCKSIZE 1
 
 namespace Core {
 	namespace Terrain {
 		using namespace Graphics;
+		using namespace std;
 		/* A chunk in our world */
 		class Chunk {
 		private:
@@ -23,13 +24,14 @@ namespace Core {
 			Chunk *lchunk, *tchunk, *fchunk;
 			Renderer* renderer;
 			Texture* texture;
+			vector<vector<double>> heightmap;
 			GLboolean active = GL_FALSE;
 			RenderMode mode = RenderMode::SOLID;
 			GLuint vertexCount = 36;
 			vec4 blendColor;
 			mat4 model = mat4(1), mvp;
 		public:
-			Chunk(ivec3 position, Texture* tex, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor = vec4(0));
+			Chunk(ivec3 position, vector<vector<double>> heightmap, Texture* tex, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor = vec4(0));
 			~Chunk();
 
 			void setRenderMode(RenderMode mode);

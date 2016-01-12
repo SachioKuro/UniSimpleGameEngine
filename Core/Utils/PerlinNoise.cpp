@@ -3,7 +3,8 @@
 namespace Core {
 	namespace Utils {
 
-		PerlinNoise::PerlinNoise(unsigned int seed) {
+		PerlinNoise::PerlinNoise(unsigned int seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned int spread)
+			: maxNoiseWidth(maxNoiseWidth), maxNoiseHeight(maxNoiseHeight),segmentWidth(segmentWidth), segmentHeight(segmentHeight) , height(height), spread(spread) {
 			// Generate a new permutation vector based on the value of seed
 			p.resize(256);
 
@@ -21,21 +22,24 @@ namespace Core {
 		}
 
 		// The actual method to fill values[][] with the generated noise values.
-		void PerlinNoise::createNoise(double deltaX, double deltaY) {	
+		vector<vector<double>>* PerlinNoise::createNoise(unsigned int deltaX, unsigned int deltaY) {	
+			values.resize(segmentWidth);
 			// Visit every pixel of the image and assign a color generated with Perlin noise
-			for (unsigned int i = 0; i < NOISE_HEIGHT; ++i) {     // y
-				for (unsigned int j = 0; j < NOISE_WIDTH; ++j) {  // x
-					double x = (deltaX + j) / ((double)NOISE_MAX_WIDTH);
-					double y = (deltaY + i) / ((double)NOISE_MAX_HEIGHT);
+			for (unsigned int i = 0; i < segmentWidth; ++i) {     // y
+				values[i].resize(segmentHeight);
+				for (unsigned int j = 0; j < segmentHeight; ++j) {  // x
+					double x = (deltaX % (maxNoiseWidth  - segmentWidth)  + i) / ((double)maxNoiseWidth);
+					double y = (deltaY % (maxNoiseHeight - segmentHeight) + j) / ((double)maxNoiseHeight);
 
 					// Typical Perlin noise
-					double n = noise(SPREAD * x, SPREAD * y, 0.8);
+					double n = noise(spread * x, spread * y, 0.8);
 
 					// Map the values to the [0, 255] interval, for simplicity we use 
 					// tones of grey
-					values[j][i] = floor(MAX_HEIGHT * n);
+					values[i][j] = floor(height * n);
 				}
 			}
+			return &values;
 		}
 
 		// linear interpolation
@@ -97,9 +101,9 @@ namespace Core {
 			myfile.open(name);
 			char buffer[10];
 
-			for (int x = 0; x < NOISE_WIDTH; x++)
+			for (int x = 0; x < segmentWidth; x++)
 			{
-				for (int y = 0; y < NOISE_HEIGHT; y++)
+				for (int y = 0; y < segmentHeight; y++)
 				{
 					sprintf(buffer, "%1.3f ", values[x][y]);
 					myfile << buffer;

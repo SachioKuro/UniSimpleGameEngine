@@ -22,14 +22,6 @@ int main(void) {
 	Context con(&window, &input);
 
 
-
-	PerlinNoise pn(SEED);
-	pn.createNoise(10,10);
-	pn.debugNoise(1);
-	pn.createNoise(18, 10);
-	pn.debugNoise(2);
-
-
 	Controller controller;
 	controller.setRootContext(&con);
 
@@ -47,30 +39,6 @@ int main(void) {
 	texture.setCubeBoxParam();
 	texture.defineTextureInfo(vec2(8, 8), vec2(64, 64));
 
-	for (int i = 0, y = countY, z = 0; i < 36; i++) {
-		if (i % 9 == 0) {
-			y -= countY;
-			z = 0;
-		} else if (i % 3 == 0 )
-			z -= countZ;
-
-		position.x = (i % 3) * countX;
-		position.y = y;
-		position.z = z;
-		chunks.push_back(
-			new Core::Terrain::Chunk(
-				position,
-				&texture,
-				(i % 3 == 0 ? nullptr : chunks[i - 1]),
-				(i < 9 ? nullptr : chunks[i - 9]),
-				(i % 9 < 3 ? nullptr : chunks[i - 3]),
-#if 1
-				vec4(0)));
-#else 
-				vec4((i < 9) ? 1 - (i % 9) * 0.1 : 0, (i >= 9 &&i < 18) ? 1 - (i % 9) * 0.1 : 0, (i >= 18 && i < 27) ? 1 - (i % 9) * 0.1 : 0, 0)));
-#endif
-	}
-
 	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);
 	Core::Terrain::WorldTree wt(&texture);
 
@@ -82,8 +50,6 @@ int main(void) {
 		
 	}
 
-	for (Core::Terrain::Chunk* chunk : chunks)
-		delete chunk;
 	delete skybox;
 
 	return 0;

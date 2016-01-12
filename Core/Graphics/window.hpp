@@ -49,7 +49,7 @@ namespace Core {
 			void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			HandleInput getHandleInputFunc() { return handleInputFunc; }
 			/* Updates the window */
-			void update(vector<vector<vector<Terrain::Chunk*>>>* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
+			void update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
 			/* Is the window ready for close */
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);

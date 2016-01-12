@@ -1,5 +1,7 @@
 #include "Block.hpp"
 
+// Todo: Fix memory
+
 namespace Core {
 	namespace Terrain {
 		GLuint timer = 0;
