@@ -66,7 +66,6 @@ namespace Core {
 			
 			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
 
-			//setCameraPosition(cameraPosition);
 			glfwSetCursorPos(window, winWidth >> 2, winHeight >> 2);
 
 			return view;
