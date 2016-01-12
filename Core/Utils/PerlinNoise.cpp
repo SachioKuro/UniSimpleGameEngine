@@ -21,12 +21,12 @@ namespace Core {
 		}
 
 		// The actual method to fill values[][] with the generated noise values.
-		void PerlinNoise::createNoise() {	
+		void PerlinNoise::createNoise(double deltaX, double deltaY) {	
 			// Visit every pixel of the image and assign a color generated with Perlin noise
-			for (unsigned int i = 0; i < noise_height; ++i) {     // y
-				for (unsigned int j = 0; j < noise_width; ++j) {  // x
-					double x = (double)j / ((double)noise_width);
-					double y = (double)i / ((double)noise_height);
+			for (unsigned int i = 0; i < NOISE_HEIGHT; ++i) {     // y
+				for (unsigned int j = 0; j < NOISE_WIDTH; ++j) {  // x
+					double x = (deltaX + j) / ((double)NOISE_MAX_WIDTH);
+					double y = (deltaY + i) / ((double)NOISE_MAX_HEIGHT);
 
 					// Typical Perlin noise
 					double n = noise(SPREAD * x, SPREAD * y, 0.8);
@@ -89,14 +89,17 @@ namespace Core {
 		}
 
 		// Debug method to write all values to a .txt file
-		void PerlinNoise::debugNoise() {
+		void PerlinNoise::debugNoise(unsigned int nr) {
 			ofstream myfile;
-			myfile.open("input.txt");
+			string name("input");
+			name.append(to_string(nr));
+			name.append(".txt");
+			myfile.open(name);
 			char buffer[10];
 
-			for (int x = 0; x < noise_width; x++)
+			for (int x = 0; x < NOISE_WIDTH; x++)
 			{
-				for (int y = 0; y < noise_height; y++)
+				for (int y = 0; y < NOISE_HEIGHT; y++)
 				{
 					sprintf(buffer, "%1.3f ", values[x][y]);
 					myfile << buffer;

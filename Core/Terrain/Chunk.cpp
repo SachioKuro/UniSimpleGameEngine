@@ -88,7 +88,7 @@ namespace Core {
 							default:				tex = TextureID::NONE;
 							}
 
-							if (x == 0 || y == 0 || z == 0 || x == ex || y == ey || z == ez) {
+							if (x == 0 || y == 0 || z == 0) {
 								isEnabled = GL_TRUE;
 							} else if ((blocks[z][y][x - 1]->isEnabled() && blocks[z][y - 1][x]->isEnabled() && blocks[z - 1][y][x]->isEnabled()) ||
 								(blocks[z][y][x - 1]->isCovered() && blocks[z][y - 1][x]->isCovered() && blocks[z - 1][y][x]->isCovered()) ||
@@ -108,7 +108,7 @@ namespace Core {
 								new Block(
 									ivec3(BLOCKSIZE * x, BLOCKSIZE * -y, BLOCKSIZE * -z),
 									btype, texture->getTextureOffset(tex), texture->getTexturePercentage(), mode, isEnabled);
-
+							
 							if (!isEnabled && !isCovered && !(x == 0 || y == 0 || z == 0)) {
 								if (blocks[z][y][x - 1]->isCovered()) blocks[z][y][x - 1]->enable();
 								if (blocks[z][y - 1][x]->isCovered()) blocks[z][y - 1][x]->enable();
@@ -117,7 +117,7 @@ namespace Core {
 								blocks[z][y - 1][x]->isCovered(GL_FALSE);
 								blocks[z - 1][y][x]->isCovered(GL_FALSE);
 							}
-
+							
 							blocks[z][y][x]->isCovered(isCovered);
 
 							if (((tchunk != nullptr && tchunk->active) || y != 0) && ((fchunk != nullptr && fchunk->active) || z != 1)) {

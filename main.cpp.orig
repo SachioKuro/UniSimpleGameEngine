@@ -3,12 +3,12 @@
 #include "Core/Controller/Context.hpp"
 #include "Core/Controller/Controller.hpp"
 #include "Core/Graphics/Window.hpp"
-
+<<<<<<< HEAD
 #include "Core\Terrain\WorldTree.hpp"
 #include <iomanip>
-
+=======
 #include "Core/Utils/PerlinNoise.hpp"
-
+>>>>>>> PerlinNoise
 #include <vector>
 int main(void) {
 	using namespace Core::Graphics;
@@ -21,15 +21,12 @@ int main(void) {
 	Input input;
 	Context con(&window, &input);
 
-
-
+<<<<<<< HEAD
+=======
 	PerlinNoise pn(SEED);
-	pn.createNoise(10,10);
-	pn.debugNoise(1);
-	pn.createNoise(18, 10);
-	pn.debugNoise(2);
+	pn.createNoise();
 
-
+>>>>>>> PerlinNoise
 	Controller controller;
 	controller.setRootContext(&con);
 
