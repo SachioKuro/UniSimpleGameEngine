@@ -158,6 +158,7 @@
     <ClCompile Include="Core\Terrain\Skybox.cpp" />
     <ClCompile Include="Core\Terrain\SkyboxBlock.cpp" />
     <ClCompile Include="Core\Utils\CoordSystem.cpp" />
+    <ClCompile Include="Core\Utils\PerlinNoise.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +178,7 @@
     <ClInclude Include="Core\Utils\CoordSystem.hpp" />
     <ClInclude Include="Core\Utils\GL.hpp" />
     <ClInclude Include="Core\Utils\Output.hpp" />
+    <ClInclude Include="Core\Utils\PerlinNoise.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

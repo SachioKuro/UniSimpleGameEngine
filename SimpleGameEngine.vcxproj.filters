@@ -87,6 +87,9 @@
     <ClCompile Include="Core\Graphics\Camera.cpp">
       <Filter>Source Files\Core\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Utils\PerlinNoise.cpp">
+      <Filter>Source Files\Core\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Input\Input.hpp">
@@ -136,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="Core\Graphics\Camera.hpp">
       <Filter>Header Files\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utils\PerlinNoise.hpp">
+      <Filter>Header Files\Core\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

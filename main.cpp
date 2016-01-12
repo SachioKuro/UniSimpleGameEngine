@@ -3,6 +3,7 @@
 #include "Core/Controller/Context.hpp"
 #include "Core/Controller/Controller.hpp"
 #include "Core/Graphics/Window.hpp"
+#include "Core/Utils/PerlinNoise.hpp"
 #include <vector>
 int main(void) {
 	using namespace Core::Graphics;
@@ -14,6 +15,8 @@ int main(void) {
 	Input input;
 	Context con(&window, &input);
 
+	PerlinNoise pn(SEED);
+	pn.createNoise();
 
 	Controller controller;
 	controller.setRootContext(&con);
