@@ -3,8 +3,12 @@
 #include "Core/Controller/Context.hpp"
 #include "Core/Controller/Controller.hpp"
 #include "Core/Graphics/Window.hpp"
+
 #include "Core\Terrain\WorldTree.hpp"
 #include <iomanip>
+
+#include "Core/Utils/PerlinNoise.hpp"
+
 #include <vector>
 int main(void) {
 	using namespace Core::Graphics;
@@ -16,6 +20,12 @@ int main(void) {
 	GLenum error = glGetError();
 	Input input;
 	Context con(&window, &input);
+
+
+
+	PerlinNoise pn(SEED);
+	pn.createNoise();
+
 
 	Controller controller;
 	controller.setRootContext(&con);

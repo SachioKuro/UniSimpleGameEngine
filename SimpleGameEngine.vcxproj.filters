@@ -89,6 +89,8 @@
     </ClCompile>
     <ClCompile Include="Core\Terrain\WorldTree.cpp">
       <Filter>Source Files</Filter>
+    <ClCompile Include="Core\Utils\PerlinNoise.cpp">
+      <Filter>Source Files\Core\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +144,8 @@
     </ClInclude>
     <ClInclude Include="Core\Terrain\WorldTree.hpp">
       <Filter>Header Files</Filter>
+    <ClInclude Include="Core\Utils\PerlinNoise.hpp">
+      <Filter>Header Files\Core\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
