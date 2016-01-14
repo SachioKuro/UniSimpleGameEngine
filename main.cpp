@@ -32,15 +32,14 @@ int main(void) {
 
 	
 
-	//Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);
+	Core::Terrain::Skybox* skybox = new Core::Terrain::Skybox(Core::Terrain::SkyType::SUNNY01);
 	Core::Terrain::WorldTree wt;
 
 	while (!controller.getRootContext()->getWindow()->closed()) {
 		controller
 			.getRootContext()
 			->getWindow()
-			->update(&(wt.getChunks()), nullptr, RenderMode::SOLID);
-		//->update(&(wt.getChunks()), skybox, chunks[0]->getRenderMode());
+			->update(&(wt.getChunks()), skybox, RenderMode::SOLID);
 		
 	}
 

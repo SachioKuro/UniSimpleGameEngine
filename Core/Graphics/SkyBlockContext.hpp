@@ -14,8 +14,9 @@ namespace Core {
 			~SkyBlockContext();
 			virtual ivec3* getMesh() const { return mesh; }
 			virtual ivec3* getNormals() const { return normals; }
-			virtual vec2* getUVs() const { return uvs; }
+			virtual vec2* getUVs(TextureID tid) { return uvs; }
 			virtual Texture* getTexture() { return &texture; }
+			virtual vec4* getCenter() { return nullptr; }
 		};
 	}
 }

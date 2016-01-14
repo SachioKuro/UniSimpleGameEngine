@@ -50,5 +50,9 @@
     <None Include="Shader\simpleVertex.glsl" />
     <None Include="Shader\skyFragment.glsl" />
     <None Include="Shader\skyVertex.glsl" />
+    <None Include="README.md" />
+    <None Include=".gitignore" />
+    <None Include="LICENSE" />
+    <None Include="Test.py" />
   </ItemGroup>
 </Project>

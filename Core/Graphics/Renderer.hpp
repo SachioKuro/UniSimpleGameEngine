@@ -4,6 +4,7 @@
 #include "Shader.hpp"
 #include "Drawable.hpp"
 #include "PrimitiveContext.hpp"
+#include "SkyBlockContext.hpp"
 #include "Camera.hpp"
 
 namespace Core {

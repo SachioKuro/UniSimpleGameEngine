@@ -81,7 +81,6 @@ namespace Core {
 				vertexAttributes++;
 			}
 			vertexCount += object->getSize();
-			
 		}
 
 		void Renderer::draw() {

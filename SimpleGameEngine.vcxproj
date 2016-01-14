@@ -140,12 +140,16 @@
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <FloatingPointModel>Fast</FloatingPointModel>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Libs\glfw-3.1.2.bin.WIN64\lib-vc2015;$(SolutionDir)Libs\glew-1.13.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>FreeImage.lib;glew32s.lib;glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <Profile>true</Profile>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Core\Graphics\BlockContext.cpp" />
@@ -188,12 +192,16 @@
     <ClInclude Include="Core\Utils\PerlinNoise.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="ClassDiagram.cd" />
     <None Include="Libs\FreeImage\x64\FreeImage.dll" />
+    <None Include="LICENSE" />
+    <None Include="README.md" />
     <None Include="Shader\simpleFragment.glsl" />
     <None Include="Shader\simpleVertex.glsl" />
     <None Include="Shader\skyFragment.glsl" />
     <None Include="Shader\skyVertex.glsl" />
+    <None Include="Test.py" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib">

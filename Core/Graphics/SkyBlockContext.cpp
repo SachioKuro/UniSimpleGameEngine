@@ -23,29 +23,31 @@ namespace Core {
 			uvs = new vec2[6];
 
 			/* Face Front */
-			*(mesh++) = vec3(-0.5, -0.5, -0.5); *(mesh++) = vec3( 0.5,  0.5, -0.5); *(mesh++) = vec3(-0.5,  0.5, -0.5);
-			*(mesh++) = vec3(-0.5, -0.5, -0.5); *(mesh++) = vec3( 0.5, -0.5, -0.5); *(mesh++) = vec3( 0.5,  0.5, -0.5);
+			*(mesh++) = ivec3(-1, -1, -1); *(mesh++) = ivec3( 1,  1, -1); *(mesh++) = ivec3(-1,  1, -1);
+			*(mesh++) = ivec3(-1, -1, -1); *(mesh++) = ivec3( 1, -1, -1); *(mesh++) = ivec3( 1,  1, -1);
 			/* Face Right */
-			*(mesh++) = vec3( 0.5, -0.5, -0.5); *(mesh++) = vec3( 0.5,  0.5,  0.5); *(mesh++) = vec3( 0.5,  0.5, -0.5);
-			*(mesh++) = vec3( 0.5, -0.5, -0.5); *(mesh++) = vec3( 0.5, -0.5,  0.5); *(mesh++) = vec3( 0.5,  0.5,  0.5);
+			*(mesh++) = ivec3( 1, -1, -1); *(mesh++) = ivec3( 1,  1,  1); *(mesh++) = ivec3( 1,  1, -1);
+			*(mesh++) = ivec3( 1, -1, -1); *(mesh++) = ivec3( 1, -1,  1); *(mesh++) = ivec3( 1,  1,  1);
 			/* Face Back */
-			*(mesh++) = vec3( 0.5, -0.5,  0.5); *(mesh++) = vec3(-0.5,  0.5,  0.5); *(mesh++) = vec3( 0.5,  0.5,  0.5);
-			*(mesh++) = vec3( 0.5, -0.5,  0.5); *(mesh++) = vec3(-0.5, -0.5,  0.5); *(mesh++) = vec3(-0.5,  0.5,  0.5);
+			*(mesh++) = ivec3( 1, -1,  1); *(mesh++) = ivec3(-1,  1,  1); *(mesh++) = ivec3( 1,  1,  1);
+			*(mesh++) = ivec3( 1, -1,  1); *(mesh++) = ivec3(-1, -1,  1); *(mesh++) = ivec3(-1,  1,  1);
 			/* Face Left */
-			*(mesh++) = vec3(-0.5, -0.5,  0.5); *(mesh++) = vec3(-0.5,  0.5, -0.5); *(mesh++) = vec3(-0.5,  0.5,  0.5);
-			*(mesh++) = vec3(-0.5, -0.5,  0.5); *(mesh++) = vec3(-0.5, -0.5, -0.5); *(mesh++) = vec3(-0.5,  0.5, -0.5);
+			*(mesh++) = ivec3(-1, -1,  1); *(mesh++) = ivec3(-1,  1, -1); *(mesh++) = ivec3(-1,  1,  1);
+			*(mesh++) = ivec3(-1, -1,  1); *(mesh++) = ivec3(-1, -1, -1); *(mesh++) = ivec3(-1,  1, -1);
 			/* Face Lower */
-			*(mesh++) = vec3(-0.5, -0.5,  0.5); *(mesh++) = vec3( 0.5, -0.5, -0.5); *(mesh++) = vec3(-0.5, -0.5, -0.5);
-			*(mesh++) = vec3(-0.5, -0.5,  0.5); *(mesh++) = vec3( 0.5, -0.5,  0.5); *(mesh++) = vec3( 0.5, -0.5, -0.5);
+			*(mesh++) = ivec3(-1, -1,  1); *(mesh++) = ivec3( 1, -1, -1); *(mesh++) = ivec3(-1, -1, -1);
+			*(mesh++) = ivec3(-1, -1,  1); *(mesh++) = ivec3( 1, -1,  1); *(mesh++) = ivec3( 1, -1, -1);
 			/* Face Upper */
-			*(mesh++) = vec3(-0.5,  0.5, -0.5); *(mesh++) = vec3( 0.5,  0.5,  0.5); *(mesh++) = vec3(-0.5,  0.5,  0.5);
-			*(mesh++) = vec3(-0.5,  0.5, -0.5); *(mesh++) = vec3( 0.5,  0.5, -0.5); *(mesh++) = vec3( 0.5,  0.5,  0.5);
+			*(mesh++) = ivec3(-1,  1, -1); *(mesh++) = ivec3( 1,  1,  1); *(mesh++) = ivec3(-1,  1,  1);
+			*(mesh++) = ivec3(-1,  1, -1); *(mesh++) = ivec3( 1,  1, -1); *(mesh++) = ivec3( 1,  1,  1);
 
-			*(normals++) = vec3(0, 0, 1); *(normals++) = vec3(-1, 0, 0); *(normals++) = vec3(0,  0, -1);
-			*(normals++) = vec3(1, 0, 0); *(normals++) = vec3( 0, 1, 0); *(normals++) = vec3(0, -1,  0);
+			*(normals++) = ivec3(0, 0, 1); *(normals++) = ivec3(-1, 0, 0); *(normals++) = ivec3(0,  0, -1);
+			*(normals++) = ivec3(1, 0, 0); *(normals++) = ivec3( 0, 1, 0); *(normals++) = ivec3(0, -1,  0);
 
-			*(uvs++) = vec2(0, 0); *(uvs++) = texture.getTexturePercentage(); *(uvs++) = vec2(0, texture.getTexturePercentage().t);
-			*(uvs++) = vec2(0, 0); *(uvs++) = vec2(texture.getTexturePercentage().s, 0); *(uvs++) = texture.getTexturePercentage();
+			*(uvs++) = vec2(0, 0); *(uvs++) = vec2(1, 1); *(uvs++) = vec2(0, 1);
+			*(uvs++) = vec2(0, 0); *(uvs++) = vec2(1, 0); *(uvs++) = vec2(1, 1);
+
+			mesh -= 36; normals -= 6; uvs -= 6;
 		}
 
 		SkyBlockContext::~SkyBlockContext() {

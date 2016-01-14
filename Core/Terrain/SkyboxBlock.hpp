@@ -26,6 +26,7 @@ namespace Core {
 			SkyType stype = SkyType::SUNNY01;
 			mat4 model = mat4(1);
 			Renderer* renderer;
+			SkyBlockContext context;
 		public:
 			SkyboxBlock(SkyType stype, RenderMode mode);
 			~SkyboxBlock();

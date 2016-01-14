@@ -30,7 +30,7 @@ namespace Core {
 			glDepthMask(GL_FALSE);
 			renderer->start();
 			// Submit Skybox
-			renderer->submit((Drawable*)this, nullptr);
+			renderer->submit((Drawable*)this, &context);
 			// Ready for render
 			renderer->end();
 			// Starts rendering

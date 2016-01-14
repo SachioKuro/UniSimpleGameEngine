@@ -26,7 +26,7 @@ namespace Core {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Draw Skybox
-			//skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
+			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
 			// Draw Chunks
 			for (vector<Terrain::Chunk*> chunkx : *chunks)
