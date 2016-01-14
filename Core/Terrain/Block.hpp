@@ -3,6 +3,7 @@
 #include "../Utils/GL.hpp"
 #include "../Graphics/Renderer.hpp"
 #include "../Graphics/Drawable.hpp"
+#include "../Graphics/BlockContext.hpp"
 
 namespace Core {
 	namespace Terrain {
@@ -28,8 +29,9 @@ namespace Core {
 			BlockType type;
 			// Should the block be rendered
 			GLboolean enabled = GL_TRUE, covered = GL_FALSE;
+			BlockContext* context;
 		public:
-			Block(ivec3 position, BlockType type, vec2 textureOffset, vec2 textureSize, RenderMode mode, GLboolean enabled);
+			Block(ivec3 position, BlockType type, TextureID textureOffset, RenderMode mode, GLboolean enabled);
 			~Block();
 
 			/* Enable the Block */
@@ -46,12 +48,7 @@ namespace Core {
 			BlockType getBlockType() const { return type; };
 
 			/* Submit Block for rendering */
-			void submit(Renderer* renderer) const;
-			void buildBlock(ivec3 position);
-		private:
-			/* Build the mesh */
-			void buildBlockSolid(ivec3 position);
-			void buildBlockWired(ivec3 position);
+			void submit(Renderer* renderer, BlockContext* context) const;
 		};
 	}
 }

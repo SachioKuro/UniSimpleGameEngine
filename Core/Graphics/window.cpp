@@ -16,42 +16,22 @@ namespace Core {
 
 		Window::~Window() {
 			delete camera;
-#if KDEBUG
-			delete coordSystem;
-#endif
 			glfwTerminate();
 		}
 
-		void Window::update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode) {
+		void Window::update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, Terrain::RenderMode renderMode) {
 			view = camera->updateCamera();
 			vec3 cameraPosition = camera->getCameraPosition();
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			// Draw Skybox
-			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
+			//skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 
 			// Draw Chunks
-			//for (GLint i = 0; i < nrOfChunks; i++) {
-			//	chunks[i]->draw(projection, view, renderMode);
-			//}
-
-			for (vector<Terrain::Chunk*> chunkx : *chunks) {
-				for (Terrain::Chunk* chunk : chunkx) {
-					chunk->draw(projection, view, renderMode);
-				}
-			}
-
-#if KDEBUG
-			coordSystem->draw(projection, view);
-#endif
-
-			// Error-Checking
-			GLenum error = glGetError();
-			if (error != GL_NO_ERROR && !(errorFlags & 0x0001)) {
-				std::cout << error << std::endl;
-				errorFlags |= 0x0001;
-			}
+			for (vector<Terrain::Chunk*> chunkx : *chunks)
+				for (Terrain::Chunk* chunk : chunkx)
+					chunk->draw(projection, view, renderMode, camera);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -131,10 +111,6 @@ namespace Core {
 
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-
-#if KDEBUG
-			coordSystem = new CoordSystem(vec3(0), GL_TRUE);
-#endif
 			camera = new Camera(window);
 
 			return true;

@@ -24,7 +24,7 @@ namespace Core {
 		private:
 			// Texture-Information
 			GLuint textureID, textureSampler;
-			vec2 textureSize = vec2(256, 256);
+			vec2 textureSize = vec2(64, 64);
 			// Clamp from 0-1
 			vec2 texturePercentage = textureSize / (textureSize * vec2(8, 8));
 

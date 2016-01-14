@@ -3,6 +3,8 @@
 #include "../Utils/GL.hpp"
 #include "Shader.hpp"
 #include "Drawable.hpp"
+#include "PrimitiveContext.hpp"
+#include "Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
@@ -11,7 +13,7 @@ namespace Core {
 		private:
 			// VertexArrayObject, VertexBufferObject
 			GLuint vao, vbo, bufferSize, vertexCount = 0;
-			VertexAttr* vertexAttributes;
+			Vertex* vertexAttributes;
 			Shader* shader;
 			RenderMode mode;
 		public:
@@ -32,7 +34,7 @@ namespace Core {
 			void end();
 
 			/* Submit an object for drawing */
-			void submit(Drawable* object);
+			void submit(Drawable* object, PrimitiveContext* context);
 			/* Draw all objects */
 			void draw();
 		};

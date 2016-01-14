@@ -11,14 +11,12 @@
 #include "../Terrain/Chunk.hpp"
 #include "../Terrain/Skybox.hpp"
 #include "../Utils/Output.hpp"
-#include "../Utils/CoordSystem.hpp"
 #include "../Terrain/WorldTree.hpp"
 #include "Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
-		using namespace Graphics::Utils;
 		// Input-Handler
 		typedef void(*HandleInput)(const GLint* const, const GLint* const);
 		/* A Window */
@@ -36,7 +34,6 @@ namespace Core {
 			// Transformation-Information
 			glm::mat4 view = mat4(1.0f), projection, model = mat4(1.0f), mvp;
 			GLbyte errorFlags = 0x0000;
-			CoordSystem* coordSystem;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();
@@ -49,7 +46,7 @@ namespace Core {
 			void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			HandleInput getHandleInputFunc() { return handleInputFunc; }
 			/* Updates the window */
-			void update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, size_t nrOfChunks, Terrain::RenderMode renderMode);
+			void update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, Terrain::RenderMode renderMode);
 			/* Is the window ready for close */
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);

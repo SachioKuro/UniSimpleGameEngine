@@ -3,14 +3,17 @@
 namespace Core {
 	namespace Terrain {
 		GLuint64 Chunk::chunkIDs = 0;
-		Chunk::Chunk(ivec3 position, vector<vector<double>> heightmap, Texture* texture, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor)
-			: lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), blendColor(blendColor), texture(texture), heightmap(heightmap) {
+		Chunk::Chunk(ivec3 position, vector<vector<double>> heightmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor)
+			: lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), blendColor(blendColor), texture(texture), heightmap(heightmap) {
 			chunkID = chunkIDs++;
 			setRenderMode(RenderMode::SOLID);
 
 			model[3].x = position.x;
 			model[3].y = position.y;
 			model[3].z = position.z;
+
+			center = vec3(position.x + CHUNK_SIZE_X / 2, position.y - CHUNK_SIZE_Y / 2, position.z - CHUNK_SIZE_Z / 2);
+			boundingRadius = sqrtf(powf(CHUNK_SIZE_X / 2, 2) + powf(CHUNK_SIZE_Y / 2, 2) + powf(CHUNK_SIZE_Z / 2, 2));
 
 			active = GL_TRUE;
 
@@ -108,9 +111,7 @@ namespace Core {
 							}
 
 							blocks[z][y][x] =
-								new Block(
-									ivec3(BLOCKSIZE * x, BLOCKSIZE * -y, BLOCKSIZE * -z),
-									btype, texture->getTextureOffset(tex), texture->getTexturePercentage(), mode, isEnabled);
+								new Block( ivec3(BLOCKSIZE * x, BLOCKSIZE * -y, BLOCKSIZE * -z), btype, tex, mode, isEnabled);
 							
 							if (!isEnabled && !isCovered && !(x == 0 || y == 0 || z == 0)) {
 								if (blocks[z][y][x - 1]->isCovered()) blocks[z][y][x - 1]->enable();
@@ -239,12 +240,6 @@ namespace Core {
 									fchunk->blocks[ez][y][x]->enable();
 								}
 
-#if 0
-							if (isEnabled && !isCovered) blocks[z][y][x]->buildBlock(ivec3(x, -1 * y, -1 * z));
-#else
-							blocks[z][y][x]->buildBlock(ivec3(x, -1 * y, -1 * z));
-#endif
-
 							isEnabled = GL_FALSE;
 							isCovered = GL_FALSE;
 						}
@@ -277,31 +272,38 @@ namespace Core {
 			}
 		}
 
-		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode) {
+		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera) {
 			if (active) {
-				mvp = projection * view * model;
-				// Setup rendering
-				renderer->activateShader();
-				renderer->start();
-				// Set shadervariables
-				renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
-				renderer->getActiveShader()->setUniformInteger("renderType", mode == RenderMode::SOLID ? 0 : 1);
-				renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
+				vec4* planes = camera->getFrustumPlanes(&projection);
+				GLboolean toDraw = GL_TRUE;
+				for (int i = 0; i < 6; i++)
+					toDraw &= 0 > planes[i].x * center.x + planes[i].y * center.y + planes[i].z * center.z + planes[i].w - boundingRadius;
+				
+				if (toDraw) {
+					mvp = projection * view * model;
+					// Setup rendering
+					renderer->activateShader();
+					renderer->start();
+					// Set shadervariables
+					renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
+					renderer->getActiveShader()->setUniformInteger("renderType", mode == RenderMode::SOLID ? 0 : 1);
+					renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
 
-				// Submit Blocks
-				for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-					for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
-						for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-							blocks[z][y][x]->submit(renderer);
+					// Submit Blocks
+					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
+						for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
+							for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
+								blocks[z][y][x]->submit(renderer, context);
+							}
 						}
 					}
-				}
 
-				// Ready for render
-				renderer->end();
-				// Starts rendering
-				renderer->draw();
-				renderer->deactivateShader();
+					// Ready for render
+					renderer->end();
+					// Starts rendering
+					renderer->draw();
+					renderer->deactivateShader();
+				}
 			}
 		}
 	}

@@ -4,11 +4,13 @@
 #include "../Graphics/Shader.hpp"
 #include "../Graphics/Renderer.hpp"
 #include "../Graphics/Texture.hpp"
+#include "../Graphics/Camera.hpp"
+#include "../Graphics/BlockContext.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 9
-#define CHUNK_SIZE_Y 25
-#define CHUNK_SIZE_Z 9
+#define CHUNK_SIZE_X 20
+#define CHUNK_SIZE_Y 15
+#define CHUNK_SIZE_Z 20
 #define BLOCKSIZE 1
 
 namespace Core {
@@ -29,9 +31,12 @@ namespace Core {
 			RenderMode mode = RenderMode::SOLID;
 			GLuint vertexCount = 36;
 			vec4 blendColor;
-			mat4 model = mat4(1), mvp;
+			mat4 model = mat4(1), mvp, pv;
+			BlockContext* context;
+			vec3 center;
+			GLfloat boundingRadius;
 		public:
-			Chunk(ivec3 position, vector<vector<double>> heightmap, Texture* tex, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, vec4 blendColor = vec4(0));
+			Chunk(ivec3 position, vector<vector<double>> heightmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
 			~Chunk();
 
 			void setRenderMode(RenderMode mode);
@@ -46,7 +51,7 @@ namespace Core {
 			void unload(GLuint id);
 
 			/* Draws the chunk */
-			void draw(mat4 projection, mat4 view, RenderMode renderMode);
+			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera);
 		};
 	}
 }

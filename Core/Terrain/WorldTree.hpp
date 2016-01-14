@@ -3,9 +3,10 @@
 #include "../Utils/GL.hpp"
 #include "Chunk.hpp"
 #include "../Utils/PerlinNoise.hpp"
+#include "../Graphics/BlockContext.hpp"
 #include <vector>
 
-#define WORLDSIZE 7
+#define WORLDSIZE 8
 
 namespace Core {
 	namespace Terrain {
@@ -17,8 +18,9 @@ namespace Core {
 			vector<vector<Chunk*>> chunks;
 			Texture* texture;
 			PerlinNoise* noise;
+			BlockContext blockContext;
 		public:
-			WorldTree(Texture* texture);
+			WorldTree();
 			~WorldTree();
 			vector<vector<Chunk*>> getChunks() { return chunks; }
 		};

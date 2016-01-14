@@ -1,166 +1,54 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
-    </Filter>
-    <Filter Include="Source Files\Core">
-      <UniqueIdentifier>{c51584a2-abe0-4b99-bb55-c2b0ee737d54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Graphics">
-      <UniqueIdentifier>{82a2bce7-f8cd-4e6e-9d1a-2a2778fd5b08}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core">
-      <UniqueIdentifier>{5b0d1bf3-c59f-4917-8e1c-691e0fba0be4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\Graphics">
-      <UniqueIdentifier>{330a8d12-c553-4fe2-a988-f4036f831f36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\Input">
-      <UniqueIdentifier>{97670580-939f-4449-a06b-13809ab6089f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\Controller">
-      <UniqueIdentifier>{0302468f-2b52-461a-8f82-2735c85674f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Input">
-      <UniqueIdentifier>{85beccf3-c1b4-4809-8d3e-7db03cd752a8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Context">
-      <UniqueIdentifier>{9daf26f5-3b60-4b3c-8fca-d222a9642c80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\Utils">
-      <UniqueIdentifier>{3c71ec11-9b74-4135-a5f7-7919eb80b963}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\Terrain">
-      <UniqueIdentifier>{f1873ca3-016f-49c4-97e7-bc97b904c8cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Terrain">
-      <UniqueIdentifier>{a9f81f5a-a740-49c0-b99e-a92ed27ef6a8}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="Core\Graphics\Camera.cpp" />
+    <ClCompile Include="Core\Controller\Context.cpp" />
+    <ClCompile Include="Core\Graphics\Renderer.cpp" />
+    <ClCompile Include="Core\Graphics\Shader.cpp" />
+    <ClCompile Include="Core\Graphics\Texture.cpp" />
+    <ClCompile Include="Core\Graphics\Window.cpp" />
+    <ClCompile Include="Core\Input\Input.cpp" />
+    <ClCompile Include="Core\Terrain\Block.cpp" />
+    <ClCompile Include="Core\Terrain\Chunk.cpp" />
+    <ClCompile Include="Core\Terrain\Skybox.cpp" />
+    <ClCompile Include="Core\Terrain\SkyboxBlock.cpp" />
+    <ClCompile Include="Core\Terrain\WorldTree.cpp" />
+    <ClCompile Include="Core\Utils\PerlinNoise.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Core\Graphics\BlockContext.cpp" />
+    <ClCompile Include="Core\Graphics\SkyBlockContext.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Input\Input.cpp">
-      <Filter>Source Files\Core\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Controller\Context.cpp">
-      <Filter>Source Files\Core\Context</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Terrain\Block.cpp">
-      <Filter>Source Files\Core\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Shader.cpp">
-      <Filter>Source Files\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Window.cpp">
-      <Filter>Source Files\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Terrain\Chunk.cpp">
-      <Filter>Source Files\Core\Terrain</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Texture.cpp">
-      <Filter>Source Files\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Terrain\Skybox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Terrain\SkyboxBlock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Renderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Utils\CoordSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Graphics\Camera.cpp">
-      <Filter>Source Files\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Terrain\WorldTree.cpp">
-      <Filter>Source Files</Filter>
-    <ClCompile Include="Core\Utils\PerlinNoise.cpp">
-      <Filter>Source Files\Core\Terrain</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Core\Input\Input.hpp">
-      <Filter>Header Files\Core\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Controller\Controller.hpp">
-      <Filter>Header Files\Core\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Controller\Context.hpp">
-      <Filter>Header Files\Core\Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Terrain\Block.hpp">
-      <Filter>Header Files\Core\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Shader.hpp">
-      <Filter>Header Files\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Window.hpp">
-      <Filter>Header Files\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Utils\Output.hpp">
-      <Filter>Header Files\Core\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Terrain\Chunk.hpp">
-      <Filter>Header Files\Core\Terrain</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Texture.hpp">
-      <Filter>Header Files\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Utils\GL.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Terrain\Skybox.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Terrain\SkyboxBlock.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Renderer.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Drawable.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Utils\CoordSystem.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Graphics\Camera.hpp">
-      <Filter>Header Files\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Terrain\WorldTree.hpp">
-      <Filter>Header Files</Filter>
-    <ClInclude Include="Core\Utils\PerlinNoise.hpp">
-      <Filter>Header Files\Core\Utils</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="Shader\simpleFragment.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shader\simpleVertex.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Shader\skyFragment.glsl" />
-    <None Include="Shader\skyVertex.glsl" />
-    <None Include="Libs\FreeImage\x64\FreeImage.dll" />
+    <ClInclude Include="Core\Graphics\Camera.hpp" />
+    <ClInclude Include="Core\Controller\Context.hpp" />
+    <ClInclude Include="Core\Controller\Controller.hpp" />
+    <ClInclude Include="Core\Graphics\Drawable.hpp" />
+    <ClInclude Include="Core\Graphics\Renderer.hpp" />
+    <ClInclude Include="Core\Graphics\Shader.hpp" />
+    <ClInclude Include="Core\Graphics\Texture.hpp" />
+    <ClInclude Include="Core\Graphics\Window.hpp" />
+    <ClInclude Include="Core\Input\Input.hpp" />
+    <ClInclude Include="Core\Terrain\Block.hpp" />
+    <ClInclude Include="Core\Terrain\Chunk.hpp" />
+    <ClInclude Include="Core\Terrain\Skybox.hpp" />
+    <ClInclude Include="Core\Terrain\SkyboxBlock.hpp" />
+    <ClInclude Include="Core\Terrain\WorldTree.hpp" />
+    <ClInclude Include="Core\Utils\GL.hpp" />
+    <ClInclude Include="Core\Utils\Output.hpp" />
+    <ClInclude Include="Core\Utils\PerlinNoise.hpp" />
+    <ClInclude Include="Core\Graphics\PrimitiveContext.hpp" />
+    <ClInclude Include="Core\Graphics\BlockContext.hpp" />
+    <ClInclude Include="Core\Graphics\SkyBlockContext.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="Libs\FreeImage\x64\FreeImage.dll" />
+    <None Include="Shader\simpleFragment.glsl" />
+    <None Include="Shader\simpleVertex.glsl" />
+    <None Include="Shader\skyFragment.glsl" />
+    <None Include="Shader\skyVertex.glsl" />
   </ItemGroup>
 </Project>

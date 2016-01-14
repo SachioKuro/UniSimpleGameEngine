@@ -5,6 +5,7 @@
 #include "../Graphics/Shader.hpp"
 #include "../Graphics/Drawable.hpp"
 #include "../Graphics/Renderer.hpp"
+#include "../Graphics/SkyBlockContext.hpp"
 #include "../Utils/output.hpp"
 
 namespace Core {
@@ -25,10 +26,10 @@ namespace Core {
 			SkyType stype = SkyType::SUNNY01;
 			mat4 model = mat4(1);
 			Renderer* renderer;
-			Texture texture;
 		public:
 			SkyboxBlock(SkyType stype, RenderMode mode);
 			~SkyboxBlock();
+			SkyBlockContext* getContext() const { return nullptr; }
 			/* Draws our Sky */
 			void draw(vec3& position, mat4& view, mat4& projection);
 		};

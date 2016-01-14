@@ -2,6 +2,7 @@
 
 #include "..\Utils\GL.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_access.hpp>
 
 namespace Core {
 	namespace Graphics {
@@ -15,10 +16,11 @@ namespace Core {
 			vec3 cameraPosition = vec3(1, 1, 1);
 			double xCursorPos, yCursorPos;
 			mat4 view = mat4(1.0f);
+			vec4* planes;
 
 			double horizontalAngle = 0.0f;
 			double verticalAngle = 0.0f;
-			float mouseSpeed = 2.0f;
+			float mouseSpeed = 2.5f;
 			float deltaTime = 0.05f;
 			float deltaTimeAngle = 0.005f;
 		public:
@@ -29,6 +31,7 @@ namespace Core {
 			double getXCursorPos() const { return xCursorPos; }
 			double getYCursorPos() const { return yCursorPos; }
 			mat4& updateCamera();
+			vec4* getFrustumPlanes(mat4* projection);
 		};
 	}
 

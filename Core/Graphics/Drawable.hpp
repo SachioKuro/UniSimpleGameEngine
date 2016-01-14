@@ -2,18 +2,11 @@
 
 #include "../Utils/GL.hpp"
 #include "Texture.hpp"
+#include "Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
-
-		/* Information for the Shader */
-		struct VertexAttr {
-			vec3 position;
-			vec3 normal;
-			vec2 uv;
-			vec4 blendColor;
-		};
 
 		/* Type of rendering (Solid/Wired) */
 		enum class RenderMode { SOLID, WIRED };
@@ -23,24 +16,17 @@ namespace Core {
 		protected:
 			GLsizei nrOfVertices;
 			RenderMode mode = RenderMode::SOLID;
-			/* Texture information */
-			vec2 textureOffset, textureSize;
-			/* Information for each Vertex */
-			VertexAttr* vertexAttr;
+			GLint x, y, z;
+			TextureID textureOffset;
+			vec4 color;
+			vec2 texturePercentage;
 		public:
-			Drawable(RenderMode mode, vec2 textureOffset, vec2 textureSize, GLuint vertexAttrSize) 
-				: mode(mode), textureOffset(textureOffset), textureSize(textureSize) {
-				vertexAttr = new VertexAttr[vertexAttrSize];
+			Drawable(RenderMode mode, ivec3 position, TextureID textureOffset, vec2 texturePercentage, GLuint vertexAttrSize)
+				: mode(mode), nrOfVertices(vertexAttrSize), textureOffset(textureOffset), texturePercentage(texturePercentage) {
+				x = position.x; y = position.y; z = position.z;
 			}
-			Drawable(RenderMode mode, GLuint vertexAttrSize)
-				: mode(mode) {
-				vertexAttr = new VertexAttr[vertexAttrSize];
-			}
-			/*Drawable() 
-				: Drawable(RenderMode::SOLID) {}*/
-			virtual ~Drawable() {
-				delete[] vertexAttr;
-			}
+
+			virtual ~Drawable() {}
 
 			/* Switch RenderMode */
 			void toggleRenderMode() { mode = mode == RenderMode::SOLID ? RenderMode::WIRED : RenderMode::SOLID; }
@@ -48,20 +34,17 @@ namespace Core {
 			void setRenderMode(RenderMode mode) { this->mode = mode; }
 			RenderMode getRenderMode() const { return mode; }
 
-			void setPosition(vec3 position, GLushort index) { vertexAttr[index].position = position; }
-			vec3 getPosition(GLushort index) const { return vertexAttr[index].position; }
+			void setPosition(ivec3 position) { x = position.x; y = position.y; z = position.z; }
+			ivec3 getPosition() const { return ivec3(x, y, z); }
 
-			void setNormal(vec3 normal, GLushort index) { vertexAttr[index].normal = normal; }
-			vec3 getNormal(GLushort index) const { return vertexAttr[index].normal; }
-
-			void setUV(vec2 uv, GLushort index) { vertexAttr[index].uv = uv; }
-			vec2 getUV(GLushort index) const { return vertexAttr[index].uv; }
-
-			void setblendColor(vec4 color, GLushort index) { vertexAttr[index].blendColor = color; }
-			vec4 getblendColor(GLushort index) const { return vertexAttr[index].blendColor; }
-
-			void setVertexAttr(VertexAttr vertexAttr, GLushort index) { this->vertexAttr[index] = vertexAttr; }
-			VertexAttr getVertexAttr(GLushort index) const { return vertexAttr[index]; }
+			void setTextureOffset(TextureID textureOffset) { this->textureOffset = textureOffset; }
+			vec2 getTextureOffset() const { return vec2((GLubyte)textureOffset & 0x0F, ((GLubyte)textureOffset >> 4) & 0x0F); }
+			TextureID getTextureID() const { return textureOffset; }
+			//void setColor(uint8 color) { this->color = color; }
+			vec4 getColor() const {
+				//return ivec4(((color << 2) & 0x0F) >> 2, (color & 0x0F) >> 2, (((color & 0xF0) >> 2) & 0x0F) << 2, ((((color >> 2) & 0xF0) >> 2) & 0x0F) << 4);
+				return color;
+			}
 
 			GLsizei getSize() { return nrOfVertices; }
 		};
