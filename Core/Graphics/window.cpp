@@ -15,23 +15,31 @@ namespace Core {
 		}
 
 		Window::~Window() {
-			delete camera;
 			glfwTerminate();
 		}
 
-		void Window::update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, Terrain::RenderMode renderMode) {
+		void Window::update(Terrain::WorldTree* wt, Terrain::Skybox* skybox, Camera*& camera, Terrain::RenderMode renderMode) {
 			view = camera->updateCamera();
 			vec3 cameraPosition = camera->getCameraPosition();
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			GLdouble currentTime = glfwGetTime();
+			frames++;
+
+			if (currentTime - lastTime >= 1.0) {
+				DEBUG_F("%d Frames/sec\n", frames);
+				frames = 0;
+				lastTime += 1.0;
+			}
+
 			// Draw Skybox
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
-
+			wt->checkAndLoad();
 			// Draw Chunks
-			for (vector<Terrain::Chunk*> chunkx : *chunks)
-				for (Terrain::Chunk* chunk : chunkx)
-					chunk->draw(projection, view, renderMode, camera);
+			for (int i = 0; i < WORLDSIZE; i++)
+				for (int j = 0; j < WORLDSIZE; j++)
+					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -111,7 +119,8 @@ namespace Core {
 
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
-			camera = new Camera(window);
+
+			lastTime = glfwGetTime();
 
 			return true;
 		}

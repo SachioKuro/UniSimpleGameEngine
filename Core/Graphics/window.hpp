@@ -26,7 +26,6 @@ namespace Core {
 			GLFWwindow* window;
 			// Inpud-Funktion
 			HandleInput handleInputFunc;
-			Camera* camera;
 			// Window-Information
 			int width, height;
 			const char* title;
@@ -34,6 +33,8 @@ namespace Core {
 			// Transformation-Information
 			glm::mat4 view = mat4(1.0f), projection, model = mat4(1.0f), mvp;
 			GLbyte errorFlags = 0x0000;
+			GLdouble lastTime;
+			GLuint frames = 0;
 		public:
 			Window(const char* title, int width, int height, glm::vec4 clearColor = glm::vec4(.5f, .5f, .9f, .0f));
 			~Window();
@@ -46,7 +47,7 @@ namespace Core {
 			void setHandleInputFunc(HandleInput _handleInputFunc) { handleInputFunc = _handleInputFunc; }
 			HandleInput getHandleInputFunc() { return handleInputFunc; }
 			/* Updates the window */
-			void update(vector<vector<Terrain::Chunk*>>* chunks, Terrain::Skybox* skybox, Terrain::RenderMode renderMode);
+			void update(Terrain::WorldTree* wt, Terrain::Skybox* skybox, Camera*& camera, Terrain::RenderMode renderMode);
 			/* Is the window ready for close */
 			bool closed() const;
 			void setButtonCallback(GLFWmousebuttonfun func);

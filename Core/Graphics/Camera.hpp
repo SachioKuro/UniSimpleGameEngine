@@ -20,8 +20,10 @@ namespace Core {
 
 			double horizontalAngle = 0.0f;
 			double verticalAngle = 0.0f;
-			float mouseSpeed = 2.5f;
+			float mouseSpeed = 4.f;
 			float deltaTime = 0.05f;
+			float deltaTimeUpdate = 0.0f;
+			float mouseSpeedUpdate = 1 / mouseSpeed;
 			float deltaTimeAngle = 0.005f;
 		public:
 			Camera(GLFWwindow* window);

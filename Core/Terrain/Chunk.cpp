@@ -12,6 +12,9 @@ namespace Core {
 			model[3].y = position.y;
 			model[3].z = position.z;
 
+			planePosition.x = position.x;
+			planePosition.y = position.y;
+
 			center = vec3(position.x + CHUNK_SIZE_X / 2, position.y - CHUNK_SIZE_Y / 2, position.z - CHUNK_SIZE_Z / 2);
 			boundingRadius = sqrtf(powf(CHUNK_SIZE_X / 2, 2) + powf(CHUNK_SIZE_Y / 2, 2) + powf(CHUNK_SIZE_Z / 2, 2));
 
@@ -37,7 +40,7 @@ namespace Core {
 				}
 				delete[] blocks;
 				delete renderer;
-				DEBUG_F("Deleted Chunk [%llu]\n", chunkID);
+				//DEBUG_F("Deleted Chunk [%llu]\n", chunkID);
 			}
 		}
 

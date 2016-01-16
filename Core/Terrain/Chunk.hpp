@@ -8,9 +8,9 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 20
-#define CHUNK_SIZE_Y 15
-#define CHUNK_SIZE_Z 20
+#define CHUNK_SIZE_X 10
+#define CHUNK_SIZE_Y 20
+#define CHUNK_SIZE_Z 10
 #define BLOCKSIZE 1
 
 namespace Core {
@@ -34,6 +34,7 @@ namespace Core {
 			mat4 model = mat4(1), mvp, pv;
 			BlockContext* context;
 			vec3 center;
+			vec2 planePosition;
 			GLfloat boundingRadius;
 		public:
 			Chunk(ivec3 position, vector<vector<double>> heightmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
@@ -49,6 +50,12 @@ namespace Core {
 
 			GLuint load(GLuint id);
 			void unload(GLuint id);
+
+			void setBlendColor(vec4 color) { blendColor = color; }
+			vec3& getCenter() { return center; }
+
+			void setFrontChunk(Chunk* fchunk) { this->fchunk = fchunk; }
+			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
 
 			/* Draws the chunk */
 			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera);

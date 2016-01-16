@@ -43,26 +43,30 @@ namespace Core {
 			// Up vector : perpendicular to both direction and right
 			glm::vec3 up = glm::cross(right, direction);
 
-			// Move forward
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-				cameraPosition += direction * deltaTime * mouseSpeed;
-			}
+			//deltaTimeUpdate += deltaTime;
 
-			// Move backward
-			else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-				cameraPosition -= direction * deltaTime * mouseSpeed;
-			}
+			//if (deltaTimeUpdate > mouseSpeedUpdate) {
+				// Move forward
+				if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+					cameraPosition += direction * deltaTime * mouseSpeed;
+				}
 
-			// Strafe right
-			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-				cameraPosition += right * deltaTime * mouseSpeed;
-			}
+				// Move backward
+				else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+					cameraPosition -= direction * deltaTime * mouseSpeed;
+				}
 
-			// Strafe left
-			else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-				cameraPosition -= right * deltaTime * mouseSpeed;
-			}
+				// Strafe right
+				if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+					cameraPosition += right * deltaTime * mouseSpeed;
+				}
 
+				// Strafe left
+				else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+					cameraPosition -= right * deltaTime * mouseSpeed;
+				}
+				//deltaTimeUpdate = 0.0f;
+			//}
 
 			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
 

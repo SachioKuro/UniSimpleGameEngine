@@ -4,9 +4,14 @@
 #include "Chunk.hpp"
 #include "../Utils/PerlinNoise.hpp"
 #include "../Graphics/BlockContext.hpp"
-#include <vector>
+#include "../Graphics/Camera.hpp"
 
-#define WORLDSIZE 8
+#define WORLDSIZE			20
+#define WORLD_HALFSIZE		10
+#define NOISE_WIDTH			1000000
+#define NOISE_HEIGHT		1000000
+#define NOISE_WIDTH_MID		500000
+#define NOISE_HEIGHT_MID 	500000
 
 namespace Core {
 	namespace Terrain {
@@ -15,14 +20,19 @@ namespace Core {
 		using namespace Core::Utils;
 		class WorldTree {
 		private:
-			vector<vector<Chunk*>> chunks;
+			Chunk*** chunks;
+			Chunk* currentChunk = nullptr;
 			Texture* texture;
 			PerlinNoise* noise;
+			uvec2 noisePos = uvec2(NOISE_WIDTH_MID, NOISE_HEIGHT_MID);
+			Camera* camera;
 			BlockContext blockContext;
+			GLfloat chunkSizeHalfX, chunkSizeHalfZ;
 		public:
-			WorldTree();
+			WorldTree(Camera* camera);
 			~WorldTree();
-			vector<vector<Chunk*>> getChunks() { return chunks; }
+			Chunk***& getChunks() { return chunks; }
+			void checkAndLoad();
 		};
 	}
 }
