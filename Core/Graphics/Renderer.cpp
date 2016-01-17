@@ -15,8 +15,7 @@ namespace Core {
 			// Binds vbo
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			// Reserves memory on the VRAM
-			if (bufferSize > 100000) glBufferData(GL_ARRAY_BUFFER, (bufferSize + 1) / 2, 0, GL_STATIC_DRAW);
-			else					 glBufferData(GL_ARRAY_BUFFER, bufferSize, 0, GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, bufferSize, 0, GL_STATIC_DRAW);
 
 			// Specifies the structur of the data, which will be send to the VRAM
 			glEnableVertexAttribArray(0);

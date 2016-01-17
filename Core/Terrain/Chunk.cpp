@@ -248,22 +248,7 @@ namespace Core {
 					renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
 
 					// Submit Blocks
-					for (size_t z = 0, n = CHUNK_SIZE_Z / 2; z < n; z++) {
-						for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
-							for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-								blocks[z][y][x]->submit(renderer, context);
-							}
-						}
-					}
-
-					// Ready for render
-					renderer->end();
-					// Starts rendering
-					renderer->draw();
-					renderer->start();
-
-					// Submit Blocks
-					for (size_t z = CHUNK_SIZE_Z / 2; z < CHUNK_SIZE_Z; z++) {
+					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
 						for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 							for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
 								blocks[z][y][x]->submit(renderer, context);
