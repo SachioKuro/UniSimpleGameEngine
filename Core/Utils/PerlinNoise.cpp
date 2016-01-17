@@ -32,11 +32,13 @@ namespace Core {
 					double y = (deltaY % (maxNoiseHeight - segmentHeight) + j) / ((double)maxNoiseHeight);
 
 					// Typical Perlin noise
-					double n = noise(spread * x, spread * y, 0.8) * noise((spread >> 2) * x, (spread >> 2) * y, 0.7);
+					double n1 = noise(spread * x, spread * y, 0.8);
+					double n2 = noise((spread >> 3) * x, (spread >> 3) * y, 0.2);
+					double n3 = noise((spread << 2) * x, (spread << 2) * y, 0.5);
 
 					// Map the values to the [0, 255] interval, for simplicity we use 
-					// tones of grey
-					values[i][j] = floor(height * n);
+					// tones of greyS
+					values[i][j] = max(1.0, min((double)height, (double)floor(height * n1 / (2 * n2) + (n3 / 10))));
 				}
 			}
 			return &values;

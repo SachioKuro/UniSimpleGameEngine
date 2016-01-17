@@ -14,9 +14,16 @@ namespace Core {
 			Last  4 Bits = Column from left
 		*/
 		enum class TextureID : GLubyte {
-			GRASS01			= 0x00,
-			STONE01			= 0x04,
-			NONE			= 0xFF
+			GRASS01 = 0x00,
+			GRASS02 = 0x01,
+			GRASS03 = 0x02,
+			STONE01 = 0x20,
+			STONE02 = 0x21,
+			STONE03 = 0x22,
+			SAND01  = 0x40,
+			KIES01  = 0x44,
+			SNOW01  = 0x60,
+			NONE    = 0xFF
 		};
 
 		/* Handles textureloading and handling */
@@ -24,7 +31,7 @@ namespace Core {
 		private:
 			// Texture-Information
 			GLuint textureID, textureSampler;
-			vec2 textureSize = vec2(64, 64);
+			vec2 textureSize = vec2(128, 128);
 			// Clamp from 0-1
 			vec2 texturePercentage = textureSize / (textureSize * vec2(8, 8));
 

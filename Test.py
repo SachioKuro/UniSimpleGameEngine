@@ -4,12 +4,12 @@ from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 # has to change whenever noise_width and noise_height change in the PerlinNoise.hpp file
-DIMENSION1 = 200
-DIMENSION2 = 200
+DIMENSION1 = 20
+DIMENSION2 = 20
 
 # works if the working directory is set
 path = os.path.dirname(os.path.realpath(__file__))
-FILENAME = path + "\input0.txt"
+FILENAME = path + "\input1.txt"
 
 if __name__ == '__main__':
     string = open(FILENAME, '+r')

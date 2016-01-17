@@ -16,9 +16,15 @@ namespace Core {
 		{
 			NONE,
 			WATER,
-			STONE,
-			GRASS,
-			SAND
+			STONE_ROUGH,
+			STONE_DARK,
+			STONE_BRIGHT,
+			GRASS_GREEN,
+			GRASS_SEMI,
+			GRASS_LONG_BROWN,
+			SAND,
+			KIES,
+			SNOW
 		};
 
 		/*
@@ -44,7 +50,7 @@ namespace Core {
 			GLboolean isEnabled() const { return enabled; };
 			GLboolean isCovered() const { return covered; };
 			GLboolean check() const { return covered || enabled; };
-			void isCovered(GLboolean isCovered) { if (isCovered) disable(); covered = isCovered; }
+			void isCovered(GLboolean isCovered) { /*if (isCovered) disable();*/ covered = isCovered; }
 			BlockType getBlockType() const { return type; };
 
 			/* Submit Block for rendering */

@@ -17,11 +17,14 @@ int main(void) {
 	using namespace Core::Terrain;
 	using namespace Core;
 
-	PerlinNoise pn(1337 + 5, NOISE_WIDTH, NOISE_HEIGHT, 200, 200, 40, 30000);
+	PerlinNoise pn(1337 + 9, NOISE_WIDTH, NOISE_HEIGHT, 1000, 1000, 28, 25000);
 	pn.createNoise(500000, 500000);
 	pn.debugNoise(0);
+	PerlinNoise pn2(1337 - 9, NOISE_WIDTH, NOISE_HEIGHT, 20, 20, 50, 800000);
+	pn2.createNoise(500000, 500000);
+	pn2.debugNoise(1);
 
-	Window window("Engine", 1024, 800);
+	Window window("Engine", 1200, 800);
 	GLenum error = glGetError();
 	Input input;
 	Context con(&window, &input);

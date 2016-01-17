@@ -9,9 +9,9 @@
 #include "../Utils/Output.hpp"
 
 #define CHUNK_SIZE_X 10
-#define CHUNK_SIZE_Y 20
+#define CHUNK_SIZE_Y 35
 #define CHUNK_SIZE_Z 10
-#define BLOCKSIZE 1
+#define BSIZE 1
 
 namespace Core {
 	namespace Terrain {
@@ -26,7 +26,7 @@ namespace Core {
 			Chunk *lchunk, *tchunk, *fchunk;
 			Renderer* renderer;
 			Texture* texture;
-			vector<vector<double>> heightmap;
+			vector<vector<double>> heightmap, blockmap;
 			GLboolean active = GL_FALSE;
 			RenderMode mode = RenderMode::SOLID;
 			GLuint vertexCount = 36;
@@ -37,7 +37,7 @@ namespace Core {
 			vec2 planePosition;
 			GLfloat boundingRadius;
 		public:
-			Chunk(ivec3 position, vector<vector<double>> heightmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
+			Chunk(ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
 			~Chunk();
 
 			void setRenderMode(RenderMode mode);
