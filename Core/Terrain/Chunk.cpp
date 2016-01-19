@@ -188,13 +188,13 @@ namespace Core {
 
 							/* Fill height-gaps betwwen Chunks*/
 							if (x == 0 && lchunk != nullptr && lchunk->active)
-								if (y > CHUNK_SIZE_Y - lchunk->heightmap[ex][z] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
+								if (y >= CHUNK_SIZE_Y - lchunk->heightmap[ex][z] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
 									lchunk->blocks[z][y][ex]->isCovered(GL_FALSE);
 									lchunk->blocks[z][y][ex]->enable();
 								}
 
 							if (z == 0 && fchunk != nullptr && fchunk->active)
-								if (y > CHUNK_SIZE_Y - fchunk->heightmap[x][ez] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
+								if (y >= CHUNK_SIZE_Y - fchunk->heightmap[x][ez] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
 									fchunk->blocks[ez][y][x]->isCovered(GL_FALSE);
 									fchunk->blocks[ez][y][x]->enable();
 								}
