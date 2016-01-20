@@ -38,7 +38,7 @@ namespace Core {
 						blocks[z][y] = new Block*[CHUNK_SIZE_X];
 						for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
 							/* "Calculate" Blocktype */
-							BlockType btype;
+							BlockType btype = BlockType::NONE;
 							if (heightmap[x][z] + blockmap[x][z] <= 8)		 { btype = BlockType::KIES;		    tex = TextureID::KIES01;  }
 							else if (heightmap[x][z] + blockmap[x][z] <= 12) { btype = BlockType::SAND;		    tex = TextureID::SAND01;  }
 							else if (heightmap[x][z] + blockmap[x][z] <= 18) { btype = BlockType::GRASS_GREEN;  tex = TextureID::GRASS01; }
@@ -47,6 +47,7 @@ namespace Core {
 							else if (heightmap[x][z] + blockmap[x][z] <= 26) { btype = BlockType::STONE_DARK;	tex = TextureID::STONE02; }
 							else if (heightmap[x][z] + blockmap[x][z] <= 28) { btype = BlockType::STONE_ROUGH;	tex = TextureID::STONE01; }
 							else											 { btype = BlockType::SNOW;		    tex = TextureID::SNOW01;  }
+
 
 							/* Enables Blocks according the heightmap */
 							if (y >= CHUNK_SIZE_Y - heightmap[x][z]) { isEnabled = GL_TRUE; isCovered = GL_FALSE; }
@@ -58,9 +59,6 @@ namespace Core {
 								if (y == 0 ? GL_TRUE : blocks[z][y - 1][x]->check()) 
 								if (z == 0 ? GL_TRUE : blocks[z - 1][y][x]->check()) 
 									isCovered = GL_TRUE;
-
-							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, mode, isEnabled);
-							blocks[z][y][x]->isCovered(isCovered);
 							
 							/* If Block is not there uncover covered neighbor */
 							if (!isEnabled && !isCovered && !(x == 0 || y == 0 || z == 0)) {
@@ -68,7 +66,16 @@ namespace Core {
 								if (blocks[z][y - 1][x]->isCovered()) { blocks[z][y - 1][x]->enable(); blocks[z][y - 1][x]->isCovered(GL_FALSE); }
 								if (blocks[z - 1][y][x]->isCovered()) { blocks[z - 1][y][x]->enable(); blocks[z - 1][y][x]->isCovered(GL_FALSE); }
 							}
-							
+
+							if (y >= 24 && !isEnabled) {
+								isEnabled = GL_TRUE;
+								btype = BlockType::WATER; tex = TextureID::WATER01;
+							}
+
+							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, mode, isEnabled);
+							blocks[z][y][x]->isCovered(isCovered);
+
+
 							/* Check Block from left side */
 							if (((tchunk != nullptr && tchunk->active) || y != 0) && ((fchunk != nullptr && fchunk->active) || z != 1)) 
 								if (x == 0 && z > 0 && y != ey) {
@@ -206,7 +213,6 @@ namespace Core {
 
 				// Set renderer
 				renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, vertexCount, mode);
-				renderer->useShader(Shader::Block);
 			}
 			return 0;
 		}
@@ -230,7 +236,7 @@ namespace Core {
 			}
 		}
 
-		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera) {
+		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type) {
 			if (active) {
 				vec4* planes = camera->getFrustumPlanes(&projection);
 				GLboolean toDraw = GL_TRUE;
@@ -240,22 +246,36 @@ namespace Core {
 				if (toDraw) {
 					mvp = projection * view * model;
 					// Setup rendering
-					renderer->activateShader();
+					
 					renderer->start();
-					// Set shadervariables
-					renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
-					renderer->getActiveShader()->setUniformInteger("renderType", mode == RenderMode::SOLID ? 0 : 1);
-					renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
 
 					// Submit Blocks
-					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-						for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
-							for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-								blocks[z][y][x]->submit(renderer, context);
+					if (type == TerrainType::LAND) {
+						renderer->useShader(Shader::Block);
+						renderer->activateShader();
+						// Set shadervariables
+						renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
+						renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
+						for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
+							for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
+								for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
+									if (!(blocks[z][y][x]->getBlockType() == BlockType::WATER)) blocks[z][y][x]->submit(renderer, context);
+									else tmpBlocksContainer.push_back(blocks[z][y][x]);
+								}
 							}
 						}
-					}
+					} else {
+						renderer->useShader(Shader::Block);
+						renderer->activateShader();
+						// Set shadervariables
+						renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
+						renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
 
+						for (Block* block : tmpBlocksContainer)
+							block->submit(renderer, context);
+
+						tmpBlocksContainer.clear();
+					}
 					// Ready for render
 					renderer->end();
 					// Starts rendering

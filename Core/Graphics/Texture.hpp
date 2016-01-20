@@ -23,6 +23,7 @@ namespace Core {
 			SAND01  = 0x40,
 			KIES01  = 0x44,
 			SNOW01  = 0x60,
+			WATER01 = 0x46,
 			NONE    = 0xFF
 		};
 

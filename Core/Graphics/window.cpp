@@ -34,12 +34,16 @@ namespace Core {
 			}
 
 			// Draw Skybox
-			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
+			//skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 			wt->checkAndLoad();
 			// Draw Chunks
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
-					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera);
+					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::LAND);
+
+			for (int i = 0; i < WORLDSIZE; i++)
+				for (int j = 0; j < WORLDSIZE; j++)
+					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::WATER);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -71,7 +75,7 @@ namespace Core {
 			// GLFW-Settings
 			glfwWindowHint(GLFW_SAMPLES, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 			// Creates GLFW-Window
@@ -105,6 +109,8 @@ namespace Core {
 			glFrontFace(GL_CCW);
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
+			glEnable (GL_BLEND);
+			glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 #if KDEBUG
 			glfwSwapInterval(0.0);
