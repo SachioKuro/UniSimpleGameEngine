@@ -54,11 +54,15 @@ namespace Core {
 			void setBlendColor(vec4 color) { blendColor = color; }
 			vec3& getCenter() { return center; }
 
+			Block**** getBlocks() { return blocks; }
+
 			void setFrontChunk(Chunk* fchunk) { this->fchunk = fchunk; }
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
 
 			/* Draws the chunk */
 			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera);
+
+			int getHighestBlock(int x, int z);
 		};
 	}
 }

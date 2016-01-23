@@ -33,6 +33,7 @@ namespace Core {
 			~WorldTree();
 			Chunk***& getChunks() { return chunks; }
 			void checkAndLoad();
+			Chunk* getCurrentChunk() { return currentChunk; }
 		};
 	}
 }

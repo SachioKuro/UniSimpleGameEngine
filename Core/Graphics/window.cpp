@@ -28,7 +28,7 @@ namespace Core {
 			frames++;
 
 			if (currentTime - lastTime >= 1.0) {
-				DEBUG_F("%d Frames/sec\n", frames);
+				//DEBUG_F("%d Frames/sec\n", frames);
 				frames = 0;
 				lastTime += 1.0;
 			}
@@ -40,6 +40,29 @@ namespace Core {
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
 					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera);
+
+			//@TODO move this to Camera
+			Terrain::Chunk* currentChunk = wt->getCurrentChunk();
+			if (currentChunk != nullptr) {
+				Terrain::Block**** blocks = currentChunk->getBlocks();
+				int x, y, z;
+				x = floor(cameraPosition.x) + 1;
+				y = floor(cameraPosition.y) + 1;
+				z = floor(cameraPosition.z) + 1;
+
+				if (blocks[z][y - 1][x]->isEnabled())
+				{
+					DEBUG("blocked bottom");
+
+				}
+
+				if (blocks[z - 1][y][x]->isEnabled() || blocks[z][y][x - 1]->isEnabled()
+				 || blocks[z + 1][y][x]->isEnabled() || blocks[z][y][x + 1]->isEnabled())
+				{
+					//@TODO has to be splitted
+					DEBUG("blocked sites");
+				}
+			}
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

@@ -211,6 +211,11 @@ namespace Core {
 			return 0;
 		}
 
+		int Chunk::getHighestBlock(int x, int z) {
+			int y = heightmap[x][z];
+			return y;
+		}
+
 		void Chunk::unload(GLuint) {
 			if (active) {
 				active = GL_FALSE;
