@@ -49,12 +49,12 @@ namespace Core {
 
 			GLboolean isEnabled() const { return enabled; };
 			GLboolean isCovered() const { return covered; };
-			GLboolean check() const { return covered || enabled; };
+			GLboolean check() const { return (covered || enabled) && BlockType::WATER != type; };
 			void isCovered(GLboolean isCovered) { /*if (isCovered) disable();*/ covered = isCovered; }
 			BlockType getBlockType() const { return type; };
 
 			/* Submit Block for rendering */
-			void submit(Renderer* renderer, BlockContext* context) const;
+			void submit(Renderer* renderer, BlockContext* context, vec2& range = vec2(0, 0)) const;
 		};
 	}
 }

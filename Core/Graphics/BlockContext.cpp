@@ -8,32 +8,32 @@ namespace Core {
 			texture.setCubeBoxParam();
 			texture.defineTextureInfo(vec2(8, 8), vec2(128, 128));
 
-			mesh = new ivec3[36];
-			normals = new ivec3[6];
+			mesh = new vec3[36];
+			normals = new vec3[6];
 
 			center = vec4(0.5, -0.5, -0.5, 1);
 
 			/* Face Front */
-			*(mesh++) = ivec3(0,  0, -1); *(mesh++) = ivec3(1, -1, -1); *(mesh++) = ivec3(0, -1, -1);
-			*(mesh++) = ivec3(0,  0, -1); *(mesh++) = ivec3(1,  0, -1); *(mesh++) = ivec3(1, -1, -1);
+			*(mesh++) = vec3(0,  0, -1); *(mesh++) = vec3(1, -1, -1); *(mesh++) = vec3(0, -1, -1);
+			*(mesh++) = vec3(0,  0, -1); *(mesh++) = vec3(1,  0, -1); *(mesh++) = vec3(1, -1, -1);
 			/* Face Right */
-			*(mesh++) = ivec3(1,  0, -1); *(mesh++) = ivec3(1, -1,  0); *(mesh++) = ivec3(1, -1, -1);
-			*(mesh++) = ivec3(1,  0, -1); *(mesh++) = ivec3(1,  0,  0); *(mesh++) = ivec3(1, -1,  0);
+			*(mesh++) = vec3(1,  0, -1); *(mesh++) = vec3(1, -1,  0); *(mesh++) = vec3(1, -1, -1);
+			*(mesh++) = vec3(1,  0, -1); *(mesh++) = vec3(1,  0,  0); *(mesh++) = vec3(1, -1,  0);
 			/* Face Back */
-			*(mesh++) = ivec3(1,  0,  0); *(mesh++) = ivec3(0, -1,  0);	*(mesh++) = ivec3(1, -1,  0);
-			*(mesh++) = ivec3(1,  0,  0); *(mesh++) = ivec3(0,  0,  0); *(mesh++) = ivec3(0, -1,  0);
+			*(mesh++) = vec3(1,  0,  0); *(mesh++) = vec3(0, -1,  0); *(mesh++) = vec3(1, -1,  0);
+			*(mesh++) = vec3(1,  0,  0); *(mesh++) = vec3(0,  0,  0); *(mesh++) = vec3(0, -1,  0);
 			/* Face Left */
-			*(mesh++) = ivec3(0,  0,  0); *(mesh++) = ivec3(0, -1, -1); *(mesh++) = ivec3(0, -1,  0);
-			*(mesh++) = ivec3(0,  0,  0); *(mesh++) = ivec3(0,  0, -1); *(mesh++) = ivec3(0, -1, -1);
+			*(mesh++) = vec3(0,  0,  0); *(mesh++) = vec3(0, -1, -1); *(mesh++) = vec3(0, -1,  0);
+			*(mesh++) = vec3(0,  0,  0); *(mesh++) = vec3(0,  0, -1); *(mesh++) = vec3(0, -1, -1);
 			/* Face Lower */
-			*(mesh++) = ivec3(0,  0,  0); *(mesh++) = ivec3(1,  0, -1); *(mesh++) = ivec3(0,  0, -1);
-			*(mesh++) = ivec3(0,  0,  0); *(mesh++) = ivec3(1,  0,  0); *(mesh++) = ivec3(1,  0, -1);
+			*(mesh++) = vec3(0,  0,  0); *(mesh++) = vec3(1,  0, -1); *(mesh++) = vec3(0,  0, -1);
+			*(mesh++) = vec3(0,  0,  0); *(mesh++) = vec3(1,  0,  0); *(mesh++) = vec3(1,  0, -1);
 			/* Face Upper */
-			*(mesh++) = ivec3(1, -1,  0); *(mesh++) = ivec3(0, -1, -1);	*(mesh++) = ivec3(1, -1, -1);
-			*(mesh++) = ivec3(1, -1,  0); *(mesh++) = ivec3(0, -1,  0);	*(mesh++) = ivec3(0, -1, -1);
+			*(mesh++) = vec3(1, -1,  0); *(mesh++) = vec3(0, -1, -1); *(mesh++) = vec3(1, -1, -1);
+			*(mesh++) = vec3(1, -1,  0); *(mesh++) = vec3(0, -1,  0); *(mesh++) = vec3(0, -1, -1);
 
-			*(normals++) = ivec3( 0, 0,  1); *(normals++) = ivec3(1,  0,  0); *(normals++) = ivec3(0, 0, -1);
-			*(normals++) = ivec3(-1, 0,  0); *(normals++) = ivec3(0, -1,  0); *(normals++) = ivec3(0, 1,  0);
+			*(normals++) = vec3( 0, 0,  1); *(normals++) = vec3(1,  0,  0); *(normals++) = vec3(0, 0, -1);
+			*(normals++) = vec3(-1, 0,  0); *(normals++) = vec3(0, -1,  0); *(normals++) = vec3(0, 1,  0);
 
 			uvs[TextureID::STONE01] = new vec2[6];
 			*(uvs[TextureID::STONE01]++) = texture.getTextureOffset(TextureID::STONE01);
@@ -116,6 +116,15 @@ namespace Core {
 			*(uvs[TextureID::SNOW01]++) = texture.getTextureOffset(TextureID::SNOW01) + texture.getTexturePercentage();
 			uvs[TextureID::SNOW01] -= 6;
 
+			uvs[TextureID::WATER01] = new vec2[6];
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01);
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
+			*(uvs[TextureID::WATER01]++) = vec2(texture.getTextureOffset(TextureID::WATER01).s, texture.getTextureOffset(TextureID::WATER01).t + texture.getTexturePercentage().t);
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01);
+			*(uvs[TextureID::WATER01]++) = vec2(texture.getTextureOffset(TextureID::WATER01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::WATER01).t);
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
+			uvs[TextureID::WATER01] -= 6;
+
 			mesh -= 36; normals -= 6;
 		}
 
@@ -123,7 +132,15 @@ namespace Core {
 			delete[] mesh;
 			delete[] normals;
 			delete[] uvs[TextureID::STONE01];
+			delete[] uvs[TextureID::STONE02];
+			delete[] uvs[TextureID::STONE03];
+			delete[] uvs[TextureID::KIES01];
+			delete[] uvs[TextureID::GRASS02];
+			delete[] uvs[TextureID::GRASS03];
+			delete[] uvs[TextureID::SAND01];
+			delete[] uvs[TextureID::SNOW01];
 			delete[] uvs[TextureID::GRASS01];
+			delete[] uvs[TextureID::WATER01];
 		}
 	}
 }

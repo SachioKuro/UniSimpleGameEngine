@@ -6,8 +6,8 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Graphics/Camera.hpp"
 
-#define WORLDSIZE			18
-#define WORLD_HALFSIZE		9
+#define WORLDSIZE			20
+#define WORLD_HALFSIZE		10
 #define NOISE_WIDTH			1000000
 #define NOISE_HEIGHT		1000000
 #define NOISE_WIDTH_MID		500000
@@ -28,6 +28,7 @@ namespace Core {
 			Camera* camera;
 			BlockContext blockContext;
 			GLfloat chunkSizeHalfX, chunkSizeHalfZ;
+			Renderer* renderer;
 		public:
 			WorldTree(Camera* camera);
 			~WorldTree();

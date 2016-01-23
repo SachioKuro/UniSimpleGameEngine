@@ -8,5 +8,5 @@ out vec4 color;
 uniform samplerCube texSampler;
 
 void main() {
-	color = texture(texSampler, _uv) + _color;
+	color = texture(texSampler, _uv);
 }

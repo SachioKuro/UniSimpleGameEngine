@@ -9,16 +9,15 @@ namespace Core {
 
 		struct Vertex {
 			vec3 position;
-			vec3 normal;
 			vec2 uv;
-			vec4 color;
+			vec3 normal;
 		};
 
 		class PrimitiveContext {
 		public:
-			virtual ivec3* getMesh() const { return nullptr; };
+			virtual vec3* getMesh() const { return nullptr; };
 			virtual vec2* getUVs(TextureID tid) { return nullptr; };
-			virtual ivec3* getNormals() const { return nullptr; };
+			virtual vec3* getNormals() const { return nullptr; };
 			virtual Texture* getTexture() { return nullptr; }
 			virtual vec4* getCenter() { return nullptr; }
 		};

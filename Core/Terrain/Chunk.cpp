@@ -3,8 +3,8 @@
 namespace Core {
 	namespace Terrain {
 		GLuint64 Chunk::chunkIDs = 0;
-		Chunk::Chunk(ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor)
-			: lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), blendColor(blendColor), heightmap(heightmap), blockmap(blockmap), active(GL_FALSE), chunkID(chunkIDs++) {
+		Chunk::Chunk(Renderer* renderer, ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor)
+			: renderer(renderer), lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), blendColor(blendColor), heightmap(heightmap), blockmap(blockmap), active(GL_FALSE), chunkID(chunkIDs++) {
 			model[3].x = position.x; model[3].y = position.y; model[3].z = position.z;										// Position of Chunk
 			center = vec3(position.x + CHUNK_SIZE_X / 2, position.y - CHUNK_SIZE_Y / 2, position.z - CHUNK_SIZE_Z / 2);		// Center of Chunk
 			boundingRadius = sqrtf(powf(CHUNK_SIZE_X / 2, 2) + powf(CHUNK_SIZE_Y / 2, 2) + powf(CHUNK_SIZE_Z / 2, 2));		// Radius of BoundingSphere
@@ -21,7 +21,6 @@ namespace Core {
 					delete[] blocks[z];
 				}
 				delete[] blocks;
-				delete renderer;
 			}
 		}
 
@@ -58,6 +57,12 @@ namespace Core {
 								if (y == 0 ? GL_TRUE : blocks[z][y - 1][x]->check()) 
 								if (z == 0 ? GL_TRUE : blocks[z - 1][y][x]->check()) 
 									isCovered = GL_TRUE;
+
+							if (y >= CHUNK_SIZE_Y - 12 && !isEnabled) {
+								isEnabled = GL_TRUE;
+								btype = BlockType::WATER; 
+								tex = TextureID::WATER01;
+							}
 
 							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, mode, isEnabled);
 							blocks[z][y][x]->isCovered(isCovered);
@@ -204,9 +209,6 @@ namespace Core {
 					}
 				}
 
-				// Set renderer
-				renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, vertexCount, mode);
-				renderer->useShader(Shader::Block);
 			}
 			return 0;
 		}
@@ -225,12 +227,11 @@ namespace Core {
 					delete[] blocks[z];
 				}
 				delete[] blocks;
-				delete renderer;
 				DEBUG_F("Deleted Chunk [%llu]\n", chunkID);
 			}
 		}
 
-		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera) {
+		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type) {
 			if (active) {
 				vec4* planes = camera->getFrustumPlanes(&projection);
 				GLboolean toDraw = GL_TRUE;
@@ -238,29 +239,56 @@ namespace Core {
 					toDraw &= 0 > planes[i].x * center.x + planes[i].y * center.y + planes[i].z * center.z + planes[i].w - boundingRadius;
 				
 				if (toDraw) {
-					mvp = projection * view * model;
 					// Setup rendering
-					renderer->activateShader();
-					renderer->start();
-					// Set shadervariables
-					renderer->getActiveShader()->setUniformMatrix4("MVP", mvp);
-					renderer->getActiveShader()->setUniformInteger("renderType", mode == RenderMode::SOLID ? 0 : 1);
-					renderer->getActiveShader()->setUniformVector4("blendColor", blendColor);
-
-					// Submit Blocks
-					for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
-						for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
-							for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-								blocks[z][y][x]->submit(renderer, context);
+					if (type == TerrainType::LAND) {
+						renderer->useShader(Shader::Block);
+						renderer->activateShader();
+						renderer->start();
+						// Set shadervariables
+						renderer->getActiveShader()->setUniformMatrix4("MODEL", model);
+						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
+						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
+						renderer->getActiveShader()->setUniformVector3("lightPosition", vec3(-1000, 2000, -1000));
+						glDisable(GL_BLEND);
+						int topLayer = -1;
+						// Submit Blocks
+						for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
+							for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
+								for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
+									if (blocks[z][y][x]->getBlockType() == BlockType::WATER && (topLayer == -1 || topLayer == y)) { topLayer = y; waterBlocks.push_back(blocks[z][y][x]); }
+									else if (blocks[z][y][x]->getBlockType() != BlockType::WATER) blocks[z][y][x]->submit(renderer, context);
+								}
 							}
 						}
-					}
 
-					// Ready for render
-					renderer->end();
-					// Starts rendering
-					renderer->draw();
-					renderer->deactivateShader();
+						// Ready for render
+						renderer->end();
+						// Starts rendering
+						renderer->draw();
+						renderer->deactivateShader();
+					} else {
+						// Setup rendering
+						renderer->useShader(Shader::Water);
+						renderer->activateShader();
+						renderer->start();
+						// Set shadervariables
+						renderer->getActiveShader()->setUniformMatrix4("MODEL", model);
+						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
+						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
+						glEnable(GL_BLEND);
+						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+						// Submit Blocks
+						for (Block* block : waterBlocks)
+							block->submit(renderer, context, vec2(24, 30));
+
+						// Ready for render
+						renderer->end();
+						// Starts rendering
+						renderer->draw();
+						renderer->deactivateShader();
+
+						waterBlocks.clear();
+					}
 				}
 			}
 		}

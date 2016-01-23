@@ -4,7 +4,7 @@ namespace Core {
 	namespace Graphics {
 		using namespace std;
 
-		Shader *Shader::Block, *Shader::Sky, *Shader::Info3D;
+		Shader *Shader::Block, *Shader::Sky, *Shader::Water;
 
 		GLuint readShaderCode(const char* const, string&);
 		void checkCode(GLuint);
@@ -120,13 +120,13 @@ namespace Core {
 		void Shader::init() {
 			Block = new Shader("Shader/simpleVertex.glsl", "Shader/simpleFragment.glsl");
 			Sky = new Shader("Shader/skyVertex.glsl", "Shader/skyFragment.glsl");
-			Info3D = new Shader("Shader/info3DVertex.glsl", "Shader/info3DFragment.glsl");
+			Water = new Shader("Shader/waterVertex.glsl", "Shader/waterFragment.glsl");
 		}
 
 		void Shader::del() {
 			delete Block;
 			delete Sky;
-			delete Info3D;
+			delete Water;
 		}
 
 		GLint Shader::getUniformLocation(const char* name)

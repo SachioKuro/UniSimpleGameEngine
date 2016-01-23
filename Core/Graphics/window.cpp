@@ -39,7 +39,11 @@ namespace Core {
 			// Draw Chunks
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
-					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera);
+					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::LAND);
+
+			for (int i = 0; i < WORLDSIZE; i++)
+				for (int j = 0; j < WORLDSIZE; j++)
+					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::WATER);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -105,7 +109,7 @@ namespace Core {
 			glFrontFace(GL_CCW);
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
-
+			
 #if KDEBUG
 			glfwSwapInterval(0.0);
 #endif // DEBUG
@@ -116,6 +120,7 @@ namespace Core {
 			// Enables Depth-Testing
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LESS);
+			//glShadeModel(GL_FLAT);
 
 			// Sets projectionmatrix
 			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);

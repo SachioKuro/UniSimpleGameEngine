@@ -8,13 +8,14 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 10
-#define CHUNK_SIZE_Y 35
-#define CHUNK_SIZE_Z 10
+#define CHUNK_SIZE_X 7
+#define CHUNK_SIZE_Y 28
+#define CHUNK_SIZE_Z 7
 #define BSIZE 1
 
 namespace Core {
 	namespace Terrain {
+		enum class TerrainType { LAND, WATER };
 		using namespace Graphics;
 		using namespace std;
 		/* A chunk in our world */
@@ -36,14 +37,13 @@ namespace Core {
 			vec3 center;
 			vec2 planePosition;
 			GLfloat boundingRadius;
+
+			vector<Block*> waterBlocks;
 		public:
-			Chunk(ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
+			Chunk(Renderer* renderer, ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
 			~Chunk();
 
-			void setRenderMode(RenderMode mode);
 			RenderMode getRenderMode() const { return mode; }
-			/* Switch between Rendermodes */
-			void toggleRenderMode();
 
 			GLboolean isActive() const { return active; }
 			void isActive(GLboolean active) { this->active = active; }
@@ -58,7 +58,7 @@ namespace Core {
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
 
 			/* Draws the chunk */
-			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera);
+			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type);
 		};
 	}
 }

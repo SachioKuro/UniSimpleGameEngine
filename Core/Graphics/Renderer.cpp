@@ -22,13 +22,10 @@ namespace Core {
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
 
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(3 * sizeof(GLfloat)));
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec3)));
 
 			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(6 * sizeof(GLfloat)));
-
-			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(8 * sizeof(GLfloat)));
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec3) + sizeof(vec2)));
 
 			// Release bindings
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -64,23 +61,22 @@ namespace Core {
 			// Release pointer
 			//glInvalidateBufferData(vbo);
 			glUnmapBuffer(GL_ARRAY_BUFFER);
-			//glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
 		// seems awkward, but saves 72 %-Operations per submit
 		int8 j[] = { 0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5 };
 		int8 k[] = {0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5};
 		// Todo: one base box + position
-		void Renderer::submit(Drawable* object, PrimitiveContext* context) {
+		void Renderer::submit(Drawable* object, PrimitiveContext* context, vec2& range) {
 			// Set vertex-information for each vertex
-			for (int8 i = 0; i < object->getSize(); i++) {
+			for (int8 i = range.x, n = (range.y == 0) ? object->getSize() : range.y; i < n; i++) {
 				vertexAttributes->position = context->getMesh()[i] + object->getPosition();
-				vertexAttributes->normal = context->getNormals()[j[i]];
 				vertexAttributes->uv = context->getUVs(object->getTextureID())[k[i]];
-				vertexAttributes->color = object->getColor();
+				vertexAttributes->normal = context->getNormals()[j[i]];
 				vertexAttributes++;
+				vertexCount ++;
 			}
-			vertexCount += object->getSize();
 		}
 
 		void Renderer::draw() {

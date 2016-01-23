@@ -35,7 +35,7 @@ namespace Core {
 			RenderMode getRenderMode() const { return mode; }
 
 			void setPosition(ivec3 position) { x = position.x; y = position.y; z = position.z; }
-			ivec3 getPosition() const { return ivec3(x, y, z); }
+			vec3 getPosition() const { return vec3(x, y, z); }
 
 			void setTextureOffset(TextureID textureOffset) { this->textureOffset = textureOffset; }
 			vec2 getTextureOffset() const { return vec2((GLubyte)textureOffset & 0x0F, ((GLubyte)textureOffset >> 4) & 0x0F); }

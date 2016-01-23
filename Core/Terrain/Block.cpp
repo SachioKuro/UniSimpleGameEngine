@@ -21,8 +21,8 @@ namespace Core {
 			this->type = type;
 		}
 
-		void Block::submit(Renderer* renderer, BlockContext* context) const {
-			if (isEnabled() && !isCovered()) renderer->submit((Drawable*)this, context);
+		void Block::submit(Renderer* renderer, BlockContext* context, vec2& range) const {
+			if (isEnabled() && !isCovered()) renderer->submit((Drawable*)this, context, range);
 		}
 	}
 }

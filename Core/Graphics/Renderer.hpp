@@ -35,7 +35,7 @@ namespace Core {
 			void end();
 
 			/* Submit an object for drawing */
-			void submit(Drawable* object, PrimitiveContext* context);
+			void submit(Drawable* object, PrimitiveContext* context, vec2& range = vec2(0, 0));
 			/* Draw all objects */
 			void draw();
 		};

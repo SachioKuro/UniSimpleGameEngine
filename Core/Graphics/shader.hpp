@@ -25,7 +25,7 @@ namespace Core {
 		{
 		public:
 			// Shaderprograms
-			static Shader *Block, *Sky, *Info3D;
+			static Shader *Block, *Sky, *Water;
 		private:
 			GLuint programID;
 			// Cache for the location of shader-variables
