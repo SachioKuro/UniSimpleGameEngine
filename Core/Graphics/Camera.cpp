@@ -18,7 +18,6 @@ namespace Core {
 		{
 			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
 
-
 			// Compute new orientation
 			horizontalAngle += mouseSpeed * deltaTimeAngle * float((winWidth >> 2) - xCursorPos);
 			verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
@@ -30,6 +29,12 @@ namespace Core {
 			glm::vec3 direction(
 				cos(verticalAngle) * sin(horizontalAngle),
 				sin(verticalAngle),
+				cos(verticalAngle) * cos(horizontalAngle)
+				);
+
+			glm::vec3 walkDirection(
+				cos(verticalAngle) * sin(horizontalAngle),
+				0,
 				cos(verticalAngle) * cos(horizontalAngle)
 				);
 
@@ -47,24 +52,38 @@ namespace Core {
 
 			//if (deltaTimeUpdate > mouseSpeedUpdate) {
 				// Move forward
+			
 				if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-					cameraPosition += direction * deltaTime * mouseSpeed;
+					cameraPosition += walkDirection * deltaTime * mouseSpeed;
 				}
-
 				// Move backward
 				else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-					cameraPosition -= direction * deltaTime * mouseSpeed;
+					cameraPosition -= walkDirection * deltaTime * mouseSpeed;
 				}
 
 				// Strafe right
 				if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 					cameraPosition += right * deltaTime * mouseSpeed;
 				}
-
 				// Strafe left
 				else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
 					cameraPosition -= right * deltaTime * mouseSpeed;
 				}
+
+				if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+					if (jumpTo == -50.f) {
+						jumpTo = cameraPosition.y + 1;
+					}
+				}
+
+				if (cameraPosition.y < jumpTo) {
+					cameraPosition.y += 0.1f;
+				}
+				else {
+					jumpTo = -50.f;
+				}
+
+				printf("%g \n", cameraPosition.y);
 				//deltaTimeUpdate = 0.0f;
 			//}
 

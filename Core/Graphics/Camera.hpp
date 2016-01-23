@@ -3,6 +3,7 @@
 #include "..\Utils\GL.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
+#include <stdio.h>
 
 namespace Core {
 	namespace Graphics {
@@ -13,13 +14,14 @@ namespace Core {
 		private:
 			GLFWwindow* window;
 			int winWidth, winHeight;
-			vec3 cameraPosition = vec3(1, 1, 1);
+			vec3 cameraPosition = vec3(1, -16, 1);
 			double xCursorPos, yCursorPos;
 			mat4 view = mat4(1.0f);
 			vec4* planes;
 
-			double horizontalAngle = 0.0f;
-			double verticalAngle = 0.0f;
+			float jumpTo = -50.f;
+			double horizontalAngle = .5f;
+			double verticalAngle = -1.0f;
 			float mouseSpeed = 4.f;
 			float deltaTime = 0.05f;
 			float deltaTimeUpdate = 0.0f;
