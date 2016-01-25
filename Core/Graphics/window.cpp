@@ -44,7 +44,7 @@ namespace Core {
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
 					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::WATER);
-
+#if 0
 			//@TODO move this to Camera
 			Terrain::Chunk* currentChunk = wt->getCurrentChunk();
 			if (currentChunk != nullptr) {
@@ -67,6 +67,7 @@ namespace Core {
 					DEBUG("blocked sites");
 				}
 			}
+#endif
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();

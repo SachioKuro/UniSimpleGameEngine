@@ -63,7 +63,7 @@ namespace Core {
 			vector<Block*>& getTmpBlocks() { return tmpBlocksContainer; }
 
 			/* Draws the chunk */
-			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera);
+			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type);
 
 			int getHighestBlock(int x, int z);
 		};
