@@ -50,7 +50,6 @@ namespace Core {
 						} else {
 							if (currentChunk != nullptr) {
 								if (currentChunk->getCenter().x + chunkSizeHalfX < cpos.x) {
-									DEBUG("posX");
 									currentChunk = chunks[i][j];
 #if 1
 									noisePos.x += CHUNK_SIZE_X;
@@ -88,7 +87,6 @@ namespace Core {
 #endif
 								} else if (currentChunk->getCenter().z + chunkSizeHalfZ < cpos.z) {
 									currentChunk = chunks[i][j];
-									DEBUG("+Z");
 #if 1
 									noisePos.y -= CHUNK_SIZE_Z;
 									for (int k = 0; k < WORLDSIZE; k++) {
@@ -107,7 +105,6 @@ namespace Core {
 #endif
 								} else if (currentChunk->getCenter().z - chunkSizeHalfZ > cpos.z) {
 									currentChunk = chunks[i][j];
-									DEBUG("-Z");
 #if 1
 									noisePos.y += CHUNK_SIZE_Z;
 									for (int k = 0; k < WORLDSIZE; k++) {

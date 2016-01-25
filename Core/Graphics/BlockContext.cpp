@@ -116,6 +116,15 @@ namespace Core {
 			*(uvs[TextureID::SNOW01]++) = texture.getTextureOffset(TextureID::SNOW01) + texture.getTexturePercentage();
 			uvs[TextureID::SNOW01] -= 6;
 
+			uvs[TextureID::WATER01] = new vec2[6];
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01);
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
+			*(uvs[TextureID::WATER01]++) = vec2(texture.getTextureOffset(TextureID::WATER01).s, texture.getTextureOffset(TextureID::WATER01).t + texture.getTexturePercentage().t);
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01);
+			*(uvs[TextureID::WATER01]++) = vec2(texture.getTextureOffset(TextureID::WATER01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::WATER01).t);
+			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
+			uvs[TextureID::WATER01] -= 6;
+
 			mesh -= 36; normals -= 6;
 		}
 
@@ -123,7 +132,15 @@ namespace Core {
 			delete[] mesh;
 			delete[] normals;
 			delete[] uvs[TextureID::STONE01];
+			delete[] uvs[TextureID::STONE02];
+			delete[] uvs[TextureID::STONE03];
+			delete[] uvs[TextureID::KIES01];
 			delete[] uvs[TextureID::GRASS01];
+			delete[] uvs[TextureID::GRASS02];
+			delete[] uvs[TextureID::GRASS03];
+			delete[] uvs[TextureID::SAND01];
+			delete[] uvs[TextureID::SNOW01];
+			delete[] uvs[TextureID::WATER01];
 		}
 	}
 }

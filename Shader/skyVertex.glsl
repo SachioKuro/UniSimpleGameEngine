@@ -1,9 +1,8 @@
 #version 330
 
 layout(location = 0) in vec3 vertexPos_ms;
-layout(location = 1) in vec3 normal;
-layout(location = 2) in vec2 uv;
-layout(location = 3) in vec4 color;
+layout(location = 1) in vec2 uv;
+layout(location = 2) in vec4 color;
 
 out vec4 _color;
 out vec3 _uv;

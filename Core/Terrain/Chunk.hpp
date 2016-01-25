@@ -17,12 +17,16 @@ namespace Core {
 	namespace Terrain {
 		using namespace Graphics;
 		using namespace std;
+
+		enum class TerrainType { LAND, WATER };
+
 		/* A chunk in our world */
 		class Chunk {
 		private:
 			static GLuint64 chunkIDs;
 			GLuint64 chunkID;
 			Block**** blocks;
+			vector<Block*> tmpBlocksContainer;
 			Chunk *lchunk, *tchunk, *fchunk;
 			Renderer* renderer;
 			Texture* texture;
@@ -40,10 +44,7 @@ namespace Core {
 			Chunk(ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
 			~Chunk();
 
-			void setRenderMode(RenderMode mode);
 			RenderMode getRenderMode() const { return mode; }
-			/* Switch between Rendermodes */
-			void toggleRenderMode();
 
 			GLboolean isActive() const { return active; }
 			void isActive(GLboolean active) { this->active = active; }
@@ -58,6 +59,8 @@ namespace Core {
 
 			void setFrontChunk(Chunk* fchunk) { this->fchunk = fchunk; }
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
+
+			vector<Block*>& getTmpBlocks() { return tmpBlocksContainer; }
 
 			/* Draws the chunk */
 			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera);

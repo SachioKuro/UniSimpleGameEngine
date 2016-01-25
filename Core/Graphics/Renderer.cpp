@@ -15,6 +15,7 @@ namespace Core {
 			// Binds vbo
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			// Reserves memory on the VRAM
+			glInvalidateBufferData(vbo);
 			glBufferData(GL_ARRAY_BUFFER, bufferSize, 0, GL_STATIC_DRAW);
 
 			// Specifies the structur of the data, which will be send to the VRAM
@@ -22,13 +23,7 @@ namespace Core {
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)0);
 
 			glEnableVertexAttribArray(1);
-			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(3 * sizeof(GLfloat)));
-
-			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(6 * sizeof(GLfloat)));
-
-			glEnableVertexAttribArray(3);
-			glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(8 * sizeof(GLfloat)));
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)(sizeof(vec3)));
 
 			// Release bindings
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -36,6 +31,7 @@ namespace Core {
 		}
 
 		Renderer::~Renderer() {
+			//glInvalidateBufferData(vbo);
 			glDeleteBuffers(1, &vbo);
 			glDeleteVertexArrays(1, &vao);
 		}
@@ -64,7 +60,7 @@ namespace Core {
 			// Release pointer
 			//glInvalidateBufferData(vbo);
 			glUnmapBuffer(GL_ARRAY_BUFFER);
-			//glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
 		// seems awkward, but saves 72 %-Operations per submit
@@ -75,9 +71,7 @@ namespace Core {
 			// Set vertex-information for each vertex
 			for (int8 i = 0; i < object->getSize(); i++) {
 				vertexAttributes->position = context->getMesh()[i] + object->getPosition();
-				vertexAttributes->normal = context->getNormals()[j[i]];
 				vertexAttributes->uv = context->getUVs(object->getTextureID())[k[i]];
-				vertexAttributes->color = object->getColor();
 				vertexAttributes++;
 			}
 			vertexCount += object->getSize();

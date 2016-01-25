@@ -9,9 +9,7 @@ namespace Core {
 
 		struct Vertex {
 			vec3 position;
-			vec3 normal;
 			vec2 uv;
-			vec4 color;
 		};
 
 		class PrimitiveContext {
