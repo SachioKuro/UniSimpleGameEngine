@@ -40,11 +40,8 @@ namespace Core {
 			void setTextureOffset(TextureID textureOffset) { this->textureOffset = textureOffset; }
 			vec2 getTextureOffset() const { return vec2((GLubyte)textureOffset & 0x0F, ((GLubyte)textureOffset >> 4) & 0x0F); }
 			TextureID getTextureID() const { return textureOffset; }
-			//void setColor(uint8 color) { this->color = color; }
-			vec4 getColor() const {
-				//return ivec4(((color << 2) & 0x0F) >> 2, (color & 0x0F) >> 2, (((color & 0xF0) >> 2) & 0x0F) << 2, ((((color >> 2) & 0xF0) >> 2) & 0x0F) << 4);
-				return color;
-			}
+			void setColor(vec4 color) { this->color = color; }
+			vec4 getColor() const { return color; }
 
 			GLsizei getSize() { return nrOfVertices; }
 		};
