@@ -35,6 +35,7 @@ namespace Core {
 			mat4 model = mat4(1), mvp, pv;
 			BlockContext* context;
 			vec3 center;
+			vec3 position;
 			vec2 planePosition;
 			GLfloat boundingRadius;
 
@@ -53,6 +54,8 @@ namespace Core {
 
 			void setBlendColor(vec4 color) { blendColor = color; }
 			vec3& getCenter() { return center; }
+			vec3 getPosition() { return position; }
+			Block**** getBlocks() { return blocks; }
 
 			void setFrontChunk(Chunk* fchunk) { this->fchunk = fchunk; }
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }

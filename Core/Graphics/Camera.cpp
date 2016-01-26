@@ -83,7 +83,6 @@ namespace Core {
 					jumpTo = -50.f;
 				}
 
-				printf("%g \n", cameraPosition.y);
 				//deltaTimeUpdate = 0.0f;
 			//}
 

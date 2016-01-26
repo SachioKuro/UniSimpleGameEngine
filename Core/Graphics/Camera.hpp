@@ -14,7 +14,7 @@ namespace Core {
 		private:
 			GLFWwindow* window;
 			int winWidth, winHeight;
-			vec3 cameraPosition = vec3(1, -16, 1);
+			vec3 cameraPosition = vec3(2, -14.2, 2);
 			double xCursorPos, yCursorPos;
 			mat4 view = mat4(1.0f);
 			vec4* planes;
