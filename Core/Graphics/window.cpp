@@ -21,7 +21,7 @@ namespace Core {
 		void Window::update(Terrain::WorldTree* wt, Terrain::Skybox* skybox, Camera*& camera, Terrain::RenderMode renderMode) {
 			Terrain::Chunk* currentChunk = wt->getCurrentChunk();
 
-			view = camera->updateCamera();
+			view = camera->updateCamera(currentChunk);
 			vec3 cameraPosition = camera->getCameraPosition();
 
 

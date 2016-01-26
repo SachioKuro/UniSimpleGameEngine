@@ -14,7 +14,7 @@ namespace Core {
 			delete[] planes;
 		}
 
-		mat4& Camera::updateCamera()
+		mat4& Camera::updateCamera(Terrain::Chunk* currentChunk)
 		{
 			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
 

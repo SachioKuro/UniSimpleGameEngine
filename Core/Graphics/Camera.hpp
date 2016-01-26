@@ -1,6 +1,8 @@
 #pragma once
 
 #include "..\Utils\GL.hpp"
+#include "..\Terrain\Block.hpp"
+#include "..\Terrain\Chunk.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
 #include <stdio.h>
@@ -8,7 +10,7 @@
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
-
+		
 		class Camera
 		{
 		private:
@@ -34,7 +36,7 @@ namespace Core {
 			void setCameraPosition(vec3 position) { cameraPosition = position; }
 			double getXCursorPos() const { return xCursorPos; }
 			double getYCursorPos() const { return yCursorPos; }
-			mat4& updateCamera();
+			mat4& updateCamera(Terrain::Chunk* currentChunk);
 			vec4* getFrustumPlanes(mat4* projection);
 		};
 	}
