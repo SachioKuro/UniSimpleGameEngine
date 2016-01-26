@@ -1,11 +1,16 @@
 #pragma once
 
 #include "..\Utils\GL.hpp"
-#include "..\Terrain\Block.hpp"
-#include "..\Terrain\Chunk.hpp"
+//#include "..\Terrain\Block.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
 #include <stdio.h>
+
+namespace Core {
+	namespace Terrain {
+		class Chunk;
+	}
+}
 
 namespace Core {
 	namespace Graphics {
