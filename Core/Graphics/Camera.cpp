@@ -17,49 +17,103 @@ namespace Core {
 
 		mat4& Camera::updateCamera(Terrain::Chunk* currentChunk)
 		{
-			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
+			if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+			{
+				freeFlight = !freeFlight;
+			}
 
-			// Compute new orientation
-			horizontalAngle += mouseSpeed * deltaTimeAngle * float((winWidth >> 2) - xCursorPos);
-			verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
+			if (freeFlight) {
+				view = updateFreeFlightCamera();
+			}
+			else {
+				view = updatePlayerCamera(currentChunk);
+			}
 
-			// restrict camera angle so the camera doesn't flip
-			if (verticalAngle >= 1) { verticalAngle = 1; } else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
+			glfwSetCursorPos(window, winWidth >> 2, winHeight >> 2);
 
-			// Direction : Spherical coordinates to Cartesian coordinates conversion
-			glm::vec3 direction(
-				cos(verticalAngle) * sin(horizontalAngle),
-				sin(verticalAngle),
-				cos(verticalAngle) * cos(horizontalAngle)
-				);
+			return view;
+		}
 
-			glm::vec3 walkDirection(
-				cos(verticalAngle) * sin(horizontalAngle),
-				0,
-				cos(verticalAngle) * cos(horizontalAngle)
-				);
+		mat4 Camera::updatePlayerCamera(Terrain::Chunk* currentChunk) {
+			if (currentChunk != nullptr) {
+				vec3 position = currentChunk->getPosition();
+				Terrain::Block**** blocks = currentChunk->getBlocks();
 
-			// Right vector
-			glm::vec3 right = glm::vec3(
-				sin(horizontalAngle - pi<float>() / 2.0f),
-				0,
-				cos(horizontalAngle - pi<float>() / 2.0f)
-				);
+				int differenceX = abs(position.x - floor(cameraPosition.x));
+				int differenceY = abs(position.y - floor(abs(cameraPosition.y)));
+				int differenceZ = abs(position.z - floor(cameraPosition.z));
 
-			// Up vector : perpendicular to both direction and right
-			glm::vec3 up = glm::cross(right, direction);
+				differenceX = differenceX % CHUNK_SIZE_X;
+				differenceY = differenceY % CHUNK_SIZE_Y;
+				differenceZ = differenceZ % CHUNK_SIZE_Z;
 
-			//deltaTimeUpdate += deltaTime;
+				if (blocks[differenceZ][differenceY + 2][differenceX]->isEnabled() == false && jumpTo == -50.f)
+				{
+					cameraPosition.y -= 0.2f;
+					setCameraPosition(vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
+				}
 
-			//if (deltaTimeUpdate > mouseSpeedUpdate) {
+				glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
+
+				// Compute new orientation
+				horizontalAngle += mouseSpeed * deltaTimeAngle * float((winWidth >> 2) - xCursorPos);
+				verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
+
+				// restrict camera angle so the camera doesn't flip
+				if (verticalAngle >= 1) { verticalAngle = 1; }
+				else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
+
+				// Direction : Spherical coordinates to Cartesian coordinates conversion
+				glm::vec3 direction(
+					cos(verticalAngle) * sin(horizontalAngle),
+					sin(verticalAngle),
+					cos(verticalAngle) * cos(horizontalAngle)
+					);
+
+				glm::vec3 walkDirection(
+					cos(verticalAngle) * sin(horizontalAngle),
+					0,
+					cos(verticalAngle) * cos(horizontalAngle)
+					);
+
+				// Right vector
+				glm::vec3 right = glm::vec3(
+					sin(horizontalAngle - pi<float>() / 2.0f),
+					0,
+					cos(horizontalAngle - pi<float>() / 2.0f)
+					);
+
+				// Up vector : perpendicular to both direction and right
+				glm::vec3 up = glm::cross(right, direction);
+
 				// Move forward
-			
 				if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-					cameraPosition += walkDirection * deltaTime * mouseSpeed;
+					if (abs(walkDirection.x) > abs(walkDirection.z)) {
+						if (blocks[differenceZ][(differenceY + 1) % CHUNK_SIZE_Y][(differenceX + 1) % CHUNK_SIZE_X]->isEnabled() == false) {
+							cameraPosition += walkDirection * deltaTime * mouseSpeed;
+						}
+					}
+					else {
+						if (blocks[(differenceZ + 1) % CHUNK_SIZE_Z][differenceY + 1][differenceX]->isEnabled() == false) {
+							cameraPosition += walkDirection * deltaTime * mouseSpeed;
+						}
+					}
+
+					//DEBUG(walkDirection.x);
+					//DEBUG(walkDirection.z);
 				}
 				// Move backward
 				else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-					cameraPosition -= walkDirection * deltaTime * mouseSpeed;
+					if (abs(walkDirection.x) > abs(walkDirection.z)) {
+						if (blocks[differenceZ][(differenceY + 1) % CHUNK_SIZE_Y][(differenceX - 1) % CHUNK_SIZE_X]->isEnabled() == false) {
+							cameraPosition -= walkDirection * deltaTime * mouseSpeed;
+						}
+					}
+					else {
+						if (blocks[(differenceZ - 1) % CHUNK_SIZE_Z][(differenceY - 1) % CHUNK_SIZE_Y][differenceX]->isEnabled() == false) {
+							cameraPosition -= walkDirection * deltaTime * mouseSpeed;
+						}
+					}
 				}
 
 				// Strafe right
@@ -78,18 +132,77 @@ namespace Core {
 				}
 
 				if (cameraPosition.y < jumpTo) {
-					cameraPosition.y += 0.1f;
+					float diff = abs(jumpTo - cameraPosition.y);
+					cameraPosition.y += 0.1f * 1 / diff;
 				}
 				else {
 					jumpTo = -50.f;
 				}
 
-				//deltaTimeUpdate = 0.0f;
-			//}
+				view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
+
+			}
+
+			return view;
+		}
+
+		mat4 Camera::updateFreeFlightCamera() {
+			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
+
+			// Compute new orientation
+			horizontalAngle += mouseSpeed * deltaTimeAngle * float((winWidth >> 2) - xCursorPos);
+			verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
+
+			// restrict camera angle so the camera doesn't flip
+			if (verticalAngle >= 1) { verticalAngle = 1; }
+			else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
+
+			// Direction : Spherical coordinates to Cartesian coordinates conversion
+			glm::vec3 direction(
+				cos(verticalAngle) * sin(horizontalAngle),
+				sin(verticalAngle),
+				cos(verticalAngle) * cos(horizontalAngle)
+				);
+
+			glm::vec3 walkDirection(
+				cos(verticalAngle) * sin(horizontalAngle),
+				sin(verticalAngle),
+				cos(verticalAngle) * cos(horizontalAngle)
+				);
+
+			// Right vector
+			glm::vec3 right = glm::vec3(
+				sin(horizontalAngle - pi<float>() / 2.0f),
+				0,
+				cos(horizontalAngle - pi<float>() / 2.0f)
+				);
+
+			// Up vector : perpendicular to both direction and right
+			glm::vec3 up = glm::cross(right, direction);
+
+			//deltaTimeUpdate += deltaTime;
+
+			//if (deltaTimeUpdate > mouseSpeedUpdate) {
+			// Move forward
+
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+						cameraPosition += walkDirection * deltaTime * mouseSpeed;
+			}
+			// Move backward
+			else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+				cameraPosition -= walkDirection * deltaTime * mouseSpeed;
+			}
+
+			// Strafe right
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+				cameraPosition += right * deltaTime * mouseSpeed;
+			}
+			// Strafe left
+			else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+				cameraPosition -= right * deltaTime * mouseSpeed;
+			}
 
 			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
-
-			glfwSetCursorPos(window, winWidth >> 2, winHeight >> 2);
 
 			return view;
 		}

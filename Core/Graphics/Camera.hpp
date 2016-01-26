@@ -20,6 +20,7 @@ namespace Core {
 		{
 		private:
 			GLFWwindow* window;
+			bool freeFlight = false;
 			int winWidth, winHeight;
 			vec3 cameraPosition = vec3(2, -14.2, 2);
 			double xCursorPos, yCursorPos;
@@ -34,6 +35,9 @@ namespace Core {
 			float deltaTimeUpdate = 0.0f;
 			float mouseSpeedUpdate = 1 / mouseSpeed;
 			float deltaTimeAngle = 0.005f;
+
+			mat4 updateFreeFlightCamera();
+			mat4 updatePlayerCamera(Terrain::Chunk* currentChunk);
 		public:
 			Camera(GLFWwindow* window);
 			~Camera();

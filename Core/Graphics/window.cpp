@@ -24,31 +24,6 @@ namespace Core {
 			view = camera->updateCamera(currentChunk);
 			vec3 cameraPosition = camera->getCameraPosition();
 
-
-			if (currentChunk != nullptr) {
-				vec3 position = currentChunk->getPosition();
-				Terrain::Block**** blocks = currentChunk->getBlocks();
-
-				int differenceX = abs(position.x - floor(cameraPosition.x));
-				int differenceY = abs(position.y - floor(abs(cameraPosition.y)));
-				int differenceZ = abs(position.z - floor(cameraPosition.z));
-
-				differenceX = differenceX % CHUNK_SIZE_X;
-				differenceY = differenceY % CHUNK_SIZE_Y;
-				differenceZ = differenceZ % CHUNK_SIZE_Z;
-
-				printf("%g %g %g \n", floor(differenceX), floor(differenceY + 1), floor(differenceZ));
-				if (blocks[differenceZ][differenceY + 2][differenceX]->isEnabled() == false)
-				{
-					DEBUG("no");
-					cameraPosition.y -= 0.2f;
-					camera->setCameraPosition(vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-				}
-				else {
-					DEBUG("yes");
-				}
-			}
-
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			GLdouble currentTime = glfwGetTime();
