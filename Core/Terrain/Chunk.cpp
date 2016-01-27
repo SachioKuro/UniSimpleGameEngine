@@ -58,7 +58,7 @@ namespace Core {
 								if (z == 0 ? GL_TRUE : blocks[z - 1][y][x]->check()) 
 									isCovered = GL_TRUE;
 
-							if (y >= CHUNK_SIZE_Y - 12 && !isEnabled) {
+							if (y >= CHUNK_SIZE_Y - WATERLEVEL && !isEnabled) {
 								isEnabled = GL_TRUE;
 								btype = BlockType::WATER; 
 								tex = TextureID::WATER01;
@@ -231,7 +231,7 @@ namespace Core {
 			}
 		}
 
-		void Chunk::draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type) {
+		void Chunk::draw(mat4 projection, mat4 view, vec4 clippingPlane, Camera* camera, TerrainType type) {
 			if (active) {
 				vec4* planes = camera->getFrustumPlanes(&projection);
 				GLboolean toDraw = GL_TRUE;
@@ -249,6 +249,7 @@ namespace Core {
 						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
 						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
 						renderer->getActiveShader()->setUniformVector3("lightPosition", vec3(-1000, 2000, -1000));
+						renderer->getActiveShader()->setUniformVector4("clippingPlane", clippingPlane);
 						glDisable(GL_BLEND);
 						int topLayer = -1;
 						// Submit Blocks

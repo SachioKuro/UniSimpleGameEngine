@@ -38,14 +38,17 @@ namespace Core {
 			// Draw Skybox
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 			wt->checkAndLoad();
+
+			glEnable(GL_CLIP_PLANE0);
+
 			// Draw Chunks
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
-					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::LAND);
+					wt->getChunks()[i][j]->draw(projection, view, vec4(0, -1, 0, -(CHUNK_SIZE_Y - WATERLEVEL)), camera, Terrain::TerrainType::LAND);
 
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
-					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::WATER);
+					wt->getChunks()[i][j]->draw(projection, view, vec4(0, -1, 0, 0), camera, Terrain::TerrainType::WATER);
 			
 			
 

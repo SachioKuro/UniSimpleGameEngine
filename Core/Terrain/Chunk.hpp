@@ -12,6 +12,7 @@
 #define CHUNK_SIZE_Y 28
 #define CHUNK_SIZE_Z 7
 #define BSIZE 1
+#define WATERLEVEL 10
 
 namespace Core {
 	namespace Terrain {
@@ -61,7 +62,7 @@ namespace Core {
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
 
 			/* Draws the chunk */
-			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type);
+			void draw(mat4 projection, mat4 view, vec4 clippingPlane, Camera* camera, TerrainType type);
 		};
 	}
 }
