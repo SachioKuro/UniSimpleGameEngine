@@ -4,7 +4,7 @@ namespace Core {
 	namespace Terrain {
 		GLuint64 Chunk::chunkIDs = 0;
 		Chunk::Chunk(Renderer* renderer, ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor)
-			: renderer(renderer), lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), blendColor(blendColor), heightmap(heightmap), blockmap(blockmap), active(GL_FALSE), chunkID(chunkIDs++), position(position) {
+			: renderer(renderer), lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), heightmap(heightmap), blockmap(blockmap), active(GL_FALSE), chunkID(chunkIDs++), position(position) {
 			model[3].x = position.x; model[3].y = position.y; model[3].z = position.z;										// Position of Chunk
 			center = vec3(position.x + CHUNK_SIZE_X / 2, position.y - CHUNK_SIZE_Y / 2, position.z - CHUNK_SIZE_Z / 2);		// Center of Chunk
 			boundingRadius = sqrtf(powf(CHUNK_SIZE_X / 2, 2) + powf(CHUNK_SIZE_Y / 2, 2) + powf(CHUNK_SIZE_Z / 2, 2));		// Radius of BoundingSphere
@@ -64,7 +64,7 @@ namespace Core {
 								tex = TextureID::WATER01;
 							}
 
-							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, mode, isEnabled);
+							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, RenderMode::SOLID, isEnabled);
 							blocks[z][y][x]->isCovered(isCovered);
 							
 							/* If Block is not there uncover covered neighbor */

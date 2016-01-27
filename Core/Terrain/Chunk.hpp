@@ -27,17 +27,13 @@ namespace Core {
 			Block**** blocks;
 			Chunk *lchunk, *tchunk, *fchunk;
 			Renderer* renderer;
-			Texture* texture;
 			vector<vector<double>> heightmap, blockmap;
 			GLboolean active = GL_FALSE;
-			RenderMode mode = RenderMode::SOLID;
 			GLuint vertexCount = 36;
-			vec4 blendColor;
-			mat4 model = mat4(1), mvp, pv;
+			mat4 model = mat4(1);
 			BlockContext* context;
 			vec3 center;
 			vec3 position;
-			vec2 planePosition;
 			GLfloat boundingRadius;
 
 			vector<Block*> waterBlocks;
@@ -45,15 +41,12 @@ namespace Core {
 			Chunk(Renderer* renderer, ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
 			~Chunk();
 
-			RenderMode getRenderMode() const { return mode; }
-
 			GLboolean isActive() const { return active; }
 			void isActive(GLboolean active) { this->active = active; }
 
 			GLuint load(GLuint id);
 			void unload(GLuint id);
 
-			void setBlendColor(vec4 color) { blendColor = color; }
 			vec3& getCenter() { return center; }
 			vec3 getPosition() { return position; }
 			Block**** getBlocks() { return blocks; }
