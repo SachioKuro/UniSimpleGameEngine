@@ -54,5 +54,7 @@
     <None Include=".gitignore" />
     <None Include="LICENSE" />
     <None Include="Test.py" />
+    <None Include="Shader\waterFragment.glsl" />
+    <None Include="Shader\waterVertex.glsl" />
   </ItemGroup>
 </Project>

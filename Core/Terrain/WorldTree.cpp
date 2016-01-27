@@ -7,8 +7,8 @@ namespace Core {
 			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, 36, RenderMode::SOLID);
 			renderer->useShader(Shader::Block);
 			chunkSizeHalfX = CHUNK_SIZE_X / 2.0, chunkSizeHalfZ = CHUNK_SIZE_Z / 2.0;
-			noise = new PerlinNoise(1337 + 10, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 34, 15000);
-			bnoise = new PerlinNoise(1337 - 10, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 3, 50000);
+			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 40, 30000);
+			bnoise = new PerlinNoise(1337 - 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 8, 50000);
 			vec3 cpos = camera->getCameraPosition();
 			noisePos.x -= (WORLD_HALFSIZE * CHUNK_SIZE_X);
 			noisePos.y -= (WORLD_HALFSIZE * CHUNK_SIZE_Z);

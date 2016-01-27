@@ -201,6 +201,8 @@
     <None Include="Shader\simpleVertex.glsl" />
     <None Include="Shader\skyFragment.glsl" />
     <None Include="Shader\skyVertex.glsl" />
+    <None Include="Shader\waterFragment.glsl" />
+    <None Include="Shader\waterVertex.glsl" />
     <None Include="Test.py" />
   </ItemGroup>
   <ItemGroup>

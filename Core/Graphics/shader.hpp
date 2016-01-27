@@ -38,7 +38,7 @@ namespace Core {
 			static void del();
 			Shader(const char* const vertexShaderPath, const char* const fragmentShaderPath);
 			~Shader();
-
+			
 			/* Activates the shaderprogram */
 			void activate() const;
 			/* Deactivates the shaderprogram */

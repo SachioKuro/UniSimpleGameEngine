@@ -8,9 +8,9 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 7
-#define CHUNK_SIZE_Y 28
-#define CHUNK_SIZE_Z 7
+#define CHUNK_SIZE_X 10
+#define CHUNK_SIZE_Y 40
+#define CHUNK_SIZE_Z 10
 #define BSIZE 1
 #define WATERLEVEL 10
 
