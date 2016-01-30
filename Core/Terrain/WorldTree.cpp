@@ -2,12 +2,15 @@
 
 namespace Core {
 	namespace Terrain {
-		WorldTree::WorldTree(Camera* camera) : camera(camera) {
+		WorldTree::WorldTree(Graphics::Camera* camera) : camera(camera) {
+			using namespace Graphics;
+			using namespace Core::Utils;
+			using namespace glm;
 			// Set renderer
-			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, 36, RenderMode::SOLID);
+			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, 36);
 			renderer->useShader(Shader::Block);
 			chunkSizeHalfX = CHUNK_SIZE_X / 2.0, chunkSizeHalfZ = CHUNK_SIZE_Z / 2.0;
-			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 40, 30000);
+			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 40, 2000);
 			bnoise = new PerlinNoise(1337 - 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 8, 50000);
 			vec3 cpos = camera->getCameraPosition();
 			noisePos.x -= (WORLD_HALFSIZE * CHUNK_SIZE_X);
@@ -44,6 +47,9 @@ namespace Core {
 		}
 
 		void WorldTree::checkAndLoad() {
+			using namespace Graphics;
+			using namespace Core::Utils;
+			using namespace glm;
 			vec3 cpos = camera->getCameraPosition();
 			for (int i = 0; i < WORLDSIZE; i++) {
 				for (int j = 0; j < WORLDSIZE; j++) {

@@ -3,12 +3,15 @@
 namespace Core {
 	namespace Terrain {
 		GLuint64 Chunk::chunkIDs = 0;
-		Chunk::Chunk(Renderer* renderer, ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor)
-			: renderer(renderer), lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), heightmap(heightmap), blockmap(blockmap), active(GL_FALSE), chunkID(chunkIDs++), position(position) {
+		Chunk::Chunk(Graphics::Renderer* renderer, glm::ivec3 position, std::vector<std::vector<GLint>> heightmap,
+					std::vector<std::vector<GLint>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk,
+					Graphics::BlockContext* context, glm::vec4 blendColor)
+					: renderer(renderer), lchunk(lchunk), tchunk(tchunk), fchunk(fchunk), context(context), 
+			          heightmap(heightmap), blockmap(blockmap), active(GL_FALSE), chunkID(chunkIDs++), position(position) {
 
-			model[3].x = position.x; model[3].y = position.y; model[3].z = position.z;										// Position of Chunk
-			center = vec3(position.x + CHUNK_SIZE_X / 2, position.y - CHUNK_SIZE_Y / 2, position.z - CHUNK_SIZE_Z / 2);		// Center of Chunk
-			boundingRadius = sqrtf(powf(CHUNK_SIZE_X / 2, 2) + powf(CHUNK_SIZE_Y / 2, 2) + powf(CHUNK_SIZE_Z / 2, 2));		// Radius of BoundingSphere
+			model[3].x = position.x; model[3].y = position.y; model[3].z = position.z;										 // Position of Chunk
+			center = glm::vec3(position.x + CHUNK_SIZE_X / 2, position.y - CHUNK_SIZE_Y / 2, position.z - CHUNK_SIZE_Z / 2); // Center of Chunk
+			boundingRadius = sqrtf(powf(CHUNK_SIZE_X / 2, 2) + powf(CHUNK_SIZE_Y / 2, 2) + powf(CHUNK_SIZE_Z / 2, 2));		 // Radius of BoundingSphere
 		}
 
 		Chunk::~Chunk() {
@@ -26,6 +29,9 @@ namespace Core {
 		}
 
 		GLuint Chunk::load(GLuint) {
+			using namespace std;
+			using namespace Graphics;
+			using namespace glm;
 			if (!active) {			// Load only if not already loaded
 				active = GL_TRUE;
 				TextureID tex;		
@@ -65,7 +71,7 @@ namespace Core {
 								tex = TextureID::WATER01;
 							}
 
-							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, RenderMode::SOLID, isEnabled);
+							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, isEnabled);
 							blocks[z][y][x]->isCovered(isCovered);
 							
 							/* If Block is not there uncover covered neighbor */
@@ -232,7 +238,11 @@ namespace Core {
 			}
 		}
 
-		void Chunk::draw(mat4 projection, mat4 view, vec4 clippingPlane, Camera* camera, TerrainType type) {
+		void Chunk::draw(glm::mat4 projection, glm::mat4 view, glm::vec4 clippingPlane, GLint highOffset, GLint lowerOffset,
+						 Graphics::Camera* camera, TerrainType type) {
+			using namespace std;
+			using namespace Graphics;
+			using namespace glm;
 			if (active) {
 				vec4* planes = camera->getFrustumPlanes(&projection);
 				GLboolean toDraw = GL_TRUE;
@@ -250,14 +260,13 @@ namespace Core {
 						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
 						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
 						renderer->getActiveShader()->setUniformVector3("lightPosition", vec3(-1000, 2000, -1000));
-						renderer->getActiveShader()->setUniformVector4("clippingPlane", clippingPlane);
 						glDisable(GL_BLEND);
 						int topLayer = -1;
 						// Submit Blocks
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
 							for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 								for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-									if (blocks[z][y][x]->getBlockType() == BlockType::WATER && (topLayer == -1 || topLayer == y)) { topLayer = y; waterBlocks.push_back(blocks[z][y][x]); }
+									if (blocks[z][y][x]->getBlockType() == BlockType::WATER && (topLayer == -1 || topLayer == y)) { topLayer = y; waterBlocks.push_back(blocks[z][y][x]); } 
 									else if (blocks[z][y][x]->getBlockType() != BlockType::WATER) blocks[z][y][x]->submit(renderer, context);
 								}
 							}
@@ -291,6 +300,7 @@ namespace Core {
 
 						waterBlocks.clear();
 					}
+
 				}
 			}
 		}

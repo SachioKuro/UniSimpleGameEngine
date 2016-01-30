@@ -3,7 +3,7 @@
 namespace Core {
 	namespace Terrain {
 		Skybox::Skybox(SkyType type) {
-			skyboxBlock = new SkyboxBlock(type, RenderMode::SOLID);
+			skyboxBlock = new SkyboxBlock(type);
 		}
 
 		Skybox::~Skybox() {

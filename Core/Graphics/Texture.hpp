@@ -6,8 +6,6 @@
 
 namespace Core {
 	namespace Graphics {
-		using namespace glm;
-		using namespace std;
 		/*
 			Offset in Texture-Grid
 			First 4 Bits = Row from below
@@ -32,15 +30,15 @@ namespace Core {
 		private:
 			// Texture-Information
 			GLuint textureID, textureSampler;
-			vec2 textureSize = vec2(128, 128);
+			glm::vec2 textureSize = glm::vec2(128, 128);
 			// Clamp from 0-1
-			vec2 texturePercentage = textureSize / (textureSize * vec2(8, 8));
+			glm::vec2 texturePercentage = textureSize / (textureSize * glm::vec2(8, 8));
 
 		public:
 			/* Load and setup texture (File have to be RGBA) */
 			GLboolean load2D(const char* texturePath, GLboolean withMipMaps = GL_TRUE);
 			/* Load and setup texture (Cubemap) */
-			GLboolean loadCubeMap(vector<const char*> texturePath);
+			GLboolean loadCubeMap(std::vector<const char*> texturePath);
 			/* Set the Filtering for 2D-Texture */
 			void setFiltering(GLint magnification, GLint minification) const;
 			/* Set the CubeBoxParam for 2D-Texture */
@@ -53,11 +51,11 @@ namespace Core {
 			void unbind(GLenum type, GLuint unit) const;
 
 			/* Set texture-information */
-			void defineTextureInfo(vec2 textureElementCount, vec2 textureElementSize);
-			const vec2 getTexturePercentage() const { return texturePercentage; }
+			void defineTextureInfo(glm::vec2 textureElementCount, glm::vec2 textureElementSize);
+			const glm::vec2 getTexturePercentage() const { return texturePercentage; }
 
-			const vec2 getTextureOffset(TextureID textureOffset) const {
-				return vec2(((GLubyte)textureOffset & 0x0F) * texturePercentage.x,
+			const glm::vec2 getTextureOffset(TextureID textureOffset) const {
+				return glm::vec2(((GLubyte)textureOffset & 0x0F) * texturePercentage.x,
 					(((GLubyte)textureOffset & 0xF0) >> 4) * texturePercentage.y);
 			}
 		};

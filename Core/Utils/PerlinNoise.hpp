@@ -22,11 +22,10 @@
 // PerlinNoise implemented with the help of https://github.com/sol-prog/Perlin_Noise GPLv3
 namespace Core {
 	namespace Utils {
-		using namespace std;
 		class PerlinNoise
 		{
 		private:
-			vector<int> p;
+			std::vector<int> p;
 			unsigned int segmentWidth, segmentHeight;
 			unsigned int maxNoiseWidth, maxNoiseHeight;
 			unsigned int height, spread;
@@ -35,11 +34,10 @@ namespace Core {
 			double grad(int hash, double x, double y, double z);
 			double lerp(double t, double a, double b);
 			double noise(double x, double y, double z);
-			vector<vector<double>> values;
+			std::vector<std::vector<int>> values;
 		public:
-			PerlinNoise(unsigned int seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned int spread); // @TODO constants to constructor parameters? 
-											// (like SPREAD, MAX_HEIGHT, noise_width, noise_height)
-			vector<vector<double>>* createNoise(unsigned int deltaX, unsigned int deltaY);
+			PerlinNoise(unsigned int seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned int spread); 
+			std::vector<std::vector<int>>* createNoise(unsigned int deltaX, unsigned int deltaY);
 			void debugNoise(unsigned int nr); // helper function to write output values to .txt file
 			~PerlinNoise();
 		};

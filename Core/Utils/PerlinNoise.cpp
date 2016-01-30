@@ -22,7 +22,7 @@ namespace Core {
 		}
 
 		// The actual method to fill values[][] with the generated noise values.
-		vector<vector<double>>* PerlinNoise::createNoise(unsigned int deltaX, unsigned int deltaY) {	
+		std::vector<std::vector<int>>* PerlinNoise::createNoise(unsigned int deltaX, unsigned int deltaY) {	
 			values.resize(segmentWidth);
 			// Visit every pixel of the image and assign a color generated with Perlin noise
 			for (unsigned int i = 0; i < segmentWidth; ++i) {     // y
@@ -38,7 +38,7 @@ namespace Core {
 
 					// Map the values to the [0, 255] interval, for simplicity we use 
 					// tones of greyS
-					values[i][j] = max(1.0, min((double)height, (double)floor(height * n1 / (2 * n2) + (n3 / 10))));
+					values[i][j] = std::max(1.0, std::min((double)height, (double)floor(height * n1 / (2 * n2) + (n3 / 10))));
 				}
 			}
 			return &values;
@@ -96,9 +96,9 @@ namespace Core {
 
 		// Debug method to write all values to a .txt file
 		void PerlinNoise::debugNoise(unsigned int nr) {
-			ofstream myfile;
-			string name("input");
-			name.append(to_string(nr));
+			std::ofstream myfile;
+			std::string name("input");
+			name.append(std::to_string(nr));
 			name.append(".txt");
 			myfile.open(name);
 			char buffer[10];

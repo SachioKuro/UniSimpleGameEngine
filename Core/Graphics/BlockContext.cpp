@@ -3,13 +3,13 @@
 namespace Core {
 	namespace Graphics {
 		BlockContext::BlockContext() {
+			using namespace glm;
 			// Define texturemap
 			texture.load2D("Textures/texturemap128.png");
 			texture.setCubeBoxParam();
 			texture.defineTextureInfo(vec2(8, 8), vec2(128, 128));
 
-			mesh = new vec3[36];
-			normals = new vec3[6];
+			mesh = new vec3[36]; normals = new vec3[6];
 
 			center = vec4(0.5, -0.5, -0.5, 1);
 

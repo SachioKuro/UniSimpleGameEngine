@@ -17,6 +17,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Core\Graphics\BlockContext.cpp" />
     <ClCompile Include="Core\Graphics\SkyBlockContext.cpp" />
+    <ClCompile Include="Core\Graphics\WaterFBO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Graphics\Camera.hpp" />
@@ -39,6 +40,9 @@
     <ClInclude Include="Core\Graphics\PrimitiveContext.hpp" />
     <ClInclude Include="Core\Graphics\BlockContext.hpp" />
     <ClInclude Include="Core\Graphics\SkyBlockContext.hpp" />
+    <ClInclude Include="Core\Graphics\WaterFBO.hpp" />
+    <ClInclude Include="Core\Utils\Error.hpp" />
+    <ClInclude Include="Core\Utils\Debug.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="Libs\glew-1.13.0\lib\Release\x64\glew32s.lib" />
