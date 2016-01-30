@@ -39,19 +39,13 @@ namespace Core {
 				vec3 position = currentChunk->getPosition();
 				Terrain::Block**** blocks = currentChunk->getBlocks();
 
-				int differenceX = abs(position.x - floor(cameraPosition.x));
-				int differenceY = abs(position.y - floor(abs(cameraPosition.y)));
-				int differenceZ = abs(position.z - floor(cameraPosition.z));
+				glm::ivec3 cameraDifference = ivec3(
+					(int) (abs(position.x - floor(cameraPosition.x))) % CHUNK_SIZE_X,
+					(int) (abs(position.y - floor(abs(cameraPosition.y)))) % CHUNK_SIZE_Y,
+					(int) (abs(position.z - floor(cameraPosition.z))) % CHUNK_SIZE_Z
+				);
 
-				differenceX = differenceX % CHUNK_SIZE_X;
-				differenceY = differenceY % CHUNK_SIZE_Y;
-				differenceZ = differenceZ % CHUNK_SIZE_Z;
-
-				if (blocks[differenceZ][differenceY + 2][differenceX]->isEnabled() == false && jumpTo == -50.f)
-				{
-					cameraPosition.y -= 0.2f;
-					setCameraPosition(vec3(cameraPosition.x, cameraPosition.y, cameraPosition.z));
-				}
+				processGravity(blocks, cameraDifference);
 
 				glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
 
@@ -64,86 +58,223 @@ namespace Core {
 				else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
 
 				// Direction : Spherical coordinates to Cartesian coordinates conversion
-				glm::vec3 direction(
-					cos(verticalAngle) * sin(horizontalAngle),
-					sin(verticalAngle),
-					cos(verticalAngle) * cos(horizontalAngle)
-					);
+				glm::vec3 direction = getDirectionVector(horizontalAngle, verticalAngle);
 
-				glm::vec3 walkDirection(
-					cos(verticalAngle) * sin(horizontalAngle),
-					0,
-					cos(verticalAngle) * cos(horizontalAngle)
-					);
+				// Cut out the "y" direction as the play can't walk upwards without jumping
+				walkDirection = getWalkDirectionVector(horizontalAngle, verticalAngle);
 
 				// Right vector
-				glm::vec3 right = glm::vec3(
-					sin(horizontalAngle - pi<float>() / 2.0f),
-					0,
-					cos(horizontalAngle - pi<float>() / 2.0f)
-					);
+				setRightVector(horizontalAngle);
+				glm::vec3 right = getRightVector();
 
 				// Up vector : perpendicular to both direction and right
 				glm::vec3 up = glm::cross(right, direction);
 
 				// Move forward
 				if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-					if (abs(walkDirection.x) > abs(walkDirection.z)) {
-						if (blocks[differenceZ][(differenceY + 1) % CHUNK_SIZE_Y][(differenceX + 1) % CHUNK_SIZE_X]->isEnabled() == false) {
-							cameraPosition += walkDirection * deltaTime * mouseSpeed;
-						}
-					}
-					else {
-						if (blocks[(differenceZ + 1) % CHUNK_SIZE_Z][differenceY + 1][differenceX]->isEnabled() == false) {
-							cameraPosition += walkDirection * deltaTime * mouseSpeed;
-						}
-					}
-
-					//DEBUG(walkDirection.x);
-					//DEBUG(walkDirection.z);
+					moveForward(blocks, cameraDifference);
 				}
 				// Move backward
 				else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-					if (abs(walkDirection.x) > abs(walkDirection.z)) {
-						if (blocks[differenceZ][(differenceY + 1) % CHUNK_SIZE_Y][(differenceX - 1) % CHUNK_SIZE_X]->isEnabled() == false) {
-							cameraPosition -= walkDirection * deltaTime * mouseSpeed;
-						}
-					}
-					else {
-						if (blocks[(differenceZ - 1) % CHUNK_SIZE_Z][(differenceY - 1) % CHUNK_SIZE_Y][differenceX]->isEnabled() == false) {
-							cameraPosition -= walkDirection * deltaTime * mouseSpeed;
-						}
-					}
+					moveBackwards(blocks, cameraDifference);
 				}
 
 				// Strafe right
 				if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-					cameraPosition += right * deltaTime * mouseSpeed;
+					strafeRight(blocks, cameraDifference);
 				}
 				// Strafe left
 				else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-					cameraPosition -= right * deltaTime * mouseSpeed;
+					strafeLeft(blocks, cameraDifference);
 				}
 
 				if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-					if (jumpTo == -50.f) {
+					if (jumpTo == JUMP_DEFAULT_VALUE) {
 						jumpTo = cameraPosition.y + 1;
 					}
 				}
 
-				if (cameraPosition.y < jumpTo) {
-					float diff = abs(jumpTo - cameraPosition.y);
-					cameraPosition.y += 0.1f * 1 / diff;
-				}
-				else {
-					jumpTo = -50.f;
-				}
+				proceedJumpAnimation();
 
 				view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
 
 			}
 
 			return view;
+		}
+
+		void Camera::moveForward(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (getBlockInFrontOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+				if (abs(walkDirection.x) > abs(walkDirection.z)) {
+					walkDirection.x = 0;
+				}
+				else {
+					walkDirection.z = 0;
+				}
+			}
+
+			cameraPosition += walkDirection * deltaTime * mouseSpeed;
+		}
+
+		void Camera::moveBackwards(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (getBlockBehindPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+				// change the walkDirectionVector
+				if (abs(walkDirection.x) > abs(walkDirection.z)) {
+					walkDirection.x = 0;
+				}
+				else {
+					walkDirection.z = 0;
+				}
+			}
+
+			cameraPosition -= walkDirection * deltaTime * mouseSpeed;
+		}
+
+		void Camera::strafeLeft(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (getBlockLeftOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+				if (abs(walkDirection.x) > abs(walkDirection.z)) {
+					rightVector.z = 0;
+				}
+				else {
+					rightVector.x = 0;
+				}
+			}
+			cameraPosition -= getRightVector() * deltaTime * mouseSpeed;
+		}
+
+		void Camera::strafeRight(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (getBlockRightOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+				if (abs(walkDirection.x) > abs(walkDirection.z)) {
+					rightVector.z = 0;
+				}
+				else {
+					rightVector.x = 0;
+				}
+			}
+			cameraPosition += getRightVector() * deltaTime * mouseSpeed;
+		}
+
+		void Camera::proceedJumpAnimation() {
+			if (cameraPosition.y < jumpTo) {
+				float diff = abs(jumpTo - cameraPosition.y);
+				cameraPosition.y += 0.1f * 1 / diff;
+			}
+			else {
+				jumpTo = JUMP_DEFAULT_VALUE;
+			}
+		}
+
+		vec3 Camera::getDirectionVector(float horizontalAngle, float verticalAngle) {
+			return vec3(
+					cos(verticalAngle) * sin(horizontalAngle),
+					sin(verticalAngle),
+					cos(verticalAngle) * cos(horizontalAngle)
+				);
+		}
+
+		vec3 Camera::getWalkDirectionVector(float horizontalAngle, float verticalAngle) {
+			return vec3(
+					cos(verticalAngle) * sin(horizontalAngle),
+					0,
+					cos(verticalAngle) * cos(horizontalAngle)
+			);
+		}
+
+		void Camera::setRightVector(float horizontalAngle) {
+			rightVector = glm::vec3(
+				sin(horizontalAngle - pi<float>() / 2.0f),
+				0,
+				cos(horizontalAngle - pi<float>() / 2.0f)
+			);
+		}
+
+		void Camera::processGravity(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (getBlockBelowPlayer(blocks, cameraDifference)->isEnabled() == false && jumpTo == JUMP_DEFAULT_VALUE)
+			{
+				cameraPosition.y -= 0.2f;
+			}
+		}
+
+		Terrain::Block* Camera::getBlockBelowPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			
+
+			return blocks[cameraDifference.z][cameraDifference.y + 2][cameraDifference.x];
+		}
+
+		Terrain::Block* Camera::getBlockInFrontOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (abs(walkDirection.x) > abs(walkDirection.z))
+			{
+				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][(cameraDifference.x + 1) % CHUNK_SIZE_X];
+			}
+
+			return blocks[(cameraDifference.z + 1) % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+		}
+
+		Terrain::Block* Camera::getBlockBehindPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (abs(walkDirection.x) > abs(walkDirection.z))
+			{
+				//if (cameraDifference.x == 0) { cameraDifference.x = CHUNK_SIZE_X; }
+				//DEBUG_F("%-5f.0 %-5f.0 %-5f.0  \n", cameraDifference.z, (cameraDifference.y + 1) % CHUNK_SIZE_Y, cameraDifference.x - 1);
+				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][(cameraDifference.x - 1) % CHUNK_SIZE_X];
+			}
+
+			return blocks[(cameraDifference.z - 1) % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+		}
+
+		Terrain::Block* Camera::getBlockLeftOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (abs(walkDirection.x) > abs(walkDirection.z))
+			{
+				int positionZ;
+				if (walkDirection.x > 0)
+				{
+					positionZ = cameraDifference.z + 1;
+				}
+				else {
+					positionZ = cameraDifference.z - 1;
+				}
+
+				return blocks[positionZ % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+			}
+			else {
+				int positionX;
+				if (walkDirection.z > 0)
+				{
+					positionX = cameraDifference.x + 1;
+				}
+				else {
+					positionX = cameraDifference.x - 1;
+				}
+
+				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][positionX % CHUNK_SIZE_X];
+			}
+		}
+
+		Terrain::Block* Camera::getBlockRightOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			if (abs(walkDirection.x) > abs(walkDirection.z))
+			{
+				int positionZ;
+				if (walkDirection.x > 0)
+				{
+					positionZ = cameraDifference.x - 1;
+				}
+				else {
+					positionZ = cameraDifference.x + 1;
+				}
+				return blocks[positionZ % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+			}
+			else {
+				int positionX;
+				if (walkDirection.z > 0)
+				{
+					positionX = cameraDifference.x - 1;
+				}
+				else {
+					positionX = cameraDifference.x + 1;
+				}
+
+				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][positionX % CHUNK_SIZE_X];
+			}
+
 		}
 
 		mat4 Camera::updateFreeFlightCamera() {
