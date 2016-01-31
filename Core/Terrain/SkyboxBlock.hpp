@@ -5,6 +5,8 @@
 #include "../Graphics/Renderer.hpp"
 #include "../Graphics/SkyBlockContext.hpp"
 #include "../Utils/output.hpp"
+#include "Chunk.hpp"
+#include "../Graphics/Camera.hpp"
 
 namespace Core {
 	namespace Terrain {
@@ -27,7 +29,7 @@ namespace Core {
 			~SkyboxBlock();
 			Graphics::SkyBlockContext* getContext() const { return nullptr; }
 			/* Draws our Sky */
-			void draw(glm::vec3& position, glm::mat4& view, glm::mat4& projection);
+			void draw(glm::vec3& position, glm::mat4& view, glm::mat4& projection, Graphics::Camera* camera);
 		};
 	}
 }

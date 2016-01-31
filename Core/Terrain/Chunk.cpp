@@ -264,6 +264,8 @@ namespace Core {
 						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
 						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
 						renderer->getActiveShader()->setUniformVector3("lightPosition", vec3(-1000, 2000, -1000));
+						renderer->getActiveShader()->setUniformInteger("FreeFlight", (int)camera->isFreeFlight());
+						renderer->getActiveShader()->setUniformInteger("UnderWater", (int)(-(CHUNK_SIZE_Y - WATERLEVEL) > camera->getCameraPosition().y));
 						// Disable Blending for normal Blocks
 						glDisable(GL_BLEND);
 						int topLayer = -1;
@@ -291,6 +293,7 @@ namespace Core {
 						renderer->getActiveShader()->setUniformMatrix4("MODEL", model);
 						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
 						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
+						renderer->getActiveShader()->setUniformInteger("FreeFlight", (int)camera->isFreeFlight());
 						// Set Alphablending
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

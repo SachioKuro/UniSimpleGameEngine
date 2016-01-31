@@ -36,6 +36,7 @@ namespace Core {
 			float deltaTimeUpdate = 0.0f;
 			float mouseSpeedUpdate = 1 / mouseSpeed;
 			float deltaTimeAngle = 0.005f;
+			bool jumped = false;
 			vec3 rightVector;
 			vec3 walkDirection;
 			vec3 getDirectionVector(float horizontalAngle, float verticalAngle);
@@ -70,6 +71,7 @@ namespace Core {
 			double getXCursorPos() const { return xCursorPos; }
 			double getYCursorPos() const { return yCursorPos; }
 			mat4& updateCamera(Terrain::Chunk* currentChunk);
+			bool isFreeFlight() { return freeFlight; }
 			vec4* getFrustumPlanes(mat4* projection);
 		};
 	}

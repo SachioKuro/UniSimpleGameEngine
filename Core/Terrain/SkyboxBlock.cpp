@@ -13,7 +13,7 @@ namespace Core {
 			delete renderer;
 		}
 
-		void SkyboxBlock::draw(glm::vec3& position, glm::mat4& view, glm::mat4& projection) {
+		void SkyboxBlock::draw(glm::vec3& position, glm::mat4& view, glm::mat4& projection, Graphics::Camera* camera) {
 			// Setup modelmatrix
 			model[3].x = position.x;
 			model[3].y = position.y;
@@ -24,6 +24,8 @@ namespace Core {
 			renderer->getActiveShader()->setUniformMatrix4("Model", model);
 			renderer->getActiveShader()->setUniformMatrix4("View", view);
 			renderer->getActiveShader()->setUniformMatrix4("Projection", projection);
+			renderer->getActiveShader()->setUniformInteger("FreeFlight", (int)camera->isFreeFlight());
+			renderer->getActiveShader()->setUniformInteger("UnderWater", (int)(-(CHUNK_SIZE_Y - WATERLEVEL) > camera->getCameraPosition().y));
 			// Don't check for depth
 			glDepthMask(GL_FALSE);
 			renderer->start();

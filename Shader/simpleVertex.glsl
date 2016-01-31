@@ -14,10 +14,10 @@ uniform mat4 MODEL;
 uniform mat4 VIEW;
 uniform mat4 PROJECTION;
 uniform vec3 lightPosition;
-uniform vec4 clippingPlane;
+//uniform vec4 clippingPlane;
 
 void main() {
-    gl_ClipDistance[0] = dot(vec4(vertexPos_ms, 1), clippingPlane);
+    //gl_ClipDistance[0] = dot(vec4(vertexPos_ms, 1), clippingPlane);
     gl_Position = PROJECTION * VIEW * MODEL * vec4(vertexPos_ms, 1);
     _pos_ws = (MODEL * vec4(vertexPos_ms, 1)).xyz;
     _eye_cs = (VIEW * MODEL * vec4(vertexPos_ms, 1)).xyz;

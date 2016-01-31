@@ -15,10 +15,19 @@ namespace Core {
 			delete[] planes;
 		}
 
+		int countDown = 20;
+		bool pressed = false;
 		mat4& Camera::updateCamera(Terrain::Chunk* currentChunk)
 		{
-			if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS && !pressed) {
 				freeFlight = !freeFlight;
+				pressed = true;
+			}
+			if (countDown == 0) {
+				pressed = false;
+				countDown = 20;
+			} else if (pressed) {
+				countDown--;
 			}
 
 			if (freeFlight) {
@@ -32,6 +41,7 @@ namespace Core {
 			return view;
 		}
 
+		int jumpCooldown = 3000;
 		mat4 Camera::updatePlayerCamera(Terrain::Chunk* currentChunk) {
 			if (currentChunk != nullptr) {
 				vec3 position = currentChunk->getPosition();
@@ -85,10 +95,19 @@ namespace Core {
 					strafeLeft(blocks, cameraDifference);
 				}
 
-				if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+
+				if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !jumped) {
 					if (jumpTo == JUMP_DEFAULT_VALUE) {
-						jumpTo = cameraPosition.y + 1;
-					}
+						jumpTo = cameraPosition.y + 1.5;
+						jumped = true;
+					} 
+				}
+
+				if (jumpCooldown == 0) {
+					jumped = false;
+					jumpCooldown = 3000;
+				} else if (jumped) {
+					jumpCooldown--;
 				}
 				
 				proceedJumpAnimation();
@@ -101,13 +120,13 @@ namespace Core {
 		}
 
 		void Camera::detectCollision(Terrain::Block**** blocks,ivec3 cameraDifference) {
-			if (getBlockOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+			if (getBlockOfPlayer(blocks, cameraDifference)->check() == GL_TRUE) {
 				cameraPosition.y += 1;
 			}
 		}
 
 		void Camera::moveForward(Terrain::Block**** blocks, ivec3 cameraDifference) {
-			if (getBlockInFrontOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+			if (getBlockInFrontOfPlayer(blocks, cameraDifference)->check() == GL_TRUE) {
 				if (abs(walkDirection.x) > abs(walkDirection.z))
 				{
 					walkDirection.x = 0;
@@ -160,16 +179,18 @@ namespace Core {
 
 		void Camera::setRightVector(float horizontalAngle) {
 			rightVector = glm::vec3(
-				sin(horizontalAngle - pi<float>() / 2.0f),
+				sin(horizontalAngle - half_pi<float>()),
 				0,
-				cos(horizontalAngle - pi<float>() / 2.0f)
+				cos(horizontalAngle - half_pi<float>())
 			);
 		}
 
 		void Camera::processGravity(Terrain::Block**** blocks, ivec3 cameraDifference) {
-			if (getBlockBelowPlayer(blocks, cameraDifference)->isEnabled() == false && jumpTo == JUMP_DEFAULT_VALUE)
+			if (getBlockBelowPlayer(blocks, cameraDifference)->check() == false && jumpTo == JUMP_DEFAULT_VALUE)
 			{
 				cameraPosition.y -= 0.2f;
+			} else if (getBlockBelowPlayer(blocks, cameraDifference)->check()) {
+				jumped = false;
 			}
 		}
 
@@ -292,9 +313,9 @@ namespace Core {
 
 			// Right vector
 			rightVector = glm::vec3(
-				sin(horizontalAngle - pi<float>() / 2.0f),
+				sin(horizontalAngle - half_pi<float>()),
 				0,
-				cos(horizontalAngle - pi<float>() / 2.0f)
+				cos(horizontalAngle - half_pi<float>())
 				);
 
 			// Up vector : perpendicular to both direction and right
