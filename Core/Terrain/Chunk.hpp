@@ -15,6 +15,7 @@
 
 namespace Core {
 	namespace Terrain {
+		/* Type of a collection of Blocks */
 		enum class TerrainType { LAND, WATER };
 		/* A chunk in our world */
 		class Chunk {
@@ -47,6 +48,7 @@ namespace Core {
 			glm::vec3& getPosition() { return position; }
 			Block**** getBlocks() { return blocks; }
 
+			/* Set neighbor */
 			void setFrontChunk(Chunk* fchunk) { this->fchunk = fchunk; }
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
 

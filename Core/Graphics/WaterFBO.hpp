@@ -9,6 +9,7 @@
 
 namespace Core {
 	namespace Graphics {
+		/* Framebuffer for the Watertexture (Not in use at the moment) */
 		class WaterFBO {
 		private:
 			GLuint reflectionFBO, refractionFBO;

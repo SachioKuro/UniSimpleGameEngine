@@ -36,7 +36,8 @@ namespace Core {
 				active = GL_TRUE;
 				TextureID tex;		
 				GLboolean isEnabled = GL_FALSE, isCovered = GL_FALSE;
-				GLuint ex = CHUNK_SIZE_X - 1, ey = CHUNK_SIZE_Y - 1, ez = CHUNK_SIZE_Z - 1;		// Border-Indieces
+				// Border-Indieces
+				GLuint ex = CHUNK_SIZE_X - 1, ey = CHUNK_SIZE_Y - 1, ez = CHUNK_SIZE_Z - 1;		
 				blocks = new Block***[CHUNK_SIZE_Z];
 				for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
 					blocks[z] = new Block**[CHUNK_SIZE_Y];
@@ -65,12 +66,14 @@ namespace Core {
 								if (z == 0 ? GL_TRUE : blocks[z - 1][y][x]->check()) 
 									isCovered = GL_TRUE;
 
+							/* Set Water for all disabled Blocks, which are under the Waterlevel */
 							if (y >= CHUNK_SIZE_Y - WATERLEVEL && !isEnabled) {
 								isEnabled = GL_TRUE;
 								btype = BlockType::WATER; 
 								tex = TextureID::WATER01;
 							}
 
+							/* New Block */
 							blocks[z][y][x] = new Block(ivec3(BSIZE * x, BSIZE * -y, BSIZE * -z), btype, tex, isEnabled);
 							blocks[z][y][x]->isCovered(isCovered);
 							
@@ -198,7 +201,7 @@ namespace Core {
 									lchunk->tchunk->fchunk->blocks[ez][ey][ex]->isCovered(GL_TRUE);
 #endif
 
-							/* Fill height-gaps betwwen Chunks*/
+							/* Fill height-gaps between Chunks*/
 							if (x == 0 && lchunk != nullptr && lchunk->active)
 								if (y >= CHUNK_SIZE_Y - lchunk->heightmap[ex][z] && y <= CHUNK_SIZE_Y - heightmap[x][z]) {
 									lchunk->blocks[z][y][ex]->isCovered(GL_FALSE);
@@ -244,6 +247,7 @@ namespace Core {
 			using namespace Graphics;
 			using namespace glm;
 			if (active) {
+				/* Check if the chunk is in front in sight  */
 				vec4* planes = camera->getFrustumPlanes(&projection);
 				GLboolean toDraw = GL_TRUE;
 				for (int i = 0; i < 6; i++)
@@ -260,9 +264,10 @@ namespace Core {
 						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
 						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
 						renderer->getActiveShader()->setUniformVector3("lightPosition", vec3(-1000, 2000, -1000));
+						// Disable Blending for normal Blocks
 						glDisable(GL_BLEND);
 						int topLayer = -1;
-						// Submit Blocks
+						// Submit Blocks, wich are not Water
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
 							for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 								for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
@@ -286,9 +291,10 @@ namespace Core {
 						renderer->getActiveShader()->setUniformMatrix4("MODEL", model);
 						renderer->getActiveShader()->setUniformMatrix4("VIEW", view);
 						renderer->getActiveShader()->setUniformMatrix4("PROJECTION", projection);
+						// Set Alphablending
 						glEnable(GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-						// Submit Blocks
+						// Submit Waterblocks
 						for (Block* block : waterBlocks)
 							block->submit(renderer, context, vec2(24, 30));
 
@@ -298,6 +304,7 @@ namespace Core {
 						renderer->draw();
 						renderer->deactivateShader();
 
+						// Clear container
 						waterBlocks.clear();
 					}
 

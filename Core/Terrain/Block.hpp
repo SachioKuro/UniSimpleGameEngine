@@ -46,6 +46,7 @@ namespace Core {
 
 			GLboolean isEnabled() const { return enabled; };
 			GLboolean isCovered() const { return covered; };
+			/* Checks the presence of the Block */
 			GLboolean check() const { return (covered || enabled) && type != BlockType::WATER; };
 			void isCovered(GLboolean isCovered) { covered = isCovered; }
 			BlockType getBlockType() const { return type; };

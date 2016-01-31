@@ -4,6 +4,7 @@
 
 namespace Core {
 	namespace Graphics {
+		/* Information for the Skybox-Vertieces */
 		class SkyBlockContext : public PrimitiveContext {
 		private:
 			glm::vec3 *mesh, *normals;

@@ -15,6 +15,7 @@
 
 namespace Core {
 	namespace Terrain {
+		/* Handles Worldloading */
 		class WorldTree {
 		private:
 			Chunk*** chunks;
@@ -29,6 +30,7 @@ namespace Core {
 			WorldTree(Graphics::Camera* camera);
 			~WorldTree();
 			Chunk***& getChunks() { return chunks; }
+			/* Loads the Chunks if needed */
 			void checkAndLoad();
 			Chunk* getCurrentChunk() { return currentChunk; }
 			Graphics::BlockContext* getContext() { return &blockContext; }

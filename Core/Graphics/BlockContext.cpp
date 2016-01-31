@@ -35,6 +35,7 @@ namespace Core {
 			*(normals++) = vec3( 0, 0,  1); *(normals++) = vec3(1,  0,  0); *(normals++) = vec3(0, 0, -1);
 			*(normals++) = vec3(-1, 0,  0); *(normals++) = vec3(0, -1,  0); *(normals++) = vec3(0, 1,  0);
 
+			/* Map with texture-offsets */
 			uvs[TextureID::STONE01] = new vec2[6];
 			*(uvs[TextureID::STONE01]++) = texture.getTextureOffset(TextureID::STONE01);
 			*(uvs[TextureID::STONE01]++) = texture.getTextureOffset(TextureID::STONE01) + texture.getTexturePercentage();

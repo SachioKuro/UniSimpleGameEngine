@@ -71,6 +71,7 @@ namespace Core {
 				vertexAttributes->position = context->getMesh()[i] + object->getPosition();
 				vertexAttributes->uv = context->getUVs(object->getTextureID())[k[i]];
 				vertexAttributes->normal = context->getNormals()[j[i]];
+				// Step to next Vertex
 				vertexAttributes++;
 				vertexCount ++;
 			}

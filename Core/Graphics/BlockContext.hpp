@@ -5,6 +5,7 @@
 
 namespace Core {
 	namespace Graphics {
+		/* Information which all Block shares */
 		class BlockContext : public PrimitiveContext {
 		private:
 			glm::vec3 *mesh, *normals;

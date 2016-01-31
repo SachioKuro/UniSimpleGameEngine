@@ -9,13 +9,20 @@ namespace Core {
 			// Set renderer
 			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, 36);
 			renderer->useShader(Shader::Block);
-			chunkSizeHalfX = CHUNK_SIZE_X / 2.0, chunkSizeHalfZ = CHUNK_SIZE_Z / 2.0;
+			
+			// Produces the Heightmap
 			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 40, 2000);
+			// Produces the BlocktypeNoiseMap
 			bnoise = new PerlinNoise(1337 - 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 8, 50000);
+			
+			// Computes the half of the chunksize
+			chunkSizeHalfX = CHUNK_SIZE_X / 2.0, chunkSizeHalfZ = CHUNK_SIZE_Z / 2.0;
 			vec3 cpos = camera->getCameraPosition();
 			noisePos.x -= (WORLD_HALFSIZE * CHUNK_SIZE_X);
 			noisePos.y -= (WORLD_HALFSIZE * CHUNK_SIZE_Z);
 			chunks = new Chunk**[WORLDSIZE];
+			
+			// Generate Chunks
 			for (int x = 0; x < WORLDSIZE; x++) {
 				Chunk** chunkz = new Chunk*[WORLDSIZE];
 				for (int z = 0; z < WORLDSIZE; z++) {
@@ -53,12 +60,13 @@ namespace Core {
 			vec3 cpos = camera->getCameraPosition();
 			for (int i = 0; i < WORLDSIZE; i++) {
 				for (int j = 0; j < WORLDSIZE; j++) {
+
+					/* Find chunk, where the camera is lokated */
 					if (chunks[i][j]->getCenter().x + chunkSizeHalfX > cpos.x &&
 						chunks[i][j]->getCenter().x - chunkSizeHalfX < cpos.x &&
 						chunks[i][j]->getCenter().z + chunkSizeHalfZ > cpos.z &&
 						chunks[i][j]->getCenter().z - chunkSizeHalfZ < cpos.z) {
-						if (chunks[i][j] == currentChunk) {
-						} else {
+						if (chunks[i][j] != currentChunk) {
 							if (currentChunk != nullptr) {
 								if (currentChunk->getCenter().x + chunkSizeHalfX < cpos.x) {
 									currentChunk = chunks[i][j];

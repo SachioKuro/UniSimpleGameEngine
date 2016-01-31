@@ -54,6 +54,7 @@ namespace Core {
 			void defineTextureInfo(glm::vec2 textureElementCount, glm::vec2 textureElementSize);
 			const glm::vec2 getTexturePercentage() const { return texturePercentage; }
 
+			/* Returns the textureoffset in percentage */
 			const glm::vec2 getTextureOffset(TextureID textureOffset) const {
 				return glm::vec2(((GLubyte)textureOffset & 0x0F) * texturePercentage.x,
 					(((GLubyte)textureOffset & 0xF0) >> 4) * texturePercentage.y);
