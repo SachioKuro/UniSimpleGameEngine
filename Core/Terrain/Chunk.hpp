@@ -3,21 +3,20 @@
 #include "Block.hpp"
 #include "../Graphics/Shader.hpp"
 #include "../Graphics/Renderer.hpp"
-#include "../Graphics/Texture.hpp"
 #include "../Graphics/Camera.hpp"
 #include "../Graphics/BlockContext.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 7
+#define CHUNK_SIZE_X 22
 #define CHUNK_SIZE_Y 28
-#define CHUNK_SIZE_Z 7
+#define CHUNK_SIZE_Z 22
 #define BSIZE 1
+#define WATERLEVEL 9
 
 namespace Core {
 	namespace Terrain {
+		/* Type of a collection of Blocks */
 		enum class TerrainType { LAND, WATER };
-		using namespace Graphics;
-		using namespace std;
 		/* A chunk in our world */
 		class Chunk {
 		private:
@@ -25,26 +24,19 @@ namespace Core {
 			GLuint64 chunkID;
 			Block**** blocks;
 			Chunk *lchunk, *tchunk, *fchunk;
-			Renderer* renderer;
-			Texture* texture;
-			vector<vector<double>> heightmap, blockmap;
+			Graphics::Renderer* renderer;
+			std::vector<std::vector<GLint>> heightmap, blockmap;
 			GLboolean active = GL_FALSE;
-			RenderMode mode = RenderMode::SOLID;
-			GLuint vertexCount = 36;
-			vec4 blendColor;
-			mat4 model = mat4(1), mvp, pv;
-			BlockContext* context;
-			vec3 center;
-			vec3 position;
-			vec2 planePosition;
+			glm::mat4 model = glm::mat4(1);
+			Graphics::BlockContext* context;
+			glm::vec3 center, position;
 			GLfloat boundingRadius;
-
-			vector<Block*> waterBlocks;
+			std::vector<Block*> waterBlocks;
 		public:
-			Chunk(Renderer* renderer, ivec3 position, vector<vector<double>> heightmap, vector<vector<double>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, BlockContext* context, vec4 blendColor = vec4(0));
+			Chunk(Graphics::Renderer* renderer, glm::ivec3 position, std::vector<std::vector<GLint>> heightmap,
+				std::vector<std::vector<GLint>> blockmap, Chunk* lchunk, Chunk* tchunk, Chunk* fchunk, 
+				Graphics::BlockContext* context, glm::vec4 blendColor = glm::vec4(0));
 			~Chunk();
-
-			RenderMode getRenderMode() const { return mode; }
 
 			GLboolean isActive() const { return active; }
 			void isActive(GLboolean active) { this->active = active; }
@@ -52,16 +44,17 @@ namespace Core {
 			GLuint load(GLuint id);
 			void unload(GLuint id);
 
-			void setBlendColor(vec4 color) { blendColor = color; }
-			vec3& getCenter() { return center; }
-			vec3 getPosition() { return position; }
+			glm::vec3& getCenter() { return center; }
+			glm::vec3& getPosition() { return position; }
 			Block**** getBlocks() { return blocks; }
 
+			/* Set neighbor */
 			void setFrontChunk(Chunk* fchunk) { this->fchunk = fchunk; }
 			void setLeftChunk(Chunk* lchunk) { this->lchunk = lchunk; }
 
 			/* Draws the chunk */
-			void draw(mat4 projection, mat4 view, RenderMode renderMode, Camera* camera, TerrainType type);
+			void draw(glm::mat4 projection, glm::mat4 view, glm::vec4 clippingPlane, GLint highOffset, GLint lowerOffset, 
+				Graphics::Camera* camera, TerrainType type);
 		};
 	}
 }

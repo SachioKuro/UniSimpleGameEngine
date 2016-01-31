@@ -1,7 +1,6 @@
 #pragma once
 
 #include "..\Utils\GL.hpp"
-//#include "..\Terrain\Block.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/matrix_access.hpp>
 #include <stdio.h>
@@ -18,9 +17,8 @@ namespace Core {
 namespace Core {
 	namespace Graphics {
 		using namespace glm;
-		
-		class Camera
-		{
+
+		class Camera {
 		private:
 			GLFWwindow* window;
 			bool freeFlight = false;

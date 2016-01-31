@@ -3,11 +3,12 @@
 namespace Core {
 	namespace Graphics {
 		SkyBlockContext::SkyBlockContext() {
+			using namespace glm;
 			// Setup texture-information
 			texture.defineTextureInfo(vec2(6, 2), vec2(1024, 1024));
 
 			// Texturepaths
-			vector<const char*> texturePaths;
+			std::vector<const char*> texturePaths;
 			texturePaths.push_back("Textures/SkyBox/Tag01/posx.png");
 			texturePaths.push_back("Textures/SkyBox/Tag01/negx.png");
 			texturePaths.push_back("Textures/SkyBox/Tag01/posy.png");
@@ -18,9 +19,9 @@ namespace Core {
 			// Load the textures
 			texture.loadCubeMap(texturePaths);
 
-			mesh = new vec3[36];
-			normals = new vec3[6];
-			uvs = new vec2[6];
+			mesh = new glm::vec3[36];
+			normals = new glm::vec3[6];
+			uvs = new glm::vec2[6];
 
 			/* Face Front */
 			*(mesh++) = vec3(-1, -1, -1); *(mesh++) = vec3( 1,  1, -1); *(mesh++) = vec3(-1,  1, -1);
@@ -44,8 +45,8 @@ namespace Core {
 			*(normals++) = vec3(0, 0, 1); *(normals++) = vec3(-1, 0, 0); *(normals++) = vec3(0,  0, -1);
 			*(normals++) = vec3(1, 0, 0); *(normals++) = vec3( 0, 1, 0); *(normals++) = vec3(0, -1,  0);
 
-			*(uvs++) = vec2(0, 0); *(uvs++) = vec2(1, 1); *(uvs++) = vec2(0, 1);
-			*(uvs++) = vec2(0, 0); *(uvs++) = vec2(1, 0); *(uvs++) = vec2(1, 1);
+			*(uvs++) = glm::vec2(0, 0); *(uvs++) = glm::vec2(1, 1); *(uvs++) = glm::vec2(0, 1);
+			*(uvs++) = glm::vec2(0, 0); *(uvs++) = glm::vec2(1, 0); *(uvs++) = glm::vec2(1, 1);
 
 			mesh -= 36; normals -= 6; uvs -= 6;
 		}

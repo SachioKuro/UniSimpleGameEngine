@@ -2,12 +2,9 @@
 
 #include "../Utils/GL.hpp"
 #include "Texture.hpp"
-#include "Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
-		using namespace glm;
-
 		/* Type of rendering (Solid/Wired) */
 		enum class RenderMode { SOLID, WIRED };
 
@@ -15,33 +12,24 @@ namespace Core {
 		class Drawable {
 		protected:
 			GLsizei nrOfVertices;
-			RenderMode mode = RenderMode::SOLID;
-			GLint x, y, z;
+			glm::ivec3 position;
 			TextureID textureOffset;
-			vec4 color;
-			vec2 texturePercentage;
+			glm::vec4 color;
+			glm::vec2 texturePercentage;
 		public:
-			Drawable(RenderMode mode, ivec3 position, TextureID textureOffset, vec2 texturePercentage, GLuint vertexAttrSize)
-				: mode(mode), nrOfVertices(vertexAttrSize), textureOffset(textureOffset), texturePercentage(texturePercentage) {
-				x = position.x; y = position.y; z = position.z;
-			}
+			Drawable(glm::ivec3 position, TextureID textureOffset, glm::vec2 texturePercentage, GLuint vertexAttrSize)
+				: nrOfVertices(vertexAttrSize), textureOffset(textureOffset), texturePercentage(texturePercentage), position(position) {}
 
 			virtual ~Drawable() {}
 
-			/* Switch RenderMode */
-			void toggleRenderMode() { mode = mode == RenderMode::SOLID ? RenderMode::WIRED : RenderMode::SOLID; }
-
-			void setRenderMode(RenderMode mode) { this->mode = mode; }
-			RenderMode getRenderMode() const { return mode; }
-
-			void setPosition(ivec3 position) { x = position.x; y = position.y; z = position.z; }
-			vec3 getPosition() const { return vec3(x, y, z); }
+			void setPosition(glm::ivec3 position) { this->position = position; }
+			glm::vec3 getPosition() const { return position; }
 
 			void setTextureOffset(TextureID textureOffset) { this->textureOffset = textureOffset; }
-			vec2 getTextureOffset() const { return vec2((GLubyte)textureOffset & 0x0F, ((GLubyte)textureOffset >> 4) & 0x0F); }
+			glm::vec2 getTextureOffset() const { return glm::vec2((GLubyte)textureOffset & 0x0F, ((GLubyte)textureOffset >> 4) & 0x0F); }
 			TextureID getTextureID() const { return textureOffset; }
-			void setColor(vec4 color) { this->color = color; }
-			vec4 getColor() const { return color; }
+			void setColor(glm::vec4 color) { this->color = color; }
+			glm::vec4 getColor() const { return color; }
 
 			GLsizei getSize() { return nrOfVertices; }
 		};

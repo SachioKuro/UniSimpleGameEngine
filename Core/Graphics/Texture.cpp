@@ -1,5 +1,4 @@
 #include "Texture.hpp"
-#include "../Utils/Output.hpp"
 
 
 namespace Core {
@@ -17,7 +16,7 @@ namespace Core {
 				return GL_FALSE;
 
 			// Holds the bits from file
-			FIBITMAP* bits;
+			FIBITMAP* bits = nullptr;
 
 			// If FreeImage supports the filetype, it loads the file
 			if (FreeImage_FIFSupportsReading(format))
@@ -64,7 +63,8 @@ namespace Core {
 			return GL_TRUE;
 		}
 		
-		GLboolean Texture::loadCubeMap(vector<const char*> texturePaths) {
+		GLboolean Texture::loadCubeMap(std::vector<const char*> texturePaths) {
+			using namespace std;
 			// Container for texturedata
 			vector<FIBITMAP*> bits;
 			vector<BYTE*> cubeData;
@@ -140,7 +140,7 @@ namespace Core {
 			glBindSampler(unit, 0);
 		}
 
-		void Texture::defineTextureInfo(vec2 textureElementCount, vec2 textureElementSize) {
+		void Texture::defineTextureInfo(glm::vec2 textureElementCount, glm::vec2 textureElementSize) {
 			texturePercentage = textureElementSize / (textureElementSize * textureElementCount);
 			textureSize = textureElementSize;
 		}

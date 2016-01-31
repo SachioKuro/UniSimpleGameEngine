@@ -2,7 +2,8 @@
 
 namespace Core {
 	namespace Graphics {
-		Renderer::Renderer(GLsizei maxObjectCount, GLsizei objectSize, RenderMode mode) : mode(mode) {
+		Renderer::Renderer(GLsizei maxObjectCount, GLsizei objectSize) {
+			using namespace glm;
 			// Generates vao and vbo
 			glGenVertexArrays(1, &vao);
 			glGenBuffers(1, &vbo);
@@ -59,21 +60,18 @@ namespace Core {
 
 		void Renderer::end() {
 			// Release pointer
-			//glInvalidateBufferData(vbo);
 			glUnmapBuffer(GL_ARRAY_BUFFER);
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 
-		// seems awkward, but saves 72 %-Operations per submit
-		int8 j[] = { 0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5 };
-		int8 k[] = {0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5};
 		// Todo: one base box + position
-		void Renderer::submit(Drawable* object, PrimitiveContext* context, vec2& range) {
+		void Renderer::submit(Drawable* object, PrimitiveContext* context, glm::vec2& range) {
 			// Set vertex-information for each vertex
-			for (int8 i = range.x, n = (range.y == 0) ? object->getSize() : range.y; i < n; i++) {
+			for (glm::int8 i = range.x, n = (range.y == 0) ? object->getSize() : range.y; i < n; i++) {
 				vertexAttributes->position = context->getMesh()[i] + object->getPosition();
 				vertexAttributes->uv = context->getUVs(object->getTextureID())[k[i]];
 				vertexAttributes->normal = context->getNormals()[j[i]];
+				// Step to next Vertex
 				vertexAttributes++;
 				vertexCount ++;
 			}
@@ -82,8 +80,6 @@ namespace Core {
 		void Renderer::draw() {
 			// Binds stuff
 			glBindVertexArray(vao);
-			//glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
 			glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 			// Unbind all
 			glBindVertexArray(0);

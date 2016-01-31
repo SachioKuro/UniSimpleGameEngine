@@ -1,12 +1,11 @@
 #include "shader.hpp"
+#include "../Utils/Error.hpp"
 
 namespace Core {
 	namespace Graphics {
-		using namespace std;
-
 		Shader *Shader::Block, *Shader::Sky, *Shader::Water;
 
-		GLuint readShaderCode(const char* const, string&);
+		GLuint readShaderCode(const char* const, std::string&);
 		void checkCode(GLuint);
 
 		Shader::Shader(const char* const vertexShaderPath, const char* const fragmentShaderPath) {
@@ -18,6 +17,7 @@ namespace Core {
 		}
 
 		GLuint Shader::load(const char* const vertexShaderPath, const char* const fragmentShaderPath) {
+			using namespace std;
 			// Create Shaders
 			GLuint vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 			GLuint fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -78,7 +78,8 @@ namespace Core {
 		/*
 			Read Shader-Code from File
 		*/
-		inline GLuint readShaderCode(const char* const path, string& code) {
+		inline GLuint readShaderCode(const char* const path, std::string& code) {
+			using namespace std;
 			ifstream vertexShaderStream(path, ios::in);
 			if (vertexShaderStream.is_open()) {
 				string line = "";
@@ -96,6 +97,7 @@ namespace Core {
 			Check Shader-Code 
 		*/
 		inline void checkCode(GLuint shaderID) {
+			using namespace std;
 			GLint result = GL_FALSE; // Compilationresult
 			int infoLogLength;
 
@@ -129,8 +131,7 @@ namespace Core {
 			delete Water;
 		}
 
-		GLint Shader::getUniformLocation(const char* name)
-		{
+		GLint Shader::getUniformLocation(const char* name) {
 			// Caches the location
 			IntCache location = locationCache[name];
 			if (location.value == -2) {

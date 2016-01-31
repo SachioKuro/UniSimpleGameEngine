@@ -2,20 +2,18 @@
 
 namespace Core {
 	namespace Terrain {
-		SkyboxBlock::SkyboxBlock(SkyType stype, RenderMode mode) 
-			: stype(stype), Drawable(mode, ivec3(0), TextureID::NONE, vec2(1, 1), 36) {
-			
-
+		SkyboxBlock::SkyboxBlock(SkyType stype) 
+			: stype(stype), Drawable(glm::ivec3(0), Graphics::TextureID::NONE, glm::vec2(1, 1), 36) {
 			// Setup renderer
-			renderer = new Renderer(1, 36, RenderMode::SOLID);
-			renderer->useShader(Shader::Sky);
+			renderer = new Graphics::Renderer(1, 36);
+			renderer->useShader(Graphics::Shader::Sky);
 		}
 
 		SkyboxBlock::~SkyboxBlock() {
 			delete renderer;
 		}
 
-		void SkyboxBlock::draw(vec3& position, mat4& view, mat4& projection) {
+		void SkyboxBlock::draw(glm::vec3& position, glm::mat4& view, glm::mat4& projection) {
 			// Setup modelmatrix
 			model[3].x = position.x;
 			model[3].y = position.y;

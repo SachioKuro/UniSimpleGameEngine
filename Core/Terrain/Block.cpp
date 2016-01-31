@@ -4,8 +4,8 @@
 
 namespace Core {
 	namespace Terrain {
-		Block::Block(ivec3 position, BlockType type, TextureID textureOffset, RenderMode mode, GLboolean enabled)
-			: type(type), enabled(enabled), Drawable(mode, position, textureOffset, texturePercentage, 36) {}
+		Block::Block(glm::ivec3 position, BlockType type, Graphics::TextureID textureOffset, GLboolean enabled)
+			: type(type), enabled(enabled), Drawable(position, textureOffset, texturePercentage, 36) {}
 
 		Block::~Block() {}
 		
@@ -21,7 +21,7 @@ namespace Core {
 			this->type = type;
 		}
 
-		void Block::submit(Renderer* renderer, BlockContext* context, vec2& range) const {
+		void Block::submit(Graphics::Renderer* renderer, Graphics::BlockContext* context, glm::vec2& range) const {
 			if (isEnabled() && !isCovered()) renderer->submit((Drawable*)this, context, range);
 		}
 	}

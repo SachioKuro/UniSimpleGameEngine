@@ -1,14 +1,12 @@
 #pragma once
 
 #include "../Utils/GL.hpp"
-#include "../Graphics/Renderer.hpp"
 #include "../Graphics/Drawable.hpp"
 #include "../Graphics/BlockContext.hpp"
+#include "../Graphics/Renderer.hpp"
 
 namespace Core {
 	namespace Terrain {
-		using namespace glm;
-		using namespace Graphics;
 		/*
 			Types of Blocks like sand, stone ...
 		*/
@@ -30,14 +28,13 @@ namespace Core {
 		/*
 			Presentation of an Block in our world
 		*/
-		class Block : public Drawable {
+		class Block : public Graphics::Drawable {
 		protected:
 			BlockType type;
 			// Should the block be rendered
 			GLboolean enabled = GL_TRUE, covered = GL_FALSE;
-			BlockContext* context;
 		public:
-			Block(ivec3 position, BlockType type, TextureID textureOffset, RenderMode mode, GLboolean enabled);
+			Block(glm::ivec3 position, BlockType type, Graphics::TextureID textureOffset, GLboolean enabled);
 			~Block();
 
 			/* Enable the Block */
@@ -49,12 +46,13 @@ namespace Core {
 
 			GLboolean isEnabled() const { return enabled; };
 			GLboolean isCovered() const { return covered; };
+			/* Checks the presence of the Block */
 			GLboolean check() const { return (covered || enabled) && type != BlockType::WATER; };
 			void isCovered(GLboolean isCovered) { covered = isCovered; }
 			BlockType getBlockType() const { return type; };
 
 			/* Submit Block for rendering */
-			void submit(Renderer* renderer, BlockContext* context, vec2& range = vec2(0, 0)) const;
+			void submit(Graphics::Renderer* renderer, Graphics::BlockContext* context, glm::vec2& range = glm::vec2(0, 0)) const;
 		};
 	}
 }

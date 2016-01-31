@@ -2,12 +2,11 @@
 
 namespace Core {
 	namespace Graphics {
-		void error_callback(int, const char*);
-		void windowResize_callback(GLFWwindow*, int, int);
+		void error_callback(GLint, const GLchar*);
+		void windowResize_callback(GLFWwindow*, GLint, GLint);
 
-		Window::Window(const char* title, int width, int height, glm::vec4 clearColor)
-			: title(title), width(width), height(height), clearColor(clearColor)
-		{
+		Window::Window(const GLchar* title, GLint width, GLint height, glm::vec4 clearColor)
+						: title(title), width(width), height(height), clearColor(clearColor) {
 			if (!init()) {
 				ERROR("Failed to init Window!");
 				glfwTerminate();
@@ -16,45 +15,69 @@ namespace Core {
 
 		Window::~Window() {
 			glfwTerminate();
+			delete waterFBO;
 		}
 
-		void Window::update(Terrain::WorldTree* wt, Terrain::Skybox* skybox, Camera*& camera, Terrain::RenderMode renderMode) {
-			Terrain::Chunk* currentChunk = wt->getCurrentChunk();
+		void Window::update(Terrain::WorldTree* wt, Terrain::Skybox* skybox, Camera*& camera) {
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			Terrain::Chunk* currentChunk = wt->getCurrentChunk();
 			view = camera->updateCamera(currentChunk);
 			vec3 cameraPosition = camera->getCameraPosition();
 
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 			GLdouble currentTime = glfwGetTime();
 			frames++;
-
 			if (currentTime - lastTime >= 1.0) {
 				DEBUG_F("%d Frames/sec\n", frames);
-				frames = 0;
-				lastTime += 1.0;
+				frames = 0; lastTime += 1.0;
 			}
 
 			// Draw Skybox
 			skybox->getSkyboxBlock()->draw(cameraPosition, view, projection);
 			wt->checkAndLoad();
-			// Draw Chunks
+
+#if 0
+			float distAsWaterMirror = 2 * (cameraPosition.y - (-CHUNK_SIZE_Y + WATERLEVEL));
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, waterFBO->getReflectionTexture());
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, waterFBO->getRefractionTexture());
+
+			glEnable(GL_CLIP_PLANE0);
+			waterFBO->bindReflectionFBO();
+			camera->getCameraPosition().y -= distAsWaterMirror;
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
-					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::LAND);
+					wt->getChunks()[i][j]->draw(projection, view, vec4(0, -1, 0, -(CHUNK_SIZE_Y - WATERLEVEL)), WATERLEVEL, 0, camera, Terrain::TerrainType::LAND);
+			camera->getCameraPosition().y += distAsWaterMirror;
+					
+			waterFBO->unbindFBO();
+			waterFBO->bindRefractionFBO();
 
 			for (int i = 0; i < WORLDSIZE; i++)
 				for (int j = 0; j < WORLDSIZE; j++)
-					wt->getChunks()[i][j]->draw(projection, view, renderMode, camera, Terrain::TerrainType::WATER);
-			
-			
+					wt->getChunks()[i][j]->draw(projection, view, vec4(0, 1, 0, -(CHUNK_SIZE_Y - WATERLEVEL)), 0, CHUNK_SIZE_Y - WATERLEVEL, camera, Terrain::TerrainType::LAND);
+
+			waterFBO->unbindFBO();
+			glDisable(GL_CLIP_PLANE0);
+			wt->getContext()->getTexture()->bind(GL_TEXTURE_2D, 0);
+#endif
+			// Draw Chunks 
+			for (int i = 0; i < WORLDSIZE; i++)
+				for (int j = 0; j < WORLDSIZE; j++)
+					wt->getChunks()[i][j]->draw(projection, view, vec4(0), 0, 0, camera, Terrain::TerrainType::LAND);
+
+			for (int i = 0; i < WORLDSIZE; i++)
+				for (int j = 0; j < WORLDSIZE; j++)
+					wt->getChunks()[i][j]->draw(projection, view, vec4(0), 0, 0, camera, Terrain::TerrainType::WATER);
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
 		}
 
 
-		bool Window::closed() const {
+		GLboolean Window::closed() const {
 			return glfwWindowShouldClose(window);
 		}
 
@@ -66,18 +89,18 @@ namespace Core {
 			glfwSetKeyCallback(window, func);
 		}
 
-		bool Window::init() {
+		GLboolean Window::init() {
 			// Initializes GLFW
 			if (!glfwInit()) {
 				ERROR("Failed to initialize GLFW\n");
-				return false;
+				return GL_FALSE;
 			}
 
 			// Error-Handling
 			glfwSetErrorCallback(error_callback);
 
 			// GLFW-Settings
-			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_SAMPLES, 2);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -89,7 +112,7 @@ namespace Core {
 			if (!window) {
 				glfwTerminate();
 				ERROR("Failed to create window\n");
-				return false;
+				return GL_FALSE;
 			}
 
 			// sets context
@@ -101,7 +124,7 @@ namespace Core {
 			glewExperimental = GL_TRUE;
 			if (glewInit() != GLEW_OK) {
 				ERROR("Failed to initialize GLEW\n");
-				return false;
+				return GL_FALSE;
 			}
 
 			INFO(glfwGetVersionString());
@@ -113,10 +136,8 @@ namespace Core {
 			glFrontFace(GL_CCW);
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
-			
-#if KDEBUG
-			glfwSwapInterval(0.0);
-#endif // DEBUG
+
+			glfwSwapInterval(0);
 
 			// Initializes shader
 			Shader::init();
@@ -127,18 +148,19 @@ namespace Core {
 			//glShadeModel(GL_FLAT);
 
 			// Sets projectionmatrix
-			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 140.0f);
 
 			lastTime = glfwGetTime();
+			waterFBO = new WaterFBO;
 
-			return true;
+			return GL_TRUE;
 		}
 
-		void error_callback(int error, const char* description) {
+		void error_callback(int error, const GLchar* description) {
 			ERROR(description);
 		}
 
-		void windowResize_callback(GLFWwindow* window, int width, int height) {
+		void windowResize_callback(GLFWwindow* window, GLint width, GLint height) {
 			// Gets pointer to the GLFW-Window
 			Window* _window = (Window*)glfwGetWindowUserPointer(window);
 			_window->setWidth(width);

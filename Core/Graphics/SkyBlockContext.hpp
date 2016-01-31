@@ -4,19 +4,20 @@
 
 namespace Core {
 	namespace Graphics {
+		/* Information for the Skybox-Vertieces */
 		class SkyBlockContext : public PrimitiveContext {
 		private:
-			vec3 *mesh, *normals;
-			vec2 *uvs;
+			glm::vec3 *mesh, *normals;
+			glm::vec2 *uvs;
 			Texture texture;
 		public:
 			SkyBlockContext();
 			~SkyBlockContext();
-			virtual vec3* getMesh() const { return mesh; }
-			virtual vec3* getNormals() const { return normals; }
-			virtual vec2* getUVs(TextureID tid) { return uvs; }
+			virtual glm::vec3* getMesh() const { return mesh; }
+			virtual glm::vec3* getNormals() const { return normals; }
+			virtual glm::vec2* getUVs(TextureID tid) { return uvs; }
 			virtual Texture* getTexture() { return &texture; }
-			virtual vec4* getCenter() { return nullptr; }
+			virtual glm::vec4* getCenter() { return nullptr; }
 		};
 	}
 }

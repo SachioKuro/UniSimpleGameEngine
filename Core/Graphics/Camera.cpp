@@ -17,15 +17,13 @@ namespace Core {
 
 		mat4& Camera::updateCamera(Terrain::Chunk* currentChunk)
 		{
-			if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-			{
+			if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
 				freeFlight = !freeFlight;
 			}
 
 			if (freeFlight) {
 				view = updateFreeFlightCamera();
-			}
-			else {
+			} else {
 				view = updatePlayerCamera(currentChunk);
 			}
 
@@ -40,10 +38,10 @@ namespace Core {
 				Terrain::Block**** blocks = currentChunk->getBlocks();
 
 				glm::ivec3 cameraDifference = ivec3(
-					(int) (abs(position.x - floor(cameraPosition.x))) % CHUNK_SIZE_X,
-					(int) (abs(position.y - floor(abs(cameraPosition.y)))) % CHUNK_SIZE_Y,
-					(int) (abs(position.z - floor(cameraPosition.z))) % CHUNK_SIZE_Z
-				);
+					(int)(abs(position.x - floor(cameraPosition.x))) % CHUNK_SIZE_X,
+					(int)(abs(position.y - floor(abs(cameraPosition.y)))) % CHUNK_SIZE_Y,
+					(int)(abs(position.z - floor(cameraPosition.z))) % CHUNK_SIZE_Z
+					);
 
 				processGravity(blocks, cameraDifference);
 
@@ -54,8 +52,7 @@ namespace Core {
 				verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
 
 				// restrict camera angle so the camera doesn't flip
-				if (verticalAngle >= 1) { verticalAngle = 1; }
-				else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
+				if (verticalAngle >= 1) { verticalAngle = 1; } else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
 
 				// Direction : Spherical coordinates to Cartesian coordinates conversion
 				glm::vec3 direction = getDirectionVector(horizontalAngle, verticalAngle);
@@ -290,6 +287,8 @@ namespace Core {
 
 		}
 
+
+
 		mat4 Camera::updateFreeFlightCamera() {
 			glfwGetCursorPos(window, &xCursorPos, &yCursorPos);
 
@@ -298,8 +297,7 @@ namespace Core {
 			verticalAngle += mouseSpeed * deltaTimeAngle * float((winHeight >> 2) - yCursorPos);
 
 			// restrict camera angle so the camera doesn't flip
-			if (verticalAngle >= 1) { verticalAngle = 1; }
-			else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
+			if (verticalAngle >= 1) { verticalAngle = 1; } else if (verticalAngle <= -1.15) { verticalAngle = -1.15; }
 
 			// Direction : Spherical coordinates to Cartesian coordinates conversion
 			glm::vec3 direction(
@@ -330,7 +328,7 @@ namespace Core {
 			// Move forward
 
 			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-						cameraPosition += walkDirection * deltaTime * mouseSpeed;
+				cameraPosition += walkDirection * deltaTime * mouseSpeed;
 			}
 			// Move backward
 			else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
@@ -356,7 +354,7 @@ namespace Core {
 		vec4* Camera::getFrustumPlanes(mat4* projection) {
 			mat4 pv = *projection * view;
 			vec4 vX = row(pv, 0), vY = row(pv, 1), vZ = row(pv, 2), vW = row(pv, 3);
-			
+
 			planes = new vec4[6];
 
 			planes[0] = normalize(vW + vX); planes[1] = normalize(vW - vX);

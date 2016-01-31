@@ -4,8 +4,6 @@
 #include "Shader.hpp"
 #include "Drawable.hpp"
 #include "PrimitiveContext.hpp"
-#include "SkyBlockContext.hpp"
-#include "Camera.hpp"
 
 namespace Core {
 	namespace Graphics {
@@ -16,9 +14,11 @@ namespace Core {
 			GLuint vao, vbo, bufferSize, vertexCount = 0;
 			Vertex* vertexAttributes;
 			Shader* shader;
-			RenderMode mode;
+			// seems awkward, but saves 72 %-Operations per submit
+			const glm::int8 j[36] = { 0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5 };
+			const glm::int8 k[36] = { 0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5 };
 		public:
-			Renderer(GLsizei maxObjectCount, GLsizei objectSize, RenderMode mode);
+			Renderer(GLsizei maxObjectCount, GLsizei objectSize);
 			~Renderer();
 
 			/* Select shader */
@@ -35,7 +35,7 @@ namespace Core {
 			void end();
 
 			/* Submit an object for drawing */
-			void submit(Drawable* object, PrimitiveContext* context, vec2& range = vec2(0, 0));
+			void submit(Drawable* object, PrimitiveContext* context, glm::vec2& range = glm::vec2(0, 0));
 			/* Draw all objects */
 			void draw();
 		};

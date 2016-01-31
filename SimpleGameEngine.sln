@@ -13,6 +13,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Beleg|Any CPU = Beleg|Any CPU
+		Beleg|x64 = Beleg|x64
+		Beleg|x86 = Beleg|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -21,6 +24,11 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Beleg|Any CPU.ActiveCfg = Beleg|Win32
+		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Beleg|x64.ActiveCfg = Beleg|x64
+		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Beleg|x64.Build.0 = Beleg|x64
+		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Beleg|x86.ActiveCfg = Beleg|Win32
+		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Beleg|x86.Build.0 = Beleg|Win32
 		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Debug|x64.ActiveCfg = Debug|x64
 		{3CCD987D-4DB3-4CE1-9B48-F7E66DC5ACC7}.Debug|x64.Build.0 = Debug|x64

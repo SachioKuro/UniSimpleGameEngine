@@ -8,12 +8,10 @@
 
 namespace Core {
 	namespace Utils {
-		using namespace glm;
-		using namespace Graphics;
 		// Key-Function
-		typedef void(*Keyfunc)(GLFWwindow*, int, int, int, int);
+		typedef void(*Keyfunc)(GLFWwindow*, GLint, GLint, GLint, GLint);
 		// Button-Function
-		typedef void(*Buttonfunc)(GLFWwindow*, int, int, int);
+		typedef void(*Buttonfunc)(GLFWwindow*, GLint, GLint, GLint);
 		/* handles the user-input */
 		class Input {
 		public:
@@ -22,13 +20,13 @@ namespace Core {
 			// Buttonmap
 			GLint Buttons[MAX_BUTTONS];
 			// Mouseposition
-			vec2 Position;
+			glm::vec2 Position;
 		public:
 			Input();
 			GLboolean isKeyPressed(GLuint key);
 			GLboolean isButtonPressed(GLuint button);
-			void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-			void button_callback(GLFWwindow* window, int button, int action, int mods);
+			void key_callback(GLFWwindow* window, GLint key, GLint scancode, GLint action, GLint mods);
+			void button_callback(GLFWwindow* window, GLint button, GLint action, GLint mods);
 			Buttonfunc getButtonCallbackFunc();
 			Keyfunc getKeyCallbackFunc();
 		};

@@ -4,15 +4,12 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include <unordered_map>
+#include <map>
 
 #include "../Utils/GL.hpp"
-#include "../Utils/output.hpp"
 
 namespace Core {
 	namespace Graphics {
-		using namespace std;
-
 		/* Integer-Wrapper with a default-value of -2 */
 		struct IntCache {
 			GLint value = -2;
@@ -29,8 +26,7 @@ namespace Core {
 		private:
 			GLuint programID;
 			// Cache for the location of shader-variables
-			unordered_map<const char*, IntCache> locationCache;
-			GLchar errorFlags = 0x0000;
+			std::map<const char*, IntCache> locationCache;
 		public:
 			/* Initialize shaders */
 			static void init();
@@ -38,7 +34,7 @@ namespace Core {
 			static void del();
 			Shader(const char* const vertexShaderPath, const char* const fragmentShaderPath);
 			~Shader();
-
+			
 			/* Activates the shaderprogram */
 			void activate() const;
 			/* Deactivates the shaderprogram */

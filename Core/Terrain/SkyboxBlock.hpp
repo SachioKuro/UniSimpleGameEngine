@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 #include "../Graphics/Shader.hpp"
 #include "../Graphics/Drawable.hpp"
 #include "../Graphics/Renderer.hpp"
@@ -10,9 +8,6 @@
 
 namespace Core {
 	namespace Terrain {
-		using namespace Graphics;
-		using namespace std;
-
 		/* Type of the Sky (Night, Stormy, Sunny, ...) */
 		enum class SkyType {
 			NONE,
@@ -21,18 +16,18 @@ namespace Core {
 		};
 
 		/* Physical-Part */
-		class SkyboxBlock : public Drawable {
+		class SkyboxBlock : public Graphics::Drawable {
 		private:
 			SkyType stype = SkyType::SUNNY01;
-			mat4 model = mat4(1);
-			Renderer* renderer;
-			SkyBlockContext context;
+			glm::mat4 model = glm::mat4(1);
+			Graphics::Renderer* renderer;
+			Graphics::SkyBlockContext context;
 		public:
-			SkyboxBlock(SkyType stype, RenderMode mode);
+			SkyboxBlock(SkyType stype);
 			~SkyboxBlock();
-			SkyBlockContext* getContext() const { return nullptr; }
+			Graphics::SkyBlockContext* getContext() const { return nullptr; }
 			/* Draws our Sky */
-			void draw(vec3& position, mat4& view, mat4& projection);
+			void draw(glm::vec3& position, glm::mat4& view, glm::mat4& projection);
 		};
 	}
 }

@@ -2,17 +2,27 @@
 
 namespace Core {
 	namespace Terrain {
-		WorldTree::WorldTree(Camera* camera) : camera(camera) {
+		WorldTree::WorldTree(Graphics::Camera* camera) : camera(camera) {
+			using namespace Graphics;
+			using namespace Core::Utils;
+			using namespace glm;
 			// Set renderer
-			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, 36, RenderMode::SOLID);
+			renderer = new Renderer(CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z, 36);
 			renderer->useShader(Shader::Block);
+			
+			// Produces the Heightmap
+			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 28, 22000);
+			// Produces the BlocktypeNoiseMap
+			bnoise = new PerlinNoise(1337 - 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 8, 55000);
+			
+			// Computes the half of the chunksize
 			chunkSizeHalfX = CHUNK_SIZE_X / 2.0, chunkSizeHalfZ = CHUNK_SIZE_Z / 2.0;
-			noise = new PerlinNoise(1337 + 10, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 34, 15000);
-			bnoise = new PerlinNoise(1337 - 10, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 3, 50000);
 			vec3 cpos = camera->getCameraPosition();
 			noisePos.x -= (WORLD_HALFSIZE * CHUNK_SIZE_X);
 			noisePos.y -= (WORLD_HALFSIZE * CHUNK_SIZE_Z);
 			chunks = new Chunk**[WORLDSIZE];
+			
+			// Generate Chunks
 			for (int x = 0; x < WORLDSIZE; x++) {
 				Chunk** chunkz = new Chunk*[WORLDSIZE];
 				for (int z = 0; z < WORLDSIZE; z++) {
@@ -44,15 +54,19 @@ namespace Core {
 		}
 
 		void WorldTree::checkAndLoad() {
+			using namespace Graphics;
+			using namespace Core::Utils;
+			using namespace glm;
 			vec3 cpos = camera->getCameraPosition();
 			for (int i = 0; i < WORLDSIZE; i++) {
 				for (int j = 0; j < WORLDSIZE; j++) {
+
+					/* Find chunk, where the camera is lokated */
 					if (chunks[i][j]->getCenter().x + chunkSizeHalfX > cpos.x &&
 						chunks[i][j]->getCenter().x - chunkSizeHalfX < cpos.x &&
 						chunks[i][j]->getCenter().z + chunkSizeHalfZ > cpos.z &&
 						chunks[i][j]->getCenter().z - chunkSizeHalfZ < cpos.z) {
-						if (chunks[i][j] == currentChunk) {
-						} else {
+						if (chunks[i][j] != currentChunk) {
 							if (currentChunk != nullptr) {
 								if (currentChunk->getCenter().x + chunkSizeHalfX < cpos.x) {
 									currentChunk = chunks[i][j];
