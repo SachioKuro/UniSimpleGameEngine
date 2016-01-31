@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable:4005)
 
 #include "../Utils/GL.hpp"
 #include "Chunk.hpp"
@@ -6,8 +7,8 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Graphics/Camera.hpp"
 
-#define WORLDSIZE			6
-#define WORLD_HALFSIZE		3
+#define WORLDSIZE			12
+#define WORLD_HALFSIZE		6
 #define NOISE_WIDTH			1000000
 #define NOISE_HEIGHT		1000000
 #define NOISE_WIDTH_MID		500000

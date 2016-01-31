@@ -7,11 +7,11 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Utils/Output.hpp"
 
-#define CHUNK_SIZE_X 10
-#define CHUNK_SIZE_Y 30
-#define CHUNK_SIZE_Z 10
+#define CHUNK_SIZE_X 16
+#define CHUNK_SIZE_Y 28
+#define CHUNK_SIZE_Z 16
 #define BSIZE 1
-#define WATERLEVEL 10
+#define WATERLEVEL 9
 
 namespace Core {
 	namespace Terrain {

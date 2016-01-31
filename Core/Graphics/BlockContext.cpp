@@ -35,6 +35,89 @@ namespace Core {
 			*(normals++) = vec3( 0, 0,  1); *(normals++) = vec3(1,  0,  0); *(normals++) = vec3(0, 0, -1);
 			*(normals++) = vec3(-1, 0,  0); *(normals++) = vec3(0, -1,  0); *(normals++) = vec3(0, 1,  0);
 
+			uvs = new vec2*[64];
+
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)][0] = texture.getTextureOffset(TextureID::STONE01);
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)][1] = texture.getTextureOffset(TextureID::STONE01) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::STONE01).s, texture.getTextureOffset(TextureID::STONE01).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)][3] = texture.getTextureOffset(TextureID::STONE01);
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::STONE01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::STONE01).t);
+			uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)][5] = texture.getTextureOffset(TextureID::STONE01) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)][0] = texture.getTextureOffset(TextureID::STONE02);
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)][1] = texture.getTextureOffset(TextureID::STONE02) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::STONE02).s, texture.getTextureOffset(TextureID::STONE02).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)][3] = texture.getTextureOffset(TextureID::STONE02);
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::STONE02).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::STONE02).t);
+			uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)][5] = texture.getTextureOffset(TextureID::STONE02) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)][0] = texture.getTextureOffset(TextureID::STONE03);
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)][1] = texture.getTextureOffset(TextureID::STONE03) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::STONE03).s, texture.getTextureOffset(TextureID::STONE03).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)][3] = texture.getTextureOffset(TextureID::STONE03);
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::STONE03).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::STONE03).t);
+			uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)][5] = texture.getTextureOffset(TextureID::STONE03) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)][0] = texture.getTextureOffset(TextureID::KIES01);
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)][1] = texture.getTextureOffset(TextureID::KIES01) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::KIES01).s, texture.getTextureOffset(TextureID::KIES01).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)][3] = texture.getTextureOffset(TextureID::KIES01);
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::KIES01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::KIES01).t);
+			uvs[(((GLubyte)TextureID::KIES01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01 & 0x0F)][5] = texture.getTextureOffset(TextureID::KIES01) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)][0] = texture.getTextureOffset(TextureID::GRASS01);
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)][1] = texture.getTextureOffset(TextureID::GRASS01) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::GRASS01).s, texture.getTextureOffset(TextureID::GRASS01).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)][3] = texture.getTextureOffset(TextureID::GRASS01);
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::GRASS01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::GRASS01).t);
+			uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)][5] = texture.getTextureOffset(TextureID::GRASS01) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)][0] = texture.getTextureOffset(TextureID::GRASS02);
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)][1] = texture.getTextureOffset(TextureID::GRASS02) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::GRASS02).s, texture.getTextureOffset(TextureID::GRASS02).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)][3] = texture.getTextureOffset(TextureID::GRASS02);
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::GRASS02).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::GRASS02).t);
+			uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)][5] = texture.getTextureOffset(TextureID::GRASS02) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)][0] = texture.getTextureOffset(TextureID::GRASS03);
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)][1] = texture.getTextureOffset(TextureID::GRASS03) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::GRASS03).s, texture.getTextureOffset(TextureID::GRASS03).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)][3] = texture.getTextureOffset(TextureID::GRASS03);
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::GRASS03).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::GRASS03).t);
+			uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)][5] = texture.getTextureOffset(TextureID::GRASS03) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)][0] = texture.getTextureOffset(TextureID::SAND01);
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)][1] = texture.getTextureOffset(TextureID::SAND01) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::SAND01).s, texture.getTextureOffset(TextureID::SAND01).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)][3] = texture.getTextureOffset(TextureID::SAND01);
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::SAND01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::SAND01).t);
+			uvs[(((GLubyte)TextureID::SAND01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01 & 0x0F)][5] = texture.getTextureOffset(TextureID::SAND01) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)][0] = texture.getTextureOffset(TextureID::SNOW01);
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)][1] = texture.getTextureOffset(TextureID::SNOW01) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::SNOW01).s, texture.getTextureOffset(TextureID::SNOW01).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)][3] = texture.getTextureOffset(TextureID::SNOW01);
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::SNOW01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::SNOW01).t);
+			uvs[(((GLubyte)TextureID::SNOW01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01 & 0x0F)][5] = texture.getTextureOffset(TextureID::SNOW01) + texture.getTexturePercentage();
+
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)] = new vec2[6];
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)][0] = texture.getTextureOffset(TextureID::WATER01);
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)][1] = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)][2] = vec2(texture.getTextureOffset(TextureID::WATER01).s, texture.getTextureOffset(TextureID::WATER01).t + texture.getTexturePercentage().t);
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)][3] = texture.getTextureOffset(TextureID::WATER01);
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)][4] = vec2(texture.getTextureOffset(TextureID::WATER01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::WATER01).t);
+			uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)][5] = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
+
+#if 0
 			/* Map with texture-offsets */
 			uvs[TextureID::STONE01] = new vec2[6];
 			*(uvs[TextureID::STONE01]++) = texture.getTextureOffset(TextureID::STONE01);
@@ -125,6 +208,7 @@ namespace Core {
 			*(uvs[TextureID::WATER01]++) = vec2(texture.getTextureOffset(TextureID::WATER01).s + texture.getTexturePercentage().s, texture.getTextureOffset(TextureID::WATER01).t);
 			*(uvs[TextureID::WATER01]++) = texture.getTextureOffset(TextureID::WATER01) + texture.getTexturePercentage();
 			uvs[TextureID::WATER01] -= 6;
+#endif
 
 			mesh -= 36; normals -= 6;
 		}
@@ -132,16 +216,18 @@ namespace Core {
 		BlockContext::~BlockContext() {
 			delete[] mesh;
 			delete[] normals;
-			delete[] uvs[TextureID::STONE01];
-			delete[] uvs[TextureID::STONE02];
-			delete[] uvs[TextureID::STONE03];
-			delete[] uvs[TextureID::KIES01];
-			delete[] uvs[TextureID::GRASS02];
-			delete[] uvs[TextureID::GRASS03];
-			delete[] uvs[TextureID::SAND01];
-			delete[] uvs[TextureID::SNOW01];
-			delete[] uvs[TextureID::GRASS01];
-			delete[] uvs[TextureID::WATER01];
+
+			delete[] uvs[(((GLubyte)TextureID::STONE01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE01 & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::STONE02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE02 & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::STONE03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::STONE03 & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::KIES01  & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::KIES01  & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::GRASS01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS01 & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::GRASS02 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS02 & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::GRASS03 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::GRASS03 & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::SAND01  & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SAND01  & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::SNOW01  & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::SNOW01  & 0x0F)];
+			delete[] uvs[(((GLubyte)TextureID::WATER01 & 0xF0) >> 4) * 8 + ((GLubyte)TextureID::WATER01 & 0x0F)];
+			delete[] uvs;
 		}
 	}
 }

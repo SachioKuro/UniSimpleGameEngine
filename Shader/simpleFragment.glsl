@@ -1,10 +1,10 @@
 #version 330
 
 in vec2 _uv;
-in vec3 _pos_ws;
-in vec3 _normal_cs;
-in vec3 _eye_cs;
-in vec3 _light_cs;
+smooth in vec3 _pos_ws;
+smooth in vec3 _normal_cs;
+smooth in vec3 _eye_cs;
+smooth in vec3 _light_cs;
 
 out vec4 color;
 
@@ -26,6 +26,9 @@ void main() {
     
     float distance = length(lightPosition - _pos_ws);
     vec4 texel = texture(texSampler, _uv);
-    color = vec4(texel.rgb * vec3(0.3, 0.3, 0.3), texel.a) + 
-            vec4(texel.rgb * lightColor * cosTheta,texel.a);
+    vec4 tmp_color = vec4(texel.rgb * vec3(0.3, 0.3, 0.3), texel.a) + 
+                     vec4(texel.rgb * lightColor * cosTheta,texel.a);
+                     
+    vec4 fog_color = vec4(0.7f, 0.7f, 0.8f, 1.0f);
+    color = mix(tmp_color, fog_color, 1.0 - clamp(1.0/exp(pow(length(_eye_cs)*0.014,2)), 0.0, 1.0));
 }

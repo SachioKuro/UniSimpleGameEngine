@@ -26,9 +26,9 @@ namespace Core {
 		{
 		private:
 			std::vector<int> p;
-			unsigned int segmentWidth, segmentHeight;
-			unsigned int maxNoiseWidth, maxNoiseHeight;
-			unsigned int height, spread;
+			unsigned long long segmentWidth, segmentHeight;
+			unsigned long long maxNoiseWidth, maxNoiseHeight;
+			unsigned long long height, spread;
 		private:
 			double fade(double t);
 			double grad(int hash, double x, double y, double z);
@@ -36,7 +36,7 @@ namespace Core {
 			double noise(double x, double y, double z);
 			std::vector<std::vector<int>> values;
 		public:
-			PerlinNoise(unsigned int seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned int spread); 
+			PerlinNoise(unsigned long long seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned long long spread);
 			std::vector<std::vector<int>>* createNoise(unsigned int deltaX, unsigned int deltaY);
 			void debugNoise(unsigned int nr); // helper function to write output values to .txt file
 			~PerlinNoise();

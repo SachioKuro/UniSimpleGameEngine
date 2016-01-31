@@ -3,7 +3,7 @@
 namespace Core {
 	namespace Utils {
 
-		PerlinNoise::PerlinNoise(unsigned int seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned int spread)
+		PerlinNoise::PerlinNoise(unsigned long long seed, unsigned int maxNoiseWidth, unsigned int maxNoiseHeight, unsigned int segmentWidth, unsigned int segmentHeight, unsigned int height, unsigned long long spread)
 			: maxNoiseWidth(maxNoiseWidth), maxNoiseHeight(maxNoiseHeight),segmentWidth(segmentWidth), segmentHeight(segmentHeight) , height(height), spread(spread) {
 			// Generate a new permutation vector based on the value of seed
 			p.resize(256);
@@ -107,7 +107,7 @@ namespace Core {
 			{
 				for (int y = 0; y < segmentHeight; y++)
 				{
-					sprintf(buffer, "%dS ", values[x][y]);
+					sprintf(buffer, "%d ", values[x][y]);
 					myfile << buffer;
 				}
 				myfile << "\n";

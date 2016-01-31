@@ -16,7 +16,7 @@ namespace Core {
 				return GL_FALSE;
 
 			// Holds the bits from file
-			FIBITMAP* bits;
+			FIBITMAP* bits = nullptr;
 
 			// If FreeImage supports the filetype, it loads the file
 			if (FreeImage_FIFSupportsReading(format))

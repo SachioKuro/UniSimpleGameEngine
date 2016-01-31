@@ -100,7 +100,7 @@ namespace Core {
 			glfwSetErrorCallback(error_callback);
 
 			// GLFW-Settings
-			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_SAMPLES, 2);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -136,7 +136,7 @@ namespace Core {
 			glFrontFace(GL_CCW);
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
-			
+
 #if DEBUG_LEVEL == 1
 			glfwSwapInterval(0.0);
 #endif // DEBUG
@@ -150,7 +150,7 @@ namespace Core {
 			//glShadeModel(GL_FLAT);
 
 			// Sets projectionmatrix
-			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f);
+			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
 
 			lastTime = glfwGetTime();
 			waterFBO = new WaterFBO;
