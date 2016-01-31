@@ -49,6 +49,7 @@ namespace Core {
 			void moveBackwards(Terrain::Block**** blocks, ivec3 cameraDifference);
 
 			void proceedJumpAnimation();
+			void detectCollision(Terrain::Block**** blocks, ivec3 cameraDifference);
 
 			void processGravity(Terrain::Block**** blocks, ivec3 cameraDifference);
 			Terrain::Block *getBlockBelowPlayer(Terrain::Block**** blocks, ivec3 cameraDifference);
