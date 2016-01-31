@@ -107,7 +107,7 @@ namespace Core {
 			{
 				for (int y = 0; y < segmentHeight; y++)
 				{
-					sprintf(buffer, "%1.3f ", values[x][y]);
+					sprintf(buffer, "%dS ", values[x][y]);
 					myfile << buffer;
 				}
 				myfile << "\n";
