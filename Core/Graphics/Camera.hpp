@@ -54,7 +54,7 @@ namespace Core {
 
 			void processGravity(Terrain::Block**** blocks, ivec3 cameraDifference);
 			Terrain::Block *getBlockBelowPlayer(Terrain::Block**** blocks, ivec3 cameraDifference);
-
+			Terrain::Block *getBlockOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference);
 			Terrain::Block *getBlockInFrontOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference);
 			Terrain::Block *getBlockBehindPlayer(Terrain::Block**** blocks, ivec3 cameraDifference);
 			Terrain::Block *getBlockLeftOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference);

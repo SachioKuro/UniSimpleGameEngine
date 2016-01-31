@@ -105,52 +105,50 @@ namespace Core {
 
 		void Camera::moveForward(Terrain::Block**** blocks, ivec3 cameraDifference) {
 			if (getBlockInFrontOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
-				if (abs(walkDirection.x) > abs(walkDirection.z)) {
+				if (abs(walkDirection.x) > abs(walkDirection.z))
+				{
 					walkDirection.x = 0;
 				}
 				else {
 					walkDirection.z = 0;
 				}
 			}
+#if 0
+			if (getBlockLeftOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+				DEBUG(walkDirection.x);
+				if (abs(walkDirection.x) > abs(walkDirection.z))
+				{
+					walkDirection.z = 0;
+				}
+				else {
+					walkDirection.x = 0;
+				}
+			}
 
+			if (getBlockRightOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
+				DEBUG(walkDirection.x);
+				if (abs(walkDirection.x) > abs(walkDirection.z))
+				{
+					walkDirection.z = 0;
+				}
+				else {
+					walkDirection.x = 0;
+				}
+			}
+#endif
 			cameraPosition += walkDirection * deltaTime * mouseSpeed;
 		}
 
 		void Camera::moveBackwards(Terrain::Block**** blocks, ivec3 cameraDifference) {
-			if (getBlockBehindPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
-				// change the walkDirectionVector
-				if (abs(walkDirection.x) > abs(walkDirection.z)) {
-					walkDirection.x = 0;
-				}
-				else {
-					walkDirection.z = 0;
-				}
-			}
 
 			cameraPosition -= walkDirection * deltaTime * mouseSpeed;
 		}
 
 		void Camera::strafeLeft(Terrain::Block**** blocks, ivec3 cameraDifference) {
-			if (getBlockLeftOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
-				if (abs(walkDirection.x) > abs(walkDirection.z)) {
-					rightVector.z = 0;
-				}
-				else {
-					rightVector.x = 0;
-				}
-			}
 			cameraPosition -= getRightVector() * deltaTime * mouseSpeed;
 		}
 
 		void Camera::strafeRight(Terrain::Block**** blocks, ivec3 cameraDifference) {
-			if (getBlockRightOfPlayer(blocks, cameraDifference)->isEnabled() == GL_TRUE) {
-				if (abs(walkDirection.x) > abs(walkDirection.z)) {
-					rightVector.z = 0;
-				}
-				else {
-					rightVector.x = 0;
-				}
-			}
 			cameraPosition += getRightVector() * deltaTime * mouseSpeed;
 		}
 
@@ -198,16 +196,27 @@ namespace Core {
 		Terrain::Block* Camera::getBlockBelowPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
 			
 
-			return blocks[cameraDifference.z][cameraDifference.y + 2][cameraDifference.x];
+			return blocks[cameraDifference.z % CHUNK_SIZE_Z][(cameraDifference.y + 2) % CHUNK_SIZE_Y][cameraDifference.x % CHUNK_SIZE_X];
 		}
 
 		Terrain::Block* Camera::getBlockInFrontOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
 			if (abs(walkDirection.x) > abs(walkDirection.z))
 			{
-				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][(cameraDifference.x + 1) % CHUNK_SIZE_X];
+				if (cameraDifference.x == CHUNK_SIZE_X - 1) {
+					cameraDifference.x -= 1;
+				}
+				return blocks[cameraDifference.z % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][(cameraDifference.x + 1) % CHUNK_SIZE_X];
 			}
 
-			return blocks[(cameraDifference.z + 1) % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+			if (cameraDifference.z == CHUNK_SIZE_Z - 1) {
+				cameraDifference.z -= 1;
+			}
+
+			return blocks[(cameraDifference.z + 1) % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x % CHUNK_SIZE_X];
+		}
+
+		Terrain::Block* Camera::getBlockOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
+			return blocks[cameraDifference.z % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x % CHUNK_SIZE_X];
 		}
 
 		Terrain::Block* Camera::getBlockBehindPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
@@ -218,7 +227,7 @@ namespace Core {
 				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][(cameraDifference.x - 1) % CHUNK_SIZE_X];
 			}
 
-			return blocks[(cameraDifference.z - 1) % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+			return blocks[((cameraDifference.z - 1) % CHUNK_SIZE_Z) % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
 		}
 
 		Terrain::Block* Camera::getBlockLeftOfPlayer(Terrain::Block**** blocks, ivec3 cameraDifference) {
@@ -233,7 +242,7 @@ namespace Core {
 					positionZ = cameraDifference.z - 1;
 				}
 
-				return blocks[positionZ % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+				return blocks[positionZ % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x % CHUNK_SIZE_X];
 			}
 			else {
 				int positionX;
@@ -245,7 +254,10 @@ namespace Core {
 					positionX = cameraDifference.x - 1;
 				}
 
-				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][positionX % CHUNK_SIZE_X];
+				//DEBUG_F("%i %i %i \n", cameraDifference.x, cameraDifference.y, cameraDifference.z);
+				//DEBUG_F("%i %i %i \n", positionX, cameraDifference.y + 1, cameraDifference.z);
+
+				return blocks[cameraDifference.z % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][positionX % CHUNK_SIZE_X];
 			}
 		}
 
@@ -255,12 +267,12 @@ namespace Core {
 				int positionZ;
 				if (walkDirection.x > 0)
 				{
-					positionZ = cameraDifference.x - 1;
+					positionZ = cameraDifference.z - 1;
 				}
 				else {
-					positionZ = cameraDifference.x + 1;
+					positionZ = cameraDifference.z + 1;
 				}
-				return blocks[positionZ % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x];
+				return blocks[positionZ % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][cameraDifference.x % CHUNK_SIZE_X];
 			}
 			else {
 				int positionX;
@@ -271,8 +283,9 @@ namespace Core {
 				else {
 					positionX = cameraDifference.x + 1;
 				}
+				DEBUG_F("%d %d %f \n", positionX, cameraDifference.y + 1, cameraDifference.z);
 
-				return blocks[cameraDifference.z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][positionX % CHUNK_SIZE_X];
+				return blocks[cameraDifference.z % CHUNK_SIZE_Z][(cameraDifference.y + 1) % CHUNK_SIZE_Y][positionX % CHUNK_SIZE_X];
 			}
 
 		}
@@ -295,21 +308,21 @@ namespace Core {
 				cos(verticalAngle) * cos(horizontalAngle)
 				);
 
-			glm::vec3 walkDirection(
+			walkDirection = vec3(
 				cos(verticalAngle) * sin(horizontalAngle),
 				sin(verticalAngle),
 				cos(verticalAngle) * cos(horizontalAngle)
 				);
 
 			// Right vector
-			glm::vec3 right = glm::vec3(
+			rightVector = glm::vec3(
 				sin(horizontalAngle - pi<float>() / 2.0f),
 				0,
 				cos(horizontalAngle - pi<float>() / 2.0f)
 				);
 
 			// Up vector : perpendicular to both direction and right
-			glm::vec3 up = glm::cross(right, direction);
+			glm::vec3 up = glm::cross(rightVector, direction);
 
 			//deltaTimeUpdate += deltaTime;
 
@@ -326,11 +339,11 @@ namespace Core {
 
 			// Strafe right
 			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-				cameraPosition += right * deltaTime * mouseSpeed;
+				cameraPosition += rightVector * deltaTime * mouseSpeed;
 			}
 			// Strafe left
 			else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-				cameraPosition -= right * deltaTime * mouseSpeed;
+				cameraPosition -= rightVector * deltaTime * mouseSpeed;
 			}
 
 			view = lookAt(cameraPosition, cameraPosition + direction, vec3(0, 1, 0));
