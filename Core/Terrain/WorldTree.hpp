@@ -7,7 +7,7 @@
 #include "../Graphics/BlockContext.hpp"
 #include "../Graphics/Camera.hpp"
 
-#define WORLDSIZE			12
+#define WORLDSIZE			11
 #define WORLD_HALFSIZE		6
 #define NOISE_WIDTH			1000000
 #define NOISE_HEIGHT		1000000

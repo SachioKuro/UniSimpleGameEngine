@@ -137,9 +137,7 @@ namespace Core {
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 
-#if DEBUG_LEVEL == 1
-			glfwSwapInterval(0.0);
-#endif // DEBUG
+			glfwSwapInterval(0);
 
 			// Initializes shader
 			Shader::init();
@@ -150,7 +148,7 @@ namespace Core {
 			//glShadeModel(GL_FLAT);
 
 			// Sets projectionmatrix
-			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+			projection = perspective(radians(45.0f), 4.0f / 3.0f, 0.1f, 140.0f);
 
 			lastTime = glfwGetTime();
 			waterFBO = new WaterFBO;

@@ -271,8 +271,8 @@ namespace Core {
 						for (size_t z = 0; z < CHUNK_SIZE_Z; z++) {
 							for (size_t y = 0; y < CHUNK_SIZE_Y; y++) {
 								for (size_t x = 0; x < CHUNK_SIZE_X; x++) {
-									if (blocks[z][y][x]->getBlockType() == BlockType::WATER && (topLayer == -1 || topLayer == y)) { topLayer = y; waterBlocks.push_back(blocks[z][y][x]); } 
-									else if (blocks[z][y][x]->getBlockType() != BlockType::WATER) blocks[z][y][x]->submit(renderer, context);
+									if (blocks[z][y][x]->getBlockType() != BlockType::WATER) blocks[z][y][x]->submit(renderer, context);
+									else if (blocks[z][y][x]->getBlockType() == BlockType::WATER && (topLayer == -1 || topLayer == y)) { topLayer = y; waterBlocks.push_back(blocks[z][y][x]); } 
 								}
 							}
 						}

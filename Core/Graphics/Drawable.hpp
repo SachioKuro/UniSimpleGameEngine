@@ -12,20 +12,18 @@ namespace Core {
 		class Drawable {
 		protected:
 			GLsizei nrOfVertices;
-			GLint x, y, z;
+			glm::ivec3 position;
 			TextureID textureOffset;
 			glm::vec4 color;
 			glm::vec2 texturePercentage;
 		public:
 			Drawable(glm::ivec3 position, TextureID textureOffset, glm::vec2 texturePercentage, GLuint vertexAttrSize)
-				: nrOfVertices(vertexAttrSize), textureOffset(textureOffset), texturePercentage(texturePercentage) {
-				x = position.x; y = position.y; z = position.z;
-			}
+				: nrOfVertices(vertexAttrSize), textureOffset(textureOffset), texturePercentage(texturePercentage), position(position) {}
 
 			virtual ~Drawable() {}
 
-			void setPosition(glm::ivec3 position) { x = position.x; y = position.y; z = position.z; }
-			glm::vec3 getPosition() const { return glm::vec3(x, y, z); }
+			void setPosition(glm::ivec3 position) { this->position = position; }
+			glm::vec3 getPosition() const { return position; }
 
 			void setTextureOffset(TextureID textureOffset) { this->textureOffset = textureOffset; }
 			glm::vec2 getTextureOffset() const { return glm::vec2((GLubyte)textureOffset & 0x0F, ((GLubyte)textureOffset >> 4) & 0x0F); }

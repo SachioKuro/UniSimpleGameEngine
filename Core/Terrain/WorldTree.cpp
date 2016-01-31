@@ -11,7 +11,7 @@ namespace Core {
 			renderer->useShader(Shader::Block);
 			
 			// Produces the Heightmap
-			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 28, 30000);
+			noise = new PerlinNoise(1337 + 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 28, 22000);
 			// Produces the BlocktypeNoiseMap
 			bnoise = new PerlinNoise(1337 - 11, NOISE_WIDTH, NOISE_HEIGHT, CHUNK_SIZE_X, CHUNK_SIZE_Z, 8, 55000);
 			
